@@ -778,7 +778,7 @@ class SalesLead(models.Model):
     chat_summary = models.TextField(blank=True, verbose_name='Chat Summary')
 
     # CRM State
-    external_id = models.CharField(max_length=100, blank=True, db_index=True, verbose_name='External ID (Meta/Voice)')
+    external_id = models.CharField(max_length=100, blank=True, null=True, db_index=True, verbose_name='External ID (Meta/Voice)')
     followed_up = models.BooleanField(default=False, verbose_name='Followed Up?')
     notes       = models.TextField(blank=True, verbose_name='Admin Notes')
 

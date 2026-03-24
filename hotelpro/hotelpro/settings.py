@@ -277,3 +277,6 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+
+# Auto field for primary keys
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

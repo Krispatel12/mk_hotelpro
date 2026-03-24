@@ -124,10 +124,9 @@ def generate_response(
     else:
         # Fallback if model_manager import fails
         model_chain = [
-            ("models/gemini-2.5-flash", {"supports_tools": True}),
-            ("models/gemini-2.0-flash", {"supports_tools": True}),
-            ("models/gemini-2.0-flash-lite", {"supports_tools": True}),
-            ("models/gemma-3-27b-it", {"supports_tools": False}),
+            ("models/gemini-1.5-flash", {"supports_tools": True}),
+            ("models/gemini-1.5-pro", {"supports_tools": True}),
+            ("models/gemini-1.0-pro", {"supports_tools": False}),
         ]
 
     last_error = None
@@ -178,7 +177,4 @@ def generate_response(
                 continue
             continue
 
-    raise RuntimeError(
-        f"⚠️ AI service is temporarily busy. All models are at capacity. "
-        f"Please try again in a few minutes. Last error: {last_error}"
-    )
+    return "I'm currently experiencing high network traffic. Please try asking again in a few seconds!"
