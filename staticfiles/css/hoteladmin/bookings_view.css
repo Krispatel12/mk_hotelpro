@@ -1,0 +1,623 @@
+/* ============================================================
+   BOOKINGS — Elite Architecture v4.0 "Professional Standard"
+   Design: Obsidian Glass v4 (Deep Space x Platinum Core)
+   ============================================================ */
+
+:root {
+    /* ✨ Obsidian Glass v60 Tokens (Synced with AI Suite) */
+    --bg-deep: #05070a;
+    --bg-card: rgba(255, 255, 255, 0.03);
+    --bg-glass: rgba(13, 17, 23, 0.8);
+    --border-main: rgba(255, 255, 255, 0.08);
+
+    --glass-blur: blur(20px) saturate(180%);
+    
+    /* 🏛️ Professional Palette */
+    --accent-primary: 59, 130, 246; /* Default Blue */
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    
+    /* 📝 High-Impact Typography */
+    --font-pro: 'Outfit', 'Inter', system-ui, sans-serif;
+    
+    /* 🎞️ Cinematic Motion */
+    --timing: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --shadow-premium: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
+}
+
+/* Cinematic Motion Tokens */
+:root { --stagger-delay: 0.1s; }
+
+/* 🧠 Neural Search Visibility Override */
+.neural-hidden {
+    display: none !important;
+}
+
+/* ── Container Entrance ─────────────────────────────────────── */
+.dual-view-container {
+    perspective: 1200px;
+}
+
+/* ── Elite Stat Nodes (v4.0 Obsidian) ────────────────────────── */
+.bk-stat {
+    background: var(--obsidian-dark) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: var(--shadow-pro) !important;
+    border-radius: 2.5rem;
+    padding: 2rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px;
+    transition: var(--transition-pro);
+    position: relative;
+    overflow: hidden;
+}
+
+.bk-stat::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at -20% -20%, rgba(79, 70, 229, 0.04), transparent 60%);
+    pointer-events: none;
+}
+
+.bk-stat:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-pro-elite);
+    border-color: var(--gold-pro);
+}
+
+.bk-stat-label {
+    font-size: 0.65rem;
+    font-weight: 850;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--slate-pro-400);
+    margin-bottom: 1rem;
+}
+
+.bk-stat-value {
+    font-family: var(--font-pro);
+    font-size: 3rem; 
+    font-weight: 950;
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    color: white !important;
+}
+
+.bk-stat-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.bk-stat-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: var(--transition-pro);
+}
+
+.bk-stat:hover .bk-stat-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* ── Master Command Center v4.11 ──────────────────────────────── */
+.master-command-center {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    margin-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    max-width: 1550px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.command-branding {
+    min-width: fit-content;
+}
+
+.command-branding h4 {
+    letter-spacing: -0.03em;
+}
+
+.bk-search-container {
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 99rem;
+    padding: 0.6rem 0.6rem;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    align-items: center;
+    min-width: 550px;
+}
+
+.bk-search-container:focus-within {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
+    transform: translateY(-2px);
+}
+
+.bk-search-input {
+    background: transparent !important;
+    border: none !important;
+    font-weight: 800;
+    font-size: 0.825rem;
+    color: white !important;
+    letter-spacing: -0.01em;
+    padding: 0.75rem 1rem !important;
+    outline: none !important;
+    flex: 1;
+}
+
+.bk-search-input::placeholder {
+    color: var(--slate-pro-400);
+    font-weight: 600;
+}
+
+.bk-search-btn {
+    background: var(--slate-pro-950) !important;
+    border-radius: 1.15rem !important;
+    padding: 0.65rem 1.75rem !important;
+    font-size: 0.65rem !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    transition: var(--transition-pro) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+.bk-search-btn:hover {
+    background: var(--primary-pro) !important;
+    transform: scale(1.05);
+}
+
+/* ── View Orchestrator v4.1 (Reference Match) ───────────────── */
+.view-orchestrator {
+    background: rgba(15, 23, 42, 0.4) !important;
+    backdrop-filter: blur(20px);
+    border-radius: 99px;
+    padding: 0.45rem;
+    display: flex;
+    gap: 0.5rem;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.view-node {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 1.25rem;
+    border: none;
+    background: transparent;
+    color: var(--slate-pro-400);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    transition: var(--transition-pro);
+    position: relative;
+    z-index: 1;
+}
+
+.view-node.active {
+    color: #ffffff;
+    background: #2563eb !important;
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+}
+
+.view-node:hover:not(.active) {
+    color: var(--slate-pro-900);
+    background: rgba(15, 23, 42, 0.04);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GRID VIEW — Portfolio Cards v4.0
+   ═══════════════════════════════════════════════════════════════ */
+.booking-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Force horizontal-friendly layout */
+    gap: 1.5rem;
+    perspective: 2000px;
+}
+
+.booking-card {
+    background: var(--bg-card) !important;
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-main) !important;
+    border-radius: 24px;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center; /* Horizontal alignment */
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--timing);
+    min-height: 120px;
+}
+
+.booking-card:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    transform: translateY(-4px) translateX(4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+    border-color: rgba(var(--accent-primary), 0.3) !important;
+}
+
+/* 🏔️ Card Depth & Header */
+.booking-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 0% 0%, rgba(var(--accent-primary), 0.05), transparent 50%);
+    pointer-events: none;
+}
+
+/* 🎨 Guest Portfolio Identity */
+.guest-avatar {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid var(--border-main) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.4rem;
+    transition: all var(--timing);
+}
+
+.booking-card:hover .guest-avatar {
+    transform: rotate(-10deg) scale(1.1);
+    background: rgba(var(--accent-primary), 0.1) !important;
+    border-color: rgba(var(--accent-primary), 0.3) !important;
+    color: rgb(var(--accent-primary));
+}
+
+.guest-info-block {
+    flex: 1;
+    min-width: 200px;
+}
+
+.guest-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: white !important;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+}
+
+.room-name {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    display: block;
+}
+
+/* 🏷️ Status Pill Architecture */
+.bk-status-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    min-width: 140px;
+}
+
+.bk-status-badge {
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.bk-status-badge.confirmed { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+.bk-status-badge.pending   { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
+.bk-status-badge.cancelled { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+
+/* 📊 Stay Intelligence (Horizontal Bar) */
+.stay-intel-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
+    border: 1px solid var(--border-main);
+}
+
+.stay-node {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stay-label {
+    font-size: 8px;
+    font-weight: 800;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.stay-value {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: white !important;
+}
+
+.stay-connector {
+    width: 20px;
+    height: 1px;
+    background: var(--border-main);
+    opacity: 0.5;
+}
+
+
+
+@keyframes bkPortfolioIn {
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LIST VIEW — Obsidian Table v4.0
+   ═══════════════════════════════════════════════════════════════ */
+.list-view-table {
+    margin-top: 1rem;
+    animation: bkPortfolioIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.list-view-table table {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    border-radius: 2.5rem;
+    box-shadow: var(--shadow-pro), var(--glass-glow);
+    overflow: hidden;
+    border-spacing: 0;
+}
+
+.bk-list-row {
+    transition: var(--transition-pro);
+    cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LIST VIEW — Elite Master Orchestration v4.9
+   ═══════════════════════════════════════════════════════════════ */
+.list-view-table {
+    margin-top: 2rem;
+    animation: bkPortfolioIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    width: 100%;
+    max-width: 1550px; /* ELITE EXPANSIVE WIDTH */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 🏔️ Grid Master Sync (The Source of Truth) */
+.list-grid-sync {
+    display: grid;
+    grid-template-columns: 3fr 2.4fr 1.6fr 1.6fr;
+    align-items: center;
+    gap: 2rem;
+    padding: 0 3rem !important;
+}
+
+/* 🏔️ List Cards Stack */
+.list-cards-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem; /* Increased for premium breathing room */
+}
+
+.bk-list-row {
+    background: var(--bg-card) !important;
+    backdrop-filter: var(--glass-blur);
+    border-radius: 20px;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+    transition: all var(--timing);
+    box-shadow: var(--shadow-premium) !important;
+    border: 1px solid var(--border-main) !important;
+    cursor: pointer;
+}
+
+.bk-list-row:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 40px 80px -20px rgba(15, 23, 42, 0.15);
+    border-color: rgba(99, 102, 241, 0.2); /* Indigo hint on hover */
+}
+
+.bk-list-avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
+    transition: var(--transition-pro);
+}
+
+.bk-list-row:hover .bk-list-avatar {
+    transform: scale(1.08) rotate(-4deg);
+    background: #2563eb !important;
+}
+
+/* 🏔️ High-Fidelity Status Pills */
+.bk-status-badge {
+    padding: 0.8rem 0;
+    width: 100%;
+    max-width: 155px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 0.68rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-radius: 3rem;
+    display: inline-block;
+}
+
+.bk-status-badge.confirmed { background: rgba(16, 185, 129, 0.1); color: #059669; }
+.bk-status-badge.pending   { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+.bk-status-badge.cancelled { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+
+/* 🏔️ Executive Micro Details */
+.col-guest .text-lg { 
+    font-size: 1.35rem; 
+    font-weight: 900;
+    color: white !important;
+    letter-spacing: -0.02em;
+}
+.col-guest .uppercase { 
+    letter-spacing: 0.3em; 
+    color: #64748b; 
+    font-size: 0.58rem; 
+    font-weight: 900;
+}
+.col-stay .text-\[13px\] { 
+    font-size: 0.95rem; 
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LIGHT MODE (CLEAN SAAS) OVERRIDES - v10.0 Bookings & Guests Elite
+   ───────────────────────────────────────────────────────────────────────── */
+
+html.light-mode body {
+    background-color: #f8fafc !important;
+}
+
+html.light-mode .bk-stat {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light-mode .bk-stat-value {
+    color: #0f172a !important;
+}
+
+html.light-mode .bk-stat-label {
+    color: #64748b !important;
+}
+
+html.light-mode .bk-search-container {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode .bk-search-input {
+    color: #0f172a !important;
+}
+
+html.light-mode .bk-search-btn {
+    background: #0f172a !important;
+    color: #ffffff !important;
+}
+
+html.light-mode .view-orchestrator {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode .view-node:hover:not(.active) {
+    background: #ffffff !important;
+    color: #2563eb !important;
+}
+
+/* Booking Grid Cards in Light Mode */
+html.light-mode .booking-card {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode .booking-card:hover {
+    background: #ffffff !important;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(37, 99, 235, 0.1) !important;
+}
+
+html.light-mode .guest-name,
+html.light-mode .stay-value {
+    color: #0f172a !important;
+}
+
+html.light-mode .room-name,
+html.light-mode .stay-label {
+    color: #64748b !important;
+}
+
+html.light-mode .guest-avatar {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+    color: #2563eb !important;
+}
+
+html.light-mode .stay-details {
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+}
+
+/* List View Row Refinement in Light Mode */
+html.light-mode .bk-list-row {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light-mode .bk-list-row:hover {
+    background: #f8fafc !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode .col-guest .text-lg,
+html.light-mode .col-stay .text-\[13px\] {
+    color: #0f172a !important;
+}
+
+html.light-mode .bk-list-avatar {
+    background: #f1f5f9 !important;
+    color: #2563eb !important;
+    border-color: #e2e8f0 !important;
+}
+

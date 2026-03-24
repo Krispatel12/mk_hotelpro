@@ -46,7 +46,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-c3dh+(#1s%62q&c-s^k$2)kwv4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0', '.onrender.com', '*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0', 'hotelpro2120.onrender.com', '.onrender.com', '*']
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -135,11 +135,12 @@ WSGI_APPLICATION = 'hotelpro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'hotelpro'),
-        'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'NAME': os.getenv('DB_NAME', 'kris_5o1z'),
+        'USER': os.getenv('DB_USER', 'kris_5o1z_user'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 's9uqj2EVjIXqUrF5Jt69B21C48VJule0'),
+        'HOST': os.getenv('DB_HOST', 'dpg-d70p5914tr6s73ch9opg-a.oregon-postgres.render.com'),
         'PORT': os.getenv('DB_PORT', '5432'),
+        'OPTIONS': {'sslmode': os.getenv('DB_SSLMODE', 'require')},
         'CONN_MAX_AGE': 600,
     }
 }
@@ -148,8 +149,7 @@ DATABASES = {
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
 
-# Use DATABASE_URL from environment if available (standard on Render)
-# Note: Ensure DATABASE_URL is a postgres:// URL
+# Use DATABASE_URL as an override if present (standard for Render)
 if HAS_DJ_DATABASE_URL and os.environ.get('DATABASE_URL'):
     db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
     if db_from_env:
@@ -222,8 +222,8 @@ EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False') == 'True'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'kp819891@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'lsfy kbxy rzyq ydtq')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
 
 # Session & Security

@@ -1,0 +1,270 @@
+/* AI Dashboard - Zenith High-Fidelity Override */
+
+:root {
+    --ai-primary: #8b5cf6;
+    --ai-secondary: #c084fc;
+    --ai-accent: #2dd4bf;
+    --ai-surface: rgba(15, 23, 42, 0.4);
+    --ai-glass-border: rgba(255, 255, 255, 0.08);
+    --ai-glow-strength: 20px;
+}
+
+/* Base Mesh Background */
+.ai-mesh-container {
+    background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(45, 212, 191, 0.05) 0%, transparent 40%),
+                #020617;
+    position: relative;
+}
+
+/* Advanced Glassmorphism */
+.ai-glass-panel {
+    background: var(--ai-surface);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid var(--ai-glass-border);
+    border-radius: 2.5rem;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6),
+                inset 0 0 40px rgba(255, 255, 255, 0.01);
+}
+
+.ai-glass-panel-heavy {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Luminous Headers */
+.ai-command-header {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent);
+}
+
+.ai-glow-text {
+    text-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+}
+
+/* Chat Mastery */
+.chat-bubble-user {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 1.5rem 1.5rem 0.25rem 1.5rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.chat-bubble-ai {
+    background: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    border-radius: 0.25rem 1.6rem 1.6rem 1.6rem;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.chat-bubble-ai::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), transparent, rgba(45, 212, 191, 0.3));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* Insight Node Refinement */
+.insight-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.insight-card:hover {
+    background: rgba(139, 92, 246, 0.05);
+    border-color: rgba(139, 92, 246, 0.2);
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--ai-accent);
+    border-radius: 50%;
+    animation: typing 1.4s infinite ease-in-out both;
+}
+
+@keyframes typing {
+    0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; text-shadow: 0 0 10px var(--ai-accent); }
+}
+
+/* =========================================================================
+   LIGHT MODE (CLEAN SLATE) OVERRIDES
+   ========================================================================= */
+
+html.light-mode .ai-mesh-container {
+    background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(45, 212, 191, 0.03) 0%, transparent 40%),
+                #f8fafc;
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.02);
+}
+
+html.light-mode .ai-glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.05);
+}
+
+html.light-mode .ai-glass-panel-heavy {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+html.light-mode .ai-command-header {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.01), transparent);
+    border-color: rgba(0, 0, 0, 0.03);
+}
+
+html.light-mode .ai-glow-text {
+    text-shadow: none;
+    color: #0f172a !important;
+}
+
+html.light-mode .chat-bubble-user {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #1e293b !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+html.light-mode .chat-bubble-ai {
+    background: rgba(139, 92, 246, 0.04);
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    color: #0f172a !important;
+}
+
+html.light-mode .chat-bubble-ai .text-white,
+html.light-mode .chat-bubble-ai .prose {
+    color: #1e293b !important;
+}
+
+html.light-mode .insight-card {
+    background: #ffffff;
+    border-color: #e2e8f0;
+}
+
+html.light-mode .insight-card:hover {
+    background: #f8fafc;
+    border-color: #8b5cf6;
+}
+
+html.light-mode .ai-chat-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+html.light-mode .ai-chat-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.2);
+}
+
+html.light-mode .ai-chat-interface .bg-white\/5 {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode .chat-bubble-ai .prose-invert {
+    color: #1e293b !important;
+}
+
+html.light-mode .chat-bubble-ai .prose-invert h1,
+html.light-mode .chat-bubble-ai .prose-invert h2,
+html.light-mode .chat-bubble-ai .prose-invert h3,
+html.light-mode .chat-bubble-ai .prose-invert strong {
+    color: #0f172a !important;
+}
+
+html.light-mode .ai-chat-interface .text-white {
+    color: #1e293b !important;
+}
+
+html.light-mode .ai-chat-interface .text-slate-400 {
+    color: #64748b !important;
+}
+
+html.light-mode .ai-chat-interface .bg-primary-600\/10 {
+    background: rgba(139, 92, 246, 0.05) !important;
+}
+
+/* Auto Action Mode View Adjustments */
+body.auto-action-active .ai-chat-interface,
+body.auto-action-active .ai-strategic-insights {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95);
+    position: absolute; /* Take them out of flow so tasks can expand */
+    z-index: -10;
+}
+
+body.auto-action-active .ai-protocol-tasks {
+    /* Expand the task block fully across the dashboard and center it */
+    position: absolute;
+    inset: 2rem;
+    z-index: 50;
+    width: auto;
+    height: auto;
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 3rem;
+    padding: 3rem;
+    box-shadow: 0 0 100px rgba(139, 92, 246, 0.1);
+    transform: scale(1.02);
+}
+
+body.auto-action-active .ai-protocol-tasks > div:first-child {
+    /* Make task header larger in focused mode */
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+body.auto-action-active .ai-protocol-tasks .scrollbar-hide {
+    /* Give the task list more breathing room */
+    height: calc(100% - 120px) !important;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+/* Micro-animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.ai-floating {
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Custom Scrollbar for Chat */
+.ai-chat-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+.ai-chat-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.ai-chat-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+.ai-chat-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.3);
+}
+
+/* Responsive Overrides */
+@media (max-width: 1024px) {
+    .ai-glass-panel {
+        border-radius: 1.5rem;
+    }
+}

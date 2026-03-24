@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup-container {
+    background: white;
+    padding: 40px;
+    width: 380px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.signup-container h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.signup-form p {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.signup-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #444;
+}
+
+.signup-form input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+}
+
+.signup-form input:focus {
+    border-color: #2a5298;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42,82,152,0.3);
+}
+
+.signup-form button {
+    width: 100%;
+    padding: 12px;
+    background: #2a5298;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.signup-form button:hover {
+    background: #1e3c72;
+}
+
+.login-link {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.login-link a {
+    color: #2a5298;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
