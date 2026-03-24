@@ -1,0 +1,745 @@
+{% load static %}
+{% csrf_token %}
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     HotelPro AI — Sales Agent Widget
+     Public-facing proactive chatbot. Pre-login. No auth required.
+     ══════════════════════════════════════════════════════════════════════════ -->
+
+<!-- ── Floating Launcher Button ─────────────────────────────────────────────-->
+<div id="sa-launcher-wrapper" class="sa-launcher-wrapper">
+    <!-- Pop-up Tooltip -->
+    <div id="sa-tooltip" class="sa-tooltip">
+        Ask Alex — AI Sales Expert 🧠
+        <div class="sa-tooltip-arrow"></div>
+    </div>
+
+    <button id="sa-launcher"
+        aria-label="Chat with HotelPro AI Sales Agent"
+        title="Talk to our AI Sales Agent"
+        style="display:none">
+        <div class="sa-launcher-inner">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                <path d="M21 12.2A9.24 9.24 0 0 0 12 3a9.24 9.24 0 0 0-9 9.2c0 4.8 3.68 8.76 8.35 9.17v-1.92c-3.63-.4-6.44-3.48-6.44-7.25 0-4.04 3.28-7.3 7.33-7.3s7.33 3.26 7.33 7.3c0 .88-.72 1.6-1.6 1.6s-1.6-.72-1.6-1.6v-2.3c0-1.28-1.04-2.3-2.33-2.3s-2.33 1.02-2.33 2.3v2.85c0 1.94 1.57 3.52 3.52 3.52 2.3 0 4.18-1.88 4.18-4.2v-.87zM10.15 14H8.3c-.5 0-.9-.4-.9-.9v-3.2c0-.5.4-.9.9-.9h1.85c.5 0 .9.4.9.9v3.2c0 .5-.4.9-.9.9zm5.55 0h-1.85c-.5 0-.9-.4-.9-.9v-3.2c0-.5.4-.9.9-.9h1.85c.5 0 .9.4.9.9v3.2c0 .5-.4.9-.9.9z"/>
+            </svg>
+            <span class="sa-badge">1</span>
+        </div>
+        <span class="sa-pulse-ring"></span>
+    </button>
+</div>
+
+<!-- ── Chat Window ────────────────────────────────────────────────────────── -->
+<div id="sa-widget" class="sa-hidden">
+
+    <!-- Header -->
+    <div class="sa-header">
+        <div class="sa-header-left">
+            <div class="sa-avatar">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M21 12.2A9.24 9.24 0 0 0 12 3a9.24 9.24 0 0 0-9 9.2c0 4.8 3.68 8.76 8.35 9.17v-1.92c-3.63-.4-6.44-3.48-6.44-7.25 0-4.04 3.28-7.3 7.33-7.3s7.33 3.26 7.33 7.3c0 .88-.72 1.6-1.6 1.6s-1.6-.72-1.6-1.6v-2.3c0-1.28-1.04-2.3-2.33-2.3s-2.33 1.02-2.33 2.3v2.85c0 1.94 1.57 3.52 3.52 3.52 2.3 0 4.18-1.88 4.18-4.2v-.87zM10.15 14H8.3c-.5 0-.9-.4-.9-.9v-3.2c0-.5.4-.9.9-.9h1.85c.5 0 .9.4.9.9v3.2c0 .5-.4.9-.9.9zm5.55 0h-1.85c-.5 0-.9-.4-.9-.9v-3.2c0-.5.4-.9.9-.9h1.85c.5 0 .9.4.9.9v3.2c0 .5-.4.9-.9.9z"/>
+                </svg>
+            </div>
+            <div class="sa-header-info">
+                <span class="sa-name">Alex — HotelPro AI</span>
+                <span class="sa-status"><span class="sa-dot"></span>Online · Sales Agent</span>
+            </div>
+        </div>
+        <button id="sa-close" aria-label="Close chat">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Messages -->
+    <div id="sa-messages" class="sa-messages"></div>
+
+    <!-- Quick Replies -->
+    <div id="sa-quick-replies" class="sa-quick-replies"></div>
+
+    <!-- CTA Banner (hidden by default) -->
+    <div id="sa-cta-banner" class="sa-cta-banner sa-hidden">
+        <a id="sa-cta-btn" href="/start-free/" class="sa-cta-btn">
+            🚀 Start Free Trial — No Card Needed
+        </a>
+    </div>
+
+    <!-- Lead Capture Form (hidden by default) -->
+    <div id="sa-lead-form" class="sa-lead-form sa-hidden">
+        <p class="sa-lead-title">📋 Quick Contact — We'll Reach Out!</p>
+        <input id="sa-lead-name"  type="text"  placeholder="Your Name" autocomplete="name">
+        <input id="sa-lead-email" type="email" placeholder="Email Address" autocomplete="email">
+        <input id="sa-lead-phone" type="tel"   placeholder="Phone (optional)" autocomplete="tel">
+        <button id="sa-lead-submit">Send & Get Free Demo 🎯</button>
+        <button id="sa-lead-skip" class="sa-lead-skip">Maybe later</button>
+    </div>
+
+    <!-- Input -->
+    <div class="sa-input-area">
+        <form id="sa-form">
+            <input id="sa-input" type="text" placeholder="Type a message…" autocomplete="off" maxlength="500">
+            <button type="submit" id="sa-send" aria-label="Send">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </form>
+        <p class="sa-disclaimer">Powered by HotelPro AI · <a href="/contact/">Privacy</a></p>
+    </div>
+</div>
+
+<!-- ── Email Contact Modal ───────────────────────────────────────────────── -->
+<div id="sa-email-modal" class="sa-modal-overlay sa-hidden">
+    <div class="sa-modal">
+        <div class="sa-modal-header">
+            <h3>📧 Send us a Message</h3>
+            <button id="sa-modal-close" aria-label="Close">✕</button>
+        </div>
+        <form id="sa-email-form">
+            <div class="sa-modal-field">
+                <label>Your Name</label>
+                <input id="em-name"  type="text"  placeholder="e.g. Rahul Sharma">
+            </div>
+            <div class="sa-modal-field">
+                <label>Email Address *</label>
+                <input id="em-email" type="email" placeholder="you@example.com" required>
+            </div>
+            <div class="sa-modal-field">
+                <label>Phone (optional)</label>
+                <input id="em-phone" type="tel"   placeholder="+91 XXXXX XXXXX">
+            </div>
+            <div class="sa-modal-field">
+                <label>Message</label>
+                <textarea id="em-message" rows="3" placeholder="Tell us about your hotel and what you need help with…"></textarea>
+            </div>
+            <button type="submit" class="sa-modal-submit">Send Message 🚀</button>
+            <p id="sa-modal-msg" class="sa-modal-msg"></p>
+        </form>
+    </div>
+</div>
+
+<!-- ── Styles ─────────────────────────────────────────────────────────────── -->
+<style>
+/* ── CSS VARIABLES ────────────────────────────────────────────────────── */
+:root {
+    --sa-primary:   #6366f1;
+    --sa-primary-d: #4f46e5;
+    --sa-bg:        #ffffff;
+    --sa-bg-msg:    #f8fafc;
+    --sa-border:    rgba(0,0,0,.08);
+    --sa-text:      #0f172a;
+    --sa-muted:     #64748b;
+    --sa-radius:    20px;
+    --sa-shadow:    0 24px 64px rgba(0,0,0,.18), 0 8px 24px rgba(99,102,241,.12);
+}
+.dark-theme {
+    --sa-bg:     #0f172a;
+    --sa-bg-msg: #1e293b;
+    --sa-border: rgba(255,255,255,.08);
+    --sa-text:   #f1f5f9;
+    --sa-muted:  #94a3b8;
+}
+
+/* ── LAUNCHER ─────────────────────────────────────────────────────────── */
+.sa-launcher-wrapper {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+}
+
+@keyframes launcher-float {
+    0%, 100% { transform: translateY(0) scale(1.05); }
+    50% { transform: translateY(-8px) scale(1.1); }
+}
+
+#sa-launcher {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--sa-primary), var(--sa-primary-d));
+    border: 1px solid rgba(255,255,255,0.2); cursor: pointer; color: white;
+    box-shadow: 0 10px 40px rgba(99,102,241,0.5);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: launcher-float 4s ease-in-out infinite;
+}
+
+#sa-launcher:hover { 
+    transform: scale(1.2) rotate(5deg); 
+    box-shadow: 0 20px 60px rgba(99,102,241,0.7); 
+}
+
+#sa-launcher:active { transform: scale(0.9); }
+
+/* Advanced Tooltip Pop-up (V2) */
+.sa-tooltip {
+    position: absolute;
+    bottom: 90px;
+    right: 0;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 18px;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.6) rotate(-4deg);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10000;
+}
+
+.sa-launcher-wrapper:hover .sa-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1) rotate(0deg);
+}
+
+.sa-tooltip-arrow {
+    position: absolute;
+    bottom: -6px;
+    right: 25px;
+    width: 12px;
+    height: 12px;
+    background: inherit;
+    backdrop-filter: inherit;
+    -webkit-backdrop-filter: inherit;
+    transform: rotate(45deg);
+    border-right: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.dark-theme .sa-tooltip {
+    background: rgba(255, 255, 255, 0.95);
+    color: #0f172a;
+    border-color: rgba(0,0,0,0.1);
+}
+.sa-launcher-inner { position:relative; display:flex; align-items:center; justify-content:center; width:28px; height:28px; }
+.sa-launcher-inner svg { width:100%; height:100%; display:block; }
+.sa-badge {
+    position:absolute; top:-5px; right:-8px;
+    background:#ef4444; color:#fff; border-radius:50%;
+    width:18px; height:18px; font-size:10px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+    border: 2px solid white;
+}
+.sa-pulse-ring {
+    position:absolute; inset:0; border-radius:50%;
+    border: 2px solid var(--sa-primary);
+    animation: sa-pulse 2s ease-out infinite;
+}
+@keyframes sa-pulse {
+    0%   { transform:scale(1); opacity:.8; }
+    100% { transform:scale(1.6); opacity:0; }
+}
+
+/* ── WIDGET WINDOW ────────────────────────────────────────────────────── */
+#sa-widget {
+    position: fixed; bottom: 100px; right: 24px; z-index: 9998;
+    width: 380px; max-width: calc(100vw - 32px);
+    height: 560px; max-height: calc(100vh - 120px);
+    background: var(--sa-bg);
+    border-radius: var(--sa-radius);
+    box-shadow: var(--sa-shadow);
+    border: 1px solid var(--sa-border);
+    display: flex; flex-direction: column;
+    overflow: hidden; font-family: 'Inter', sans-serif;
+    transform-origin: bottom right;
+    transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+}
+#sa-widget.sa-hidden { transform: scale(0) translateY(20px); opacity: 0; pointer-events: none; }
+
+/* ── HEADER ─────────────────────────────────────────────────────────── */
+.sa-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, var(--sa-primary) 0%, #8b5cf6 100%);
+    color: white; flex-shrink:0;
+}
+.sa-header-left { display:flex; align-items:center; gap:10px; }
+.sa-avatar {
+    width:38px; height:38px; border-radius:50%;
+    background:rgba(255,255,255,.2); display:flex;
+    align-items:center; justify-content:center;
+    border: 2px solid rgba(255,255,255,.4);
+}
+.sa-name { font-weight:700; font-size:14px; display:block; }
+.sa-status { font-size:11px; opacity:.85; display:flex; align-items:center; gap:5px; }
+.sa-dot { width:7px; height:7px; border-radius:50%; background:#4ade80; animation:sa-blink 2s infinite; }
+@keyframes sa-blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+#sa-close {
+    background:rgba(255,255,255,.15); border:none; color:white;
+    width:28px; height:28px; border-radius:50%; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: background .2s;
+}
+#sa-close:hover { background:rgba(255,255,255,.3); }
+
+/* ── MESSAGES ────────────────────────────────────────────────────────── */
+.sa-messages {
+    flex:1; overflow-y:auto; padding:16px;
+    display:flex; flex-direction:column; gap:12px;
+    background: var(--sa-bg-msg);
+    scrollbar-width: thin; scrollbar-color: var(--sa-border) transparent;
+}
+.sa-msg { display:flex; gap:8px; align-items:flex-end; max-width:88%; }
+.sa-msg.sa-agent { align-self:flex-start; }
+.sa-msg.sa-user  { align-self:flex-end; flex-direction:row-reverse; }
+.sa-msg-avatar {
+    width:28px; height:28px; border-radius:50%; flex-shrink:0;
+    background: linear-gradient(135deg, var(--sa-primary), #8b5cf6);
+    display:flex; align-items:center; justify-content:center; color:white; font-size:12px;
+}
+.sa-bubble {
+    padding: 10px 14px; border-radius: 16px; font-size: 13.5px;
+    line-height: 1.55; color: var(--sa-text); max-width: 100%;
+    word-break: break-word;
+}
+.sa-msg.sa-agent .sa-bubble {
+    background: var(--sa-bg); border: 1px solid var(--sa-border);
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.sa-msg.sa-user .sa-bubble {
+    background: linear-gradient(135deg, var(--sa-primary), #8b5cf6);
+    color:white; border-bottom-right-radius: 4px;
+}
+/* Typing indicator */
+.sa-typing { display:flex; gap:4px; align-items:center; padding:12px 16px; }
+.sa-typing span {
+    width:7px; height:7px; border-radius:50%;
+    background: var(--sa-muted); display:block;
+    animation: sa-bounce .9s ease-in-out infinite;
+}
+.sa-typing span:nth-child(2) { animation-delay:.15s; }
+.sa-typing span:nth-child(3) { animation-delay:.3s; }
+@keyframes sa-bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-7px)} }
+/* Enter animation */
+@keyframes sa-fadeup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+.sa-msg { animation: sa-fadeup .3s ease; }
+
+/* ── QUICK REPLIES ─────────────────────────────────────────────────── */
+.sa-quick-replies {
+    padding:0 16px 10px; display:flex; flex-wrap:wrap; gap:6px;
+    background: var(--sa-bg-msg); flex-shrink:0;
+}
+.sa-qr-btn {
+    background: var(--sa-bg); border: 1px solid var(--sa-primary);
+    color: var(--sa-primary); padding: 6px 12px;
+    border-radius: 20px; font-size: 12px; font-weight:600;
+    cursor:pointer; transition: all .2s; white-space:nowrap;
+}
+.sa-qr-btn:hover { background:var(--sa-primary); color:white; transform:scale(1.03); }
+
+/* ── CTA BANNER ─────────────────────────────────────────────────────── */
+.sa-cta-banner { padding: 10px 16px; background:var(--sa-bg-msg); flex-shrink:0; }
+.sa-cta-btn {
+    display:block; width:100%; text-align:center;
+    background: linear-gradient(135deg,#10b981,#059669);
+    color:white; padding:11px; border-radius:12px;
+    font-weight:700; font-size:13px; text-decoration:none;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 18px rgba(16,185,129,.35);
+}
+.sa-cta-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(16,185,129,.45); color:white; }
+
+/* ── LEAD FORM ───────────────────────────────────────────────────────── */
+.sa-lead-form {
+    padding:14px 16px; background:var(--sa-bg); border-top:1px solid var(--sa-border);
+    flex-shrink:0; display:flex; flex-direction:column; gap:8px;
+}
+.sa-lead-title { font-size:13px; font-weight:700; color:var(--sa-text); margin:0; }
+.sa-lead-form input {
+    padding:9px 12px; border:1px solid var(--sa-border); border-radius:10px;
+    font-size:13px; color:var(--sa-text); background:var(--sa-bg-msg);
+    outline:none; transition: border .2s;
+}
+.sa-lead-form input:focus { border-color:var(--sa-primary); }
+.sa-lead-form button[type=button], #sa-lead-submit {
+    padding:10px; border-radius:10px; border:none;
+    font-size:13px; font-weight:700; cursor:pointer; transition:.2s;
+}
+#sa-lead-submit { background:var(--sa-primary); color:white; }
+#sa-lead-submit:hover { background:var(--sa-primary-d); }
+.sa-lead-skip { background:transparent; color:var(--sa-muted); font-size:12px; border:none; cursor:pointer; }
+
+/* ── INPUT AREA ─────────────────────────────────────────────────────── */
+.sa-input-area {
+    padding:12px 16px 8px; background:var(--sa-bg);
+    border-top:1px solid var(--sa-border); flex-shrink:0;
+}
+.sa-input-area form { display:flex; gap:8px; align-items:center; }
+#sa-input {
+    flex:1; padding:10px 14px; border:1.5px solid var(--sa-border);
+    border-radius:12px; font-size:13.5px; color:var(--sa-text);
+    background:var(--sa-bg-msg); outline:none; transition: border .2s;
+}
+#sa-input:focus { border-color:var(--sa-primary); }
+#sa-send {
+    width:40px; height:40px; border-radius:50%;
+    background: linear-gradient(135deg, var(--sa-primary), #8b5cf6);
+    border:none; color:white; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 12px rgba(99,102,241,.35);
+}
+#sa-send:hover { transform:scale(1.1); }
+.sa-disclaimer { font-size:10px; color:var(--sa-muted); margin:6px 0 0; text-align:center; }
+.sa-disclaimer a { color:var(--sa-primary); text-decoration:none; }
+
+/* ── EMAIL MODAL ─────────────────────────────────────────────────────── */
+.sa-modal-overlay {
+    position:fixed; inset:0; z-index:10000;
+    background:rgba(0,0,0,.55); backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center; padding:16px;
+}
+.sa-modal {
+    background:var(--sa-bg); border-radius:20px;
+    width:100%; max-width:440px; padding:28px;
+    box-shadow: 0 32px 80px rgba(0,0,0,.3);
+    animation: sa-fadeup .35s ease;
+}
+.sa-modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.sa-modal-header h3 { font-size:18px; font-weight:700; color:var(--sa-text); margin:0; }
+.sa-modal-header button {
+    background:none; border:none; font-size:18px; cursor:pointer;
+    color:var(--sa-muted); transition:.2s;
+}
+.sa-modal-header button:hover { color:var(--sa-text); }
+.sa-modal-field { margin-bottom:14px; }
+.sa-modal-field label { font-size:12px; font-weight:700; color:var(--sa-muted); display:block; margin-bottom:5px; letter-spacing:.05em; text-transform:uppercase; }
+.sa-modal-field input, .sa-modal-field textarea {
+    width:100%; padding:10px 14px; border:1.5px solid var(--sa-border);
+    border-radius:10px; font-size:14px; color:var(--sa-text);
+    background:var(--sa-bg-msg); outline:none; transition: border .2s;
+    font-family:inherit; resize:vertical; box-sizing:border-box;
+}
+.sa-modal-field input:focus, .sa-modal-field textarea:focus { border-color:var(--sa-primary); }
+.sa-modal-submit {
+    width:100%; padding:13px; background: linear-gradient(135deg,var(--sa-primary),#8b5cf6);
+    color:white; border:none; border-radius:12px; font-size:15px; font-weight:700;
+    cursor:pointer; transition:.2s; box-shadow:0 4px 18px rgba(99,102,241,.35);
+}
+.sa-modal-submit:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(99,102,241,.45); }
+.sa-modal-msg { font-size:13px; color:var(--sa-muted); margin-top:10px; text-align:center; }
+.sa-hidden { display:none !important; }
+</style>
+
+<!-- ── JavaScript ────────────────────────────────────────────────────────── -->
+<script>
+(function() {
+'use strict';
+
+// ── Session ID ─────────────────────────────────────────────────────────────
+let SA_SESSION = sessionStorage.getItem('sa_sid');
+if (!SA_SESSION) {
+    SA_SESSION = 'sa_' + Math.random().toString(36).slice(2,11) + Date.now();
+    sessionStorage.setItem('sa_sid', SA_SESSION);
+}
+
+// ── DOM refs ────────────────────────────────────────────────────────────────
+const launcher    = document.getElementById('sa-launcher');
+const widget      = document.getElementById('sa-widget');
+const closeBtn    = document.getElementById('sa-close');
+const messages    = document.getElementById('sa-messages');
+const form        = document.getElementById('sa-form');
+const input       = document.getElementById('sa-input');
+const qrContainer = document.getElementById('sa-quick-replies');
+const ctaBanner   = document.getElementById('sa-cta-banner');
+const ctaBtn      = document.getElementById('sa-cta-btn');
+const leadForm    = document.getElementById('sa-lead-form');
+const leadSubmit  = document.getElementById('sa-lead-submit');
+const leadSkip    = document.getElementById('sa-lead-skip');
+const emailModal  = document.getElementById('sa-email-modal');
+const emailModalClose = document.getElementById('sa-modal-close');
+const emailForm   = document.getElementById('sa-email-form');
+const modalMsg    = document.getElementById('sa-modal-msg');
+
+// ── State ───────────────────────────────────────────────────────────────────
+let isOpen    = false;
+let isTyping  = false;
+let autoGreeted = false;
+let leadCaptured = sessionStorage.getItem('sa_lead_captured') === '1';
+
+// ── CSRF Token ──────────────────────────────────────────────────────────────
+function getCsrf() {
+    const m = document.cookie.match(/csrftoken=([^;]+)/);
+    return m ? m[1] : (document.querySelector('[name=csrfmiddlewaretoken]') || {}).value || '';
+}
+
+// ── Dark Mode ───────────────────────────────────────────────────────────────
+function applyTheme() {
+    const isDark = document.documentElement.classList.contains('dark') ||
+                   document.body.classList.contains('dark') ||
+                   document.documentElement.dataset.theme === 'dark' ||
+                   (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    [widget, emailModal.querySelector('.sa-modal'), launcher].forEach(el => {
+        if (el) { isDark ? el.classList.add('dark-theme') : el.classList.remove('dark-theme'); }
+    });
+}
+applyTheme();
+const themeObserver = new MutationObserver(applyTheme);
+themeObserver.observe(document.documentElement, { attributes:true, attributeFilter:['class','data-theme'] });
+
+// ── Open / Close ────────────────────────────────────────────────────────────
+function openWidget() {
+    isOpen = true;
+    widget.classList.remove('sa-hidden');
+    launcher.style.display = 'none';
+    setTimeout(() => { input.focus(); scrollToBottom(); }, 100);
+    applyTheme();
+}
+
+function closeWidget() {
+    isOpen = false;
+    widget.classList.add('sa-hidden');
+    launcher.style.display = 'flex';
+}
+
+launcher.addEventListener('click', openWidget);
+closeBtn.addEventListener('click', closeWidget);
+
+// ── Proactive Greeting (auto-opens after 4s) ────────────────────────────────
+function showLauncher() {
+    launcher.style.display = 'flex';
+    launcher.style.animation = 'sa-fadeup .5s ease';
+}
+
+setTimeout(() => {
+    showLauncher();
+    // Auto-open ONCE per session
+    if (!sessionStorage.getItem('sa_greeted')) {
+        setTimeout(() => {
+            openWidget();
+            if (!autoGreeted && messages.children.length === 0) {
+                autoGreeted = true;
+                sessionStorage.setItem('sa_greeted', '1');
+                addAgentMessage(
+                    "Hi 👋 I'm Alex from HotelPro AI! Are you currently managing a hotel or planning to start one?",
+                    ['Yes, I manage a hotel', 'Planning to start', 'Just exploring'],
+                    false, '', ''
+                );
+            }
+        }, 400);
+    }
+}, 4000);
+
+// ── Add Messages ────────────────────────────────────────────────────────────
+function addAgentMessage(text, quickReplies, showCta, ctaLabel, ctaUrl) {
+    // Clear quick replies
+    qrContainer.innerHTML = '';
+
+    // Message bubble
+    const wrap = document.createElement('div');
+    wrap.className = 'sa-msg sa-agent';
+    wrap.innerHTML = `
+        <div class="sa-msg-avatar">AI</div>
+        <div class="sa-bubble">${escapeHtml(text).replace(/\n/g,'<br>')}</div>`;
+    messages.appendChild(wrap);
+    scrollToBottom();
+
+    // Quick replies
+    if (quickReplies && quickReplies.length) {
+        quickReplies.forEach(qr => {
+            const btn = document.createElement('button');
+            btn.className = 'sa-qr-btn';
+            btn.textContent = qr;
+            btn.addEventListener('click', () => sendMessage(qr));
+            qrContainer.appendChild(btn);
+        });
+    }
+
+    // CTA
+    if (showCta && ctaLabel) {
+        ctaBtn.textContent = '🚀 ' + ctaLabel;
+        ctaBtn.href = ctaUrl || '/start-free/';
+        ctaBanner.classList.remove('sa-hidden');
+        // Show lead capture form after 2nd CTA
+        if (!leadCaptured) {
+            setTimeout(() => leadForm.classList.remove('sa-hidden'), 1200);
+        }
+    }
+}
+
+function addUserMessage(text) {
+    qrContainer.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'sa-msg sa-user';
+    wrap.innerHTML = `<div class="sa-bubble">${escapeHtml(text)}</div>`;
+    messages.appendChild(wrap);
+    scrollToBottom();
+}
+
+function showTyping() {
+    const el = document.createElement('div');
+    el.id = 'sa-typing';
+    el.className = 'sa-msg sa-agent';
+    el.innerHTML = `<div class="sa-msg-avatar">AI</div>
+        <div class="sa-bubble sa-typing"><span></span><span></span><span></span></div>`;
+    messages.appendChild(el);
+    scrollToBottom();
+}
+
+function hideTyping() {
+    const el = document.getElementById('sa-typing');
+    if (el) el.remove();
+}
+
+function scrollToBottom() {
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ── Send Message ────────────────────────────────────────────────────────────
+function sendMessage(text) {
+    text = (text || input.value).trim();
+    if (!text || isTyping) return;
+    input.value = '';
+    addUserMessage(text);
+    isTyping = true;
+    showTyping();
+
+    fetch('/api/sales-agent/chat/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrf(),
+        },
+        body: JSON.stringify({ message: text, session_id: SA_SESSION }),
+    })
+    .then(r => r.json())
+    .then(data => {
+        hideTyping();
+        isTyping = false;
+        addAgentMessage(
+            data.reply || "I'm here to help! What would you like to know about HotelPro?",
+            data.quick_replies || [],
+            data.show_cta || false,
+            data.cta_label || '',
+            data.cta_url || '/start-free/',
+        );
+    })
+    .catch(err => {
+        hideTyping();
+        isTyping = false;
+        addAgentMessage(
+            "Sorry, I had a quick hiccup! 😅 Can you try again?",
+            ['Try again', 'Contact us'],
+            false, '', ''
+        );
+    });
+}
+
+form.addEventListener('submit', e => { e.preventDefault(); sendMessage(); });
+
+// ── Lead Capture Form ────────────────────────────────────────────────────────
+leadSubmit.addEventListener('click', () => {
+    const name  = document.getElementById('sa-lead-name').value.trim();
+    const email = document.getElementById('sa-lead-email').value.trim();
+    const phone = document.getElementById('sa-lead-phone').value.trim();
+
+    if (!email && !phone) {
+        alert('Please enter your email or phone so we can reach you!');
+        return;
+    }
+    leadSubmit.disabled = true;
+    leadSubmit.textContent = 'Sending…';
+
+    fetch('/api/sales-agent/lead/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+        body: JSON.stringify({ name, email, phone, message: 'Lead from chat widget', source: 'chat' }),
+    })
+    .then(r => r.json())
+    .then(data => {
+        leadForm.classList.add('sa-hidden');
+        leadCaptured = true;
+        sessionStorage.setItem('sa_lead_captured', '1');
+        addAgentMessage(
+            "🎉 Perfect! We've got your details. Our team will reach out within 24 hours. Meanwhile, you can start your free trial right now!",
+            ['Start Free Trial', 'Tell me more'],
+            true, 'Start Free Trial', '/start-free/'
+        );
+    })
+    .catch(() => {
+        leadSubmit.disabled = false;
+        leadSubmit.textContent = 'Send & Get Free Demo 🎯';
+        alert('Something went wrong. Please try the email button in the footer!');
+    });
+});
+
+leadSkip.addEventListener('click', () => {
+    leadForm.classList.add('sa-hidden');
+    sessionStorage.setItem('sa_lead_skipped', '1');
+});
+
+// ── Email Modal (triggered by footer email button) ─────────────────────────
+window.openEmailModal = function(source) {
+    emailModal.classList.remove('sa-hidden');
+    emailModal.dataset.source = source || 'email_form';
+    applyTheme();
+};
+emailModalClose.addEventListener('click', () => emailModal.classList.add('sa-hidden'));
+emailModal.addEventListener('click', e => { if (e.target === emailModal) emailModal.classList.add('sa-hidden'); });
+
+emailForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name    = document.getElementById('em-name').value.trim();
+    const email   = document.getElementById('em-email').value.trim();
+    const phone   = document.getElementById('em-phone').value.trim();
+    const message = document.getElementById('em-message').value.trim();
+    const source  = emailModal.dataset.source || 'email_form';
+    const btn     = emailForm.querySelector('.sa-modal-submit');
+
+    if (!email) { alert('Please enter your email address.'); return; }
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    modalMsg.textContent = '';
+
+    fetch('/api/sales-agent/lead/', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'X-CSRFToken': getCsrf() },
+        body: JSON.stringify({ name, email, phone, message, source }),
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'success') {
+            modalMsg.style.color = '#10b981';
+            modalMsg.textContent = data.message || "Message sent! Check your inbox for a response 📩";
+            emailForm.reset();
+            setTimeout(() => emailModal.classList.add('sa-hidden'), 3000);
+        } else {
+            modalMsg.style.color = '#ef4444';
+            modalMsg.textContent = data.error || "Something went wrong. Please try again.";
+            btn.disabled = false;
+            btn.textContent = 'Send Message 🚀';
+        }
+    })
+    .catch(() => {
+        modalMsg.style.color = '#ef4444';
+        modalMsg.textContent = 'Network error. Please try again.';
+        btn.disabled = false;
+        btn.textContent = 'Send Message 🚀';
+    });
+});
+
+// ── WhatsApp click → log lead ───────────────────────────────────────────────
+window.logChannelClick = function(source) {
+    fetch('/api/sales-agent/lead/', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'X-CSRFToken': getCsrf() },
+        body: JSON.stringify({ name:'', email:'', phone:'', message:`Clicked ${source} button`, source }),
+    }).catch(() => {});
+};
+
+})();
+</script>

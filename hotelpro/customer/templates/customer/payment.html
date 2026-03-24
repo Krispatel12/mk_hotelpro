@@ -1,0 +1,41 @@
+{% extends "customer/base.html" %}
+{% load static %}
+
+{% block title %}Complete Payment - HotelPro{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'customer/css/payment.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="payment-container">
+    <div class="payment-card">
+        <i class="fas fa-shield-halved payment-icon"></i>
+        <h1 class="payment-title">Secure Payment</h1>
+        <p class="payment-desc">You are about to pay <strong>₹{{ booking.total_revenue|floatformat:0 }}</strong> for
+            your stay at {{ booking.hotel.name }}.</p>
+
+        <div class="payment-summary">
+            <div class="summary-item">
+                <span class="summary-label">Booking Reference</span>
+                <span class="summary-val">#{{ booking.reference }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Guest Name</span>
+                <span class="summary-val">{{ booking.guest_name }}</span>
+            </div>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-pay">
+                <i class="fas fa-lock"></i> Pay ₹{{ booking.total_revenue|floatformat:0 }} Securely
+            </button>
+        </form>
+
+        <p class="secure-footer">
+            <i class="fas fa-lock"></i> SSL Secured • Stripe-Connect Architecture
+        </p>
+    </div>
+</div>
+{% endblock %}

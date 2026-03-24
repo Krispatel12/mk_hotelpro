@@ -1,0 +1,296 @@
+/* ============================================================
+   REVIEWS DUAL VIEW — Professional Layout System
+   Views: Grid (Card) | List (Row)
+   ============================================================ */
+
+/* ── Container ─────────────────────────────────────────────── */
+.reviews-dual-container {
+    transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── View Toggle Pill (Shared Design) ─────────────────────── */
+.view-switcher-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.3rem;
+    background: #f1f5f9;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+.view-switcher-label {
+    font-size: 0.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #94a3b8;
+    padding: 0 0.5rem;
+    white-space: nowrap;
+}
+
+.view-toggle-btn {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    background-color: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.view-toggle-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0.75rem;
+    background: white;
+    transform: scale(0.7);
+    opacity: 0;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+    z-index: -1;
+}
+
+.view-toggle-btn.active {
+    color: white;
+}
+
+.view-toggle-btn.active::after {
+    background: #0f172a;
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* == GRID VIEW =============================================== */
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+.review-card-wrapper {
+    animation: reviewCardIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes reviewCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.review-grid .executive-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Staggered Delays */
+.review-card-wrapper:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.review-card-wrapper:nth-child(2) {
+    animation-delay: 0.10s;
+}
+
+.review-card-wrapper:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+/* == LIST VIEW =============================================== */
+
+.view-list-mode .review-grid {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.view-list-mode .review-card-wrapper {
+    animation: reviewRowIn 0.4s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes reviewRowIn {
+    from {
+        opacity: 0;
+        transform: translateX(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* List Mode Overrides for executive-card */
+.view-list-mode .executive-card {
+    padding: 1.25rem 2rem !important;
+    border-radius: 1.5rem !important;
+}
+
+.view-list-mode .executive-card>div {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 2rem !important;
+}
+
+.view-list-mode .identity-block {
+    flex-direction: row !important;
+    margin-bottom: 0 !important;
+    width: 250px;
+}
+
+.view-list-mode .identity-block .avatar-box {
+    width: 3.5rem !important;
+    height: 3.5rem !important;
+    font-size: 1.25rem !important;
+    margin-bottom: 0 !important;
+    margin-right: 1rem;
+}
+
+.view-list-mode .identity-block .guest-meta {
+    text-align: left !important;
+}
+
+.view-list-mode .content-orchestration {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    flex: 1;
+}
+
+.view-list-mode .review-comment {
+    font-size: 0.95rem !important;
+    margin-bottom: 0 !important;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.view-list-mode .action-hub {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.view-list-mode .action-hub button {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.55rem !important;
+}
+
+/* Hover Accent */
+.view-list-mode .executive-card:hover {
+    transform: translateX(6px) !important;
+    border-left: 3px solid #4f46e5 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LIGHT MODE (CLEAN SAAS) OVERRIDES - v10.0 Review Orchestration
+   ───────────────────────────────────────────────────────────────────────── */
+
+html.light-mode .view-switcher-pill {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode .view-toggle-btn:hover {
+    color: #2563eb !important;
+}
+
+html.light-mode .view-toggle-btn.active::after {
+    background: #0f172a !important;
+}
+
+html.light-mode .review-comment {
+    color: #475569 !important;
+}
+
+html.light-mode .executive-card .text-white,
+html.light-mode .executive-card h5.text-white {
+    color: #0f172a !important;
+}
+
+html.light-mode .review-card-wrapper .text-slate-500 {
+    color: #64748b !important;
+}
+
+html.light-mode .avatar-box {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+}
+
+/* ── Zenith Selector: Custom Dropdown Architecture ───────────────── */
+.zenith-selector-wrapper {
+    min-width: 280px;
+    z-index: 50;
+}
+
+.zenith-trigger {
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+.zenith-trigger:hover {
+    box-shadow: 0 15px 40px -12px rgba(16, 185, 129, 0.2);
+    transform: translateY(-1px);
+}
+
+.zenith-trigger .fa-chevron-down.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.zenith-dropdown {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.zenith-dropdown::-webkit-scrollbar {
+    width: 4px;
+}
+
+.zenith-dropdown::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LIGHT MODE Zenith Selector OVERRIDES
+   ───────────────────────────────────────────────────────────────────────── */
+html.light-mode .zenith-trigger {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode .zenith-label {
+    color: #0f172a !important;
+}
+
+html.light-mode .zenith-dropdown {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1) !important;
+}
+
+html.light-mode .zenith-option {
+    color: #475569 !important;
+}
+
+html.light-mode .zenith-option:hover {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+}

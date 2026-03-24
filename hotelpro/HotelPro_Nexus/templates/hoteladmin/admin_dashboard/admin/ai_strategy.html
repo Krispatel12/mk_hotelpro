@@ -1,0 +1,70 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Strategic Intelligence Hub | Super Admin{% endblock %}
+
+{% block dashboard_content %}
+<div class="p-8 space-y-8 animate-fade-in">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+            <h1 class="text-3xl font-display font-bold text-slate-900 dark:text-white">Strategic Intelligence Hub</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-2">Platform-wide ecosystem analysis and growth trajectories.</p>
+        </div>
+        <button onclick="generateStrategyReport()" id="generateBtn" 
+            data-url="{% url 'api_ai_super_admin_strategy' %}"
+            class="px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-xl font-bold shadow-lg shadow-primary-500/20 hover:scale-105 transition-all flex items-center gap-3">
+            <i class="fas fa-brain"></i> Generate Strategic Report
+        </button>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 shadow-sm">
+            <div class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Network Scale</div>
+            <div class="text-2xl font-bold text-slate-900 dark:text-white">Global Ecosystem</div>
+            <div class="mt-2 text-xs text-emerald-500 font-bold flex items-center gap-1">
+                <i class="fas fa-arrow-up"></i> Multi-Property Synergy
+            </div>
+        </div>
+        <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 shadow-sm">
+            <div class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Intelligence Layer</div>
+            <div class="text-2xl font-bold text-slate-900 dark:text-white">Gemini 1.5 Pro</div>
+            <div class="mt-2 text-xs text-primary-500 font-bold">Active Reasoning</div>
+        </div>
+    </div>
+
+    <!-- Report Area -->
+    <div class="grid grid-cols-1 gap-8">
+        <div class="rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xl overflow-hidden min-h-[500px] flex flex-col">
+            <div class="p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-slate-950/50 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary-500/10 flex items-center justify-center text-primary-500">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <span class="font-bold text-slate-900 dark:text-white">AI Strategy Engine</span>
+                </div>
+                <div id="statusBadge" class="hidden px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-bold uppercase tracking-widest border border-emerald-500/20 animate-pulse">
+                    Processing Intelligence...
+                </div>
+            </div>
+            
+            <div id="reportContainer" class="flex-1 p-8 prose prose-slate dark:prose-invert max-w-none">
+                <div class="flex flex-col items-center justify-center h-full text-center space-y-6">
+                    <div class="w-20 h-20 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400">
+                        <i class="fas fa-microchip text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Ready for Analysis</h3>
+                        <p class="text-slate-500 max-w-sm mt-2">Generate a platform-wide overview to identify high-growth opportunities and operational bottlenecks across all properties.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/hoteladmin/admin/ai_strategy.js' %}"></script>
+{% endblock %}

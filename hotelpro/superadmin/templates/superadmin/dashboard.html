@@ -1,0 +1,195 @@
+{% extends "superadmin/base.html" %}
+
+{% block title %}Strategic Overview{% endblock %}
+{% block page_title %}Operations Control{% endblock %}
+{% block page_subtitle %}Real-time system health and asset governance dashboard{% endblock %}
+{% block active_dashboard %}active{% endblock %}
+
+{% block content %}
+<!-- Strategic Intelligence Grid -->
+<div class="stats-grid">
+    <div class="stat-card warn">
+        <div class="stat-icon warn"><i class="fas fa-shield-exclamation"></i></div>
+        <div class="stat-value">{{ stats.pending_hotels }}</div>
+        <div class="stat-label">Registry Audit Required</div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-icon success"><i class="fas fa-server"></i></div>
+        <div class="stat-value">{{ stats.live_hotels }}</div>
+        <div class="stat-label">Active Operational Assets</div>
+    </div>
+    <div class="stat-card accent">
+        <div class="stat-icon accent"><i class="fas fa-handshake-angle"></i></div>
+        <div class="stat-value">{{ stats.total_bookings }}</div>
+        <div class="stat-label">System Engagements</div>
+    </div>
+    <div class="stat-card teal">
+        <div class="stat-icon teal"><i class="fas fa-vault"></i></div>
+        <div class="stat-value">{{ stats.total_revenue|floatformat:0 }}</div>
+        <div class="stat-label">Gross Transaction Value (₹)</div>
+    </div>
+    <div class="stat-card accent">
+        <div class="stat-icon accent"><i class="fas fa-user-crown"></i></div>
+        <div class="stat-value">{{ stats.total_hotel_admins }}</div>
+        <div class="stat-label">Certified Proprietors</div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-icon success"><i class="fas fa-users-gear"></i></div>
+        <div class="stat-value">{{ stats.total_customers }}</div>
+        <div class="stat-label">Marketplace Users</div>
+    </div>
+    <div class="stat-card teal">
+        <div class="stat-icon teal"><i class="fas fa-award"></i></div>
+        <div class="stat-value">{{ stats.avg_platform_rating }}</div>
+        <div class="stat-label">Platform Trust Index</div>
+    </div>
+    <div class="stat-card danger">
+        <div class="stat-icon danger"><i class="fas fa-ban-bug"></i></div>
+        <div class="stat-value">{{ stats.rejected_hotels }}</div>
+        <div class="stat-label">Compliance Rejections</div>
+    </div>
+</div>
+
+<!-- Intelligence Columns -->
+<div class="grid-2">
+
+    <!-- Governance: Pending Review -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-microchip-ai" style="color:var(--warn); margin-right:8px;"></i>High-Priority Approvals
+            </h3>
+            <a href="{% url 'super_hotels' %}?status=PENDING" class="btn btn-ghost btn-sm">Audit All</a>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset Entity</th>
+                        <th>Jurisdiction</th>
+                        <th>Proprietor</th>
+                        <th>Governance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hotel in recent_pending %}
+                    <tr>
+                        <td>
+                            <div style="font-weight:700; color:var(--text); letter-spacing: -0.2px;">{{ hotel.name }}
+                            </div>
+                            <div
+                                style="font-size:10px; color:var(--accent); font-weight:700; text-transform:uppercase;">
+                                {{ hotel.category }}</div>
+                        </td>
+                        <td style="color:var(--text-2); font-weight:500;">{{ hotel.city|default:"Global" }}</td>
+                        <td style="color:var(--text-2); font-size:12px;">{{ hotel.owner.email }}</td>
+                        <td>
+                            <div style="display:flex; gap:6px;">
+                                <a href="{% url 'super_approve_hotel' hotel.id %}" class="btn btn-success btn-sm"
+                                    title="Authorize">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                                <a href="{% url 'super_reject_hotel' hotel.id %}" class="btn btn-danger btn-sm"
+                                    title="Revoke">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                                <a href="{% url 'super_hotel_detail' hotel.id %}" class="btn btn-ghost btn-sm"
+                                    title="Inspect">
+                                    <i class="fas fa-arrow-up-right-from-square"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align:center; color:var(--text-2); padding:40px;">
+                            <div style="opacity:0.6; margin-bottom:12px;"><i class="fas fa-shield-check"
+                                    style="font-size:32px; color:var(--success);"></i></div>
+                            <div style="font-weight:600; font-size:14px; color:var(--text);">System Compliance 100%
+                            </div>
+                            <div style="font-size:12px; margin-top:4px;">No pending hotel registrations awaiting audit.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Ledger: Recent Activity -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-receipt" style="color:var(--accent); margin-right:8px;"></i>Transmission Ledger</h3>
+            <a href="{% url 'super_bookings' %}" class="btn btn-ghost btn-sm">Full Ledger</a>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sequence ID</th>
+                        <th>Entity</th>
+                        <th>Principal</th>
+                        <th>Valuation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in recent_bookings %}
+                    <tr>
+                        <td style="font-family:monospace; font-size:11px; font-weight:700; color:var(--accent);">{{booking.reference }}</td>
+                        <td style="font-weight:600;">{{ booking.hotel.name }}</td>
+                        <td style="color:var(--text-2);">{{ booking.guest_name }}</td>
+                        <td style="color:var(--success); font-weight:700;">₹{{ booking.total_revenue|floatformat:0 }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align:center; color:var(--text-2); padding:40px;">
+                            <div style="opacity:0.3; margin-bottom:12px;"><i class="fas fa-file-invoice"
+                                    style="font-size:32px;"></i></div>
+                            <div style="font-size:13px;">Awaiting first system transmission.</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Command Directives -->
+<div style="margin-top:24px;">
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-terminal" style="color:var(--accent-2); margin-right:8px;"></i>Strategic Directives
+            </h3>
+        </div>
+        <div class="card-body">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">
+                <a href="{% url 'super_hotels' %}?status=PENDING" class="btn btn-primary"
+                    style="justify-content: space-between; padding: 16px 20px;">
+                    <span style="display:flex; align-items:center; gap:12px;">
+                        <i class="fas fa-building-circle-check"></i>
+                        Execute Asset Audit
+                    </span>
+                    {% if stats.pending_hotels > 0 %}
+                    <span
+                        style="background:rgba(255,255,255,0.2); color:white; padding:2px 10px; border-radius:100px; font-size:11px; font-weight:900;">{{stats.pending_hotels }}</span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'super_hotel_admins' %}" class="btn btn-ghost"
+                    style="justify-content: flex-start; padding: 16px 20px; gap:12px;">
+                    <i class="fas fa-user-shield"></i> Governance: Proprietors
+                </a>
+                <a href="{% url 'super_reviews' %}" class="btn btn-ghost"
+                    style="justify-content: flex-start; padding: 16px 20px; gap:12px;">
+                    <i class="fas fa-comment-check"></i> Marketplace Intelligence
+                </a>
+                <a href="{% url 'super_analytics' %}" class="btn btn-ghost"
+                    style="justify-content: flex-start; padding: 16px 20px; gap:12px;">
+                    <i class="fas fa-chart-tree-map"></i> Performance Metrics
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

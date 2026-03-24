@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guest Details</title>
+</head>
+<body>
+
+<h2>Enter Guest Details</h2>
+
+<form method="post">
+{% csrf_token %}
+
+<label>First Name</label><br>
+<input type="text" required><br><br>
+
+<label>Last Name</label><br>
+<input type="text" required><br><br>
+
+<label>Phone</label><br>
+<input type="text" required><br><br>
+
+<label>Email</label><br>
+<input type="email" required><br><br>
+
+<button type="submit">Confirm Booking</button>
+
+</form>
+
+</body>
+</html>

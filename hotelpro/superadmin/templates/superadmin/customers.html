@@ -1,0 +1,67 @@
+{% extends "superadmin/base.html" %}
+{% block title %}Identity Directory{% endblock %}
+{% block page_title %}Account Governance{% endblock %}
+{% block page_subtitle %}Strategic administration and lifecycle auditing of global marketplace identities within the
+Nexus ecosystem{% endblock %}
+{% block active_customers %}active{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3><i class="fas fa-id-card-clip" style="color:var(--accent-2); margin-right:8px;"></i>Verified Marketplace
+      Participants</h3>
+    <span class="badge badge-accent">{{ customer_data|length }} Identity Profiles</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Identity Name</th>
+          <th>Resource Email</th>
+          <th>Engagement History</th>
+          <th>Enrollment Date</th>
+          <th>Verification Status</th>
+          <th>Governance Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in customer_data %}
+        <tr>
+          <td style="font-weight:600;">{{ item.user.username }}</td>
+          <td style="color:var(--text-2); font-size:12px;">{{ item.user.email }}</td>
+          <td><span style="color:var(--accent);">{{ item.total_bookings }}</span></td>
+          <td style="color:var(--text-2); font-size:12px;">{{ item.user.date_joined|date:"d M Y" }}</td>
+          <td>
+            {% if item.user.is_active %}
+            <span class="badge badge-live"><i class="fas fa-shield-check" style="font-size:10px;"></i> Active
+              Protocol</span>
+            {% else %}
+            <span class="badge badge-rejected"><i class="fas fa-lock" style="font-size:10px;"></i> Identity
+              Suspended</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'super_toggle_customer' item.user.id %}"
+              class="btn {% if item.user.is_active %}btn-danger{% else %}btn-success{% endif %} btn-sm"
+              onclick="return confirm('{% if item.user.is_active %}Suspend{% else %}Restore{% endif %} this customer?')">
+              {% if item.user.is_active %}
+              <i class="fas fa-user-slash"></i> Terminate Session
+              {% else %}
+              <i class="fas fa-user-check"></i> Restore Authorization
+              {% endif %}
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" style="text-align:center; padding:48px; color:var(--text-2);">
+            <i class="fas fa-users" style="font-size:32px; display:block; margin-bottom:12px; opacity:0.3;"></i>
+            No customer accounts yet.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

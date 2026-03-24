@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hotel Onboarding | HotelPro{% endblock %}</title>
+    <!-- common.css contains all core styles -->
+    <link rel="stylesheet" href="{% static 'css/hoteladmin/live_hotel/common.css' %}?v=375">
+    <link rel="stylesheet" href="{% static 'css/hoteladmin/live_hotel/dossier_elite.css' %}?v=375">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="{% static 'js/hoteladmin/live_hotel/theme_init.js' %}"></script>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <div class="onboarding-container">
+        <!-- Left Panel: Elite Entry Flow Architecture -->
+        <div class="onboarding-side-panel">
+            <div class="mesh-layer"></div>
+            <div class="orbit-ring orbit-ring-1"></div>
+            <div class="orbit-ring orbit-ring-2"></div>
+
+            <div class="brand-icon-wrap">
+                <i class="fas fa-hotel"></i>
+            </div>
+
+            <div class="side-panel-content">
+                <div class="side-panel-logo-elite">HotelPro</div>
+                <h1 class="side-panel-heading">Join<br><span class="color-secondary">HotelPro</span>
+                </h1>
+                <p class="side-panel-text">
+                    Join our hotel network. Manage your property with easy-to-use professional tools.
+                </p>
+                <div class="side-panel-badges">
+                    <div class="side-panel-badge"><i class="fas fa-shield-check"></i> Professional</div>
+                    <div class="side-panel-badge"><i class="fas fa-bolt"></i> Fast Setup</div>
+                </div>
+
+                <!-- Elite Progress Monitor -->
+                <div class="mt-48 pt-48 border-t border-white/10">
+                    <div class="flex items-center justify-between mb-12">
+                        <span class="text-[9px] font-black text-white/40 uppercase tracking-[0.3em]">Audit
+                            Progress</span>
+                        <span class="text-xs font-black text-secondary tracking-tight"
+                            id="sideProgressPercent">25%</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-secondary rounded-full transition-all duration-1000 ease-out"
+                            id="sideProgressBar" style="width: 25%;"></div>
+                    </div>
+                    <div class="mt-16 flex items-center gap-3">
+                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <span class="text-[10px] font-bold text-white/60 uppercase tracking-widest"
+                            id="sideStatusText">PHASE 01 ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SVG Arc Transition: Sync with Login Flow -->
+            <div class="arc-container">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path class="arc-path-1" d="M0,0 Q50,50 0,100 L100,100 L100,0 Z"></path>
+                    <path class="arc-path-2" d="M0,0 Q30,50 0,100 L100,100 L100,0 Z"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Right Panel: Form Actions -->
+        <div class="onboarding-main-content">
+            <div class="aurora-glow"></div>
+
+            <div class="stepper-wrapper">
+                <div class="stepper">
+                    <div class="stepper-progress-line" id="stepper-progress-line"></div>
+                    <div class="step active" id="step-index-1">
+                        <div class="step-number"><i class="fas fa-hotel"></i></div>
+                        <span class="step-label">Identify</span>
+                    </div>
+                    <div class="step" id="step-index-2">
+                        <div class="step-number"><i class="fas fa-boxes-stacked"></i></div>
+                        <span class="step-label">Inventory</span>
+                    </div>
+                    <div class="step" id="step-index-3">
+                        <div class="step-number"><i class="fas fa-building-shield"></i></div>
+                        <span class="step-label">Compliance</span>
+                    </div>
+                    <div class="step" id="step-index-4">
+                        <div class="step-number"><i class="fas fa-file-invoice"></i></div>
+                        <span class="step-label">Review</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                {% if messages %}
+                <div class="messages-container">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <i
+                            class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form id="onboardingForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% block content %}{% endblock %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/hoteladmin/live_hotel/onboarding_lightbox.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+
+    <!-- Global Elite Document Dossier Previewer (Supports Images, Video, PDF) -->
+    <div id="lightboxModal" class="d-none">
+        <div class="dossier-viewer-container">
+            <!-- Professional Header ToolBar -->
+            <div class="viewer-header">
+                <div class="viewer-file-info">
+                    <div class="viewer-icon-box">
+                        <i class="fas fa-file-shield"></i>
+                    </div>
+                    <div class="viewer-text-meta">
+                        <span id="lightboxCaption" class="viewer-filename">verification_dossier.pdf</span>
+                        <div class="viewer-status-row">
+                            <span class="viewer-status-badge"><i class="fas fa-shield-check"></i> SECURE</span>
+                            <span class="viewer-audit-token" id="viewer-token"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="viewer-actions">
+                    <button type="button" class="viewer-action-btn color-error" onclick="removeCurrentAsset()" title="Delete Asset">
+                        <i class="fas fa-trash-can"></i>
+                    </button>
+                    <button type="button" class="viewer-action-btn" onclick="window.print()" title="Print Dossier">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    <button type="button" class="viewer-action-btn close-dossier-btn" onclick="closeLightbox()"
+                        title="Return to Onboarding">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="lightbox-content-wrapper">
+                <div class="lightbox-nav lightbox-prev" onclick="changeSlide(-1)"><i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="lightbox-stage">
+                    <img id="lightboxImage" class="lightbox-content d-none" src="">
+                    <video id="lightboxVideo" class="lightbox-content d-none" controls></video>
+                    <iframe id="lightboxPDF" class="lightbox-content d-none w-100 h-100 border-none" src=""></iframe>
+                </div>
+                <div class="lightbox-nav lightbox-next" onclick="changeSlide(1)"><i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <!-- Professional Footer -->
+            <div class="viewer-footer">
+                <i class="fas fa-lock"></i> Your documents are securely stored and protected.
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,113 @@
+{% extends "superadmin/base.html" %}
+{% block title %}Strategic Metrics{% endblock %}
+{% block page_title %}Market Intelligence{% endblock %}
+{% block page_subtitle %}Strategic valuation of revenue, engagement trends, and asset performance metrics{% endblock %}
+{% block active_analytics %}active{% endblock %}
+
+{% block content %}
+<style>
+    .progress-bar-inner {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        border-radius: 6px;
+        min-width: 4px;
+        transition: width 0.5s;
+    }
+</style>
+<div class="grid-2" style="margin-bottom:24px;">
+    <!-- Booking Trend -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Transmission Velocity — Last 7 Intervals</h3>
+        </div>
+        <div class="card-body">
+            {% for day in booking_trend %}
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                <div style="font-size:12px; color:var(--text-2); width:50px; flex-shrink:0;">{{ day.date }}</div>
+                <div style="flex:1; background:var(--border); border-radius:6px; height:24px; overflow:hidden;">
+                    {% if day.count > 0 %}
+                    {% widthratio day.count 20 100 as w %}
+                    <div class="progress-bar-inner" data-width="{{ w }}"></div>
+                    {% endif %}
+                </div>
+                <div style="font-size:13px; font-weight:600; color:var(--text); width:30px; text-align:right;">
+                    {{day.count }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Top Hotels by Revenue -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Top Assets by Valuation</h3>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hotel</th>
+                        <th>Revenue (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in hotel_revenue %}
+                    <tr>
+                        <td style="font-weight:500;">{{ h.hotel__name }}</td>
+                        <td style="color:var(--success); font-weight:600;">{{ h.total|floatformat:0 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" style="text-align:center;padding:24px;color:var(--text-2);">No revenue data yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Top Rated Hotels -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Elite Performers by Reputation</h3>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hotel</th>
+                        <th>City</th>
+                        <th>Avg Rating</th>
+                        <th>Review Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in top_hotels %}
+                    <tr>
+                        <td style="font-weight:600;">{{ h.hotel__name }}</td>
+                        <td style="color:var(--text-2);">{{ h.hotel__city|default:"—" }}</td>
+                        <td style="color:var(--warn);">{{ h.avg_rating|floatformat:1 }} ★</td>
+                        <td>{{ h.review_count }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align:center;padding:24px;color:var(--text-2);">No review data yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.progress-bar-inner').forEach(bar => {
+            const w = bar.getAttribute('data-width');
+            if (w) bar.style.width = w + '%';
+        });
+    });
+</script>
+{% endblock %}

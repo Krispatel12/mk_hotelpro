@@ -1,0 +1,110 @@
+{% load static %}
+<section id="how-it-works" class="py-32 relative overflow-hidden">
+    <div class="container mx-auto px-6 relative z-10">
+        <!-- Section Header -->
+        <div class="text-center mb-24 space-y-6 reveal-up">
+            <h2 class="text-5xl md:text-6xl font-display font-bold text-slate-900 dark:text-white tracking-tight">Dashboard Preview</h2>
+            <p class="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">Clean, comprehensive management overview for elite property operations.</p>
+        </div>
+
+        <!-- Dashboard Mockup -->
+        <div
+            class="glass-panel-heavy p-8 rounded-[4rem] bg-white/[0.1] dark:bg-white/[0.01] border-slate-200 dark:border-white/10 shadow-2xl reveal-up stagger-1 max-w-6xl mx-auto overflow-hidden">
+            <div
+                class="bg-[#F8FAFC] rounded-[3.5rem] overflow-hidden border border-slate-200 shadow-inner group/mockup">
+                <!-- Mockup Header (Pixel-Perfect Match to Image 1) -->
+                <div class="px-10 py-7 border-b border-slate-100 flex items-center justify-between bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative z-30">
+                    <div class="flex items-center gap-14">
+                        <span class="text-sm font-extrabold text-slate-900 tracking-tight">HotelPro Dashboard</span>
+                        <div class="hidden lg:flex gap-10">
+                            <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-[0.25em] cursor-pointer hover:text-primary-600 transition-colors">Bookings</span>
+                            <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-[0.25em] cursor-pointer hover:text-primary-600 transition-colors">Reports</span>
+                            <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-[0.25em] cursor-pointer hover:text-primary-600 transition-colors">Settings</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-5">
+                        <div class="w-10 h-10 rounded-2xl bg-white dark:bg-slate-50 flex items-center justify-center text-slate-600 dark:text-slate-400 text-sm hover:bg-slate-100 transition-all cursor-pointer border border-slate-200 dark:border-transparent">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="px-3 py-2 rounded-2xl bg-indigo-50/80 flex items-center justify-center text-indigo-600 text-[10px] font-black shadow-sm border border-indigo-100/50">
+                            KP
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Swipe Mode Content (15 Dashboard Images) -->
+                <div class="relative overflow-hidden" id="dashboard-carousel-container">
+                    <div class="flex transition-transform duration-700 ease-out cursor-grab active:cursor-grabbing" id="dashboard-slider">
+                        <!-- Slide 1 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_1.png' %}" alt="Dashboard 1" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 2 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_2.png' %}" alt="Dashboard 2" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 3 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_3.png' %}" alt="Dashboard 3" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 4 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_4.png' %}" alt="Dashboard 4" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 5 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_5.png' %}" alt="Dashboard 5" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 6 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_6.png' %}" alt="Dashboard 6" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 7 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_7.png' %}" alt="Dashboard 7" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 8 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_8.png' %}" alt="Dashboard 8" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 9 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_9.png' %}" alt="Dashboard 9" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 10 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_10.png' %}" alt="Dashboard 10" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 11 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_11.png' %}" alt="Dashboard 11" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 12 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_12.png' %}" alt="Dashboard 12" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 13 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_13.png' %}" alt="Dashboard 13" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 14 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_14.png' %}" alt="Dashboard 14" class="w-full h-auto select-none pointer-events-none"></div>
+                        <!-- Slide 15 -->
+                        <div class="min-w-full"><img src="{% static 'images/dashboards/dashboard_15.png' %}" alt="Dashboard 15" class="w-full h-auto select-none pointer-events-none"></div>
+                    </div>
+
+                    <!-- Internal Pagination (Integrated into Professional Frame) -->
+                    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-6 px-10 py-5 rounded-full glass-panel-heavy border-slate-200/50 dark:border-white/10 bg-white/80 dark:bg-black/60 shadow-2xl z-20">
+                        <button id="carousel-prev" class="text-white/60 hover:text-white transition-all hover:scale-125">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="flex gap-2 max-w-[200px] overflow-x-auto no-scrollbar" id="carousel-dots">
+                            <div class="min-w-[8px] h-2 rounded-full bg-primary-500 transition-all duration-300 dot-active" data-index="0" style="width: 1.5rem;"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="1"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="2"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="3"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="4"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="5"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="6"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="7"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="8"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="9"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="10"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="11"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="12"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="13"></div>
+                            <div class="min-w-[8px] h-2 rounded-full bg-white/20 transition-all duration-300" data-index="14"></div>
+                        </div>
+                        <button id="carousel-next" class="text-white/60 hover:text-white transition-all hover:scale-125">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Premium Interaction Helper -->
+                    <div class="absolute top-8 right-8 pointer-events-none reveal-up stagger-3">
+                        <div class="glass-panel-heavy px-4 py-2 rounded-xl bg-primary-500/10 border-primary-500/20 backdrop-blur-md">
+                            <div class="flex items-center gap-2 text-[10px] font-bold text-primary-400 uppercase tracking-widest">
+                                <span class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></span>
+                                Live Preview Mode
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

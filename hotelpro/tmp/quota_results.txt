@@ -1,0 +1,7 @@
+Testing Gemini Models with API Key: AIzaS...5Fy_Q
+models/gemini-2.0-flash: FAILED - 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please 
+models/gemini-1.5-flash: FAILED - 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API vers
+models/gemini-1.5-flash-8b: FAILED - 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-8b is not found for API v
+models/gemini-1.5-pro: FAILED - 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-pro is not found for API versio
+models/gemini-2.0-flash-lite-preview-02-05: FAILED - 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-2.0-flash-lite-preview-02-05 is not
+models/gemini-1.0-pro: FAILED - 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.0-pro is not found for API versio

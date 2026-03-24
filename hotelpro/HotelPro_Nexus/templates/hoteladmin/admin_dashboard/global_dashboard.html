@@ -1,0 +1,508 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Global Enterprise Hub | HotelPro{% endblock %}
+
+{% block page_title %}Enterprise Command Hub{% endblock %}
+{% block page_subtitle %}Aggregated performance and portfolio oversight for all properties.{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/hoteladmin/portfolio_strip.css' %}">
+<link rel="stylesheet" href="{% static 'css/hoteladmin/dual_view_shared.css' %}">
+<script src="{% static 'js/hoteladmin/portfolio_search.js' %}" defer></script>
+{% endblock %}
+
+{% block dashboard_content %}
+<!-- Zenith Ultra Ambient Spatial Depth -->
+<div class="ambient-glow glow-top-right"></div>
+<div class="ambient-glow glow-bottom-left"></div>
+
+<div class="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 pb-24 relative z-10">
+
+
+    <!-- ══ Enterprise Metrics Strip ══ -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Node: Global Revenue -->
+        <div class="metric-mesh-card mesh-revenue rounded-[2.5rem] p-8 relative group cursor-pointer active:scale-[0.98]"
+            data-metric-id="revenue">
+            <div class="relative z-10">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm shadow-inner group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500 icon-pulse-aura">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global
+                            Revenue</span>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-4xl font-display font-bold text-white tracking-tight">₹{{total_revenue|floatformat:0 }}</h3>
+                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-lg">+{{revenue_today|floatformat:0 }} today</span>
+                </div>
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="text-[9px] font-bold text-emerald-500/60 uppercase tracking-widest">Aggregate
+                        Portfolio</span>
+                    <div class="h-px flex-1 bg-white/5"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Node: Portfolio Capacity -->
+        <div class="metric-mesh-card mesh-active rounded-[2.5rem] p-8 relative group cursor-pointer active:scale-[0.98]"
+            data-metric-id="capacity">
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-primary-500/10 text-primary-400 flex items-center justify-center text-sm shadow-inner group-hover:bg-primary-600 group-hover:text-white transition-all duration-500 icon-pulse-aura">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active nodes</span>
+                </div>
+                <h3 class="text-4xl font-display font-bold text-white tracking-tight">{{ live_hotels_count }}</h3>
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="text-[9px] font-bold text-primary-500/60 uppercase tracking-widest">Live in
+                        Network</span>
+                    <div class="h-px flex-1 bg-white/5"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Node: Reservation Density -->
+        <div class="metric-mesh-card mesh-bookings rounded-[2.5rem] p-8 relative group cursor-pointer active:scale-[0.98]"
+            data-metric-id="bookings">
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-sm shadow-inner group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 icon-pulse-aura">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Bookings</span>
+                </div>
+                <h3 class="text-4xl font-display font-bold text-white tracking-tight">{{ total_bookings }}</h3>
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="text-[9px] font-bold text-indigo-500/60 uppercase tracking-widest">Aggregated
+                        Peak</span>
+                    <div class="h-px flex-1 bg-white/5"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Node: Audit Pipeline -->
+        <div class="metric-mesh-card mesh-audit rounded-[2.5rem] p-8 relative group cursor-pointer active:scale-[0.98]"
+            data-metric-id="audit">
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-sm shadow-inner group-hover:bg-amber-600 group-hover:text-white transition-all duration-500 icon-pulse-aura">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Awaiting Audit</span>
+                </div>
+                <h3 class="text-4xl font-display font-bold text-white tracking-tight">{{ pending_audit_count }}</h3>
+                <div class="mt-4 flex items-center gap-2">
+                    <span class="text-[9px] font-bold text-amber-500/60 uppercase tracking-widest">Verification
+                        Node</span>
+                    <div class="h-px flex-1 bg-white/5"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ══ AI Portfolio Sentinel (v2.0) ══ -->
+    <div class="premium-glass bg-white/5 rounded-[3rem] p-1 border border-white/5 shadow-2xl overflow-hidden relative group mt-12">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-transparent to-indigo-600/10"></div>
+        <div class="relative z-10 p-10 flex flex-col lg:flex-row items-center gap-12">
+            <div class="lg:w-2/3">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-600 to-indigo-700 flex items-center justify-center text-white shadow-lg">
+                        <i class="fas fa-brain text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-display font-bold text-white tracking-tight">AI Portfolio Sentinel</h2>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Cross-Node Yield Analysis & Ecosystem Health</p>
+                    </div>
+                </div>
+                <div id="portfolioAISentinelContent" class="space-y-6">
+                    <div class="p-8 rounded-3xl bg-white/5 border border-white/5">
+                        <p class="text-[13px] text-slate-400 leading-relaxed">Sync global intelligence to activate cross-property yield analysis and strategic growth projections.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:w-1/3 w-full">
+                <button id="generatePortfolioIntel" onclick="syncPortfolioIntel()" data-hotel-count="{{ all_hotels|length }}" class="w-full py-6 bg-primary-600 hover:bg-primary-500 rounded-3xl text-white font-bold text-[11px] uppercase tracking-[0.3em] shadow-xl shadow-primary-600/20 transition-all active:scale-95 flex items-center justify-center gap-4 group">
+                    <i class="fas fa-microchip group-hover:rotate-180 transition-transform duration-700"></i>
+                    Sync Global Intel
+                </button>
+                <div class="mt-8 grid grid-cols-2 gap-4">
+                    <div class="p-5 rounded-2xl bg-white/5 border border-white/5 text-center">
+                        <p class="text-[8px] font-black text-slate-500 uppercase mb-1">Health Score</p>
+                        <p class="text-2xl font-bold text-emerald-400">94%</p>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-white/5 border border-white/5 text-center">
+                        <p class="text-[8px] font-black text-slate-500 uppercase mb-1">Growth Pred.</p>
+                        <p class="text-2xl font-bold text-primary-400">+12%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ══ Interactive Insight Console (v28.0) ══ -->
+    <div id="metricInsightConsole" class="hidden">
+        <div
+            class="premium-glass rounded-[3rem] p-12 border border-white/5 shadow-2xl shadow-black/40 insight-reveal relative overflow-hidden bg-white/5">
+            <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+            <div class="relative z-10">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-4">
+                        <div id="insightIcon"
+                            class="w-14 h-14 rounded-2xl bg-primary-600 text-white flex items-center justify-center text-xl shadow-lg shadow-primary-600/20">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div>
+                            <h4 id="insightTitle" class="text-2xl font-display font-bold text-white tracking-tight">
+                                Metric Analytics</h4>
+                            <p id="insightSubtitle"
+                                class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Data
+                                Breakdown</p>
+                        </div>
+                    </div>
+                    <button
+                        onclick="document.getElementById('metricInsightConsole').classList.add('hidden'); document.querySelectorAll('[data-metric-id]').forEach(c => c.classList.remove('selected-card-prism'))"
+                        class="w-10 h-10 rounded-full bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div id="insightContent" class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <!-- Dynamic Content Swapped via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ Global Portfolio Nodes (Hotel Cards) ══ -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 px-2 border-b border-white/5 pb-10">
+            <div class="flex items-center gap-4">
+                <div class="w-2 h-8 bg-white/20 rounded-full"></div>
+                <div>
+                    <h3 class="text-2xl font-display font-bold text-white tracking-tight">Global Portfolio Nodes</h3>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Registry Overview · {{ all_hotels|length }} Active Nodes</p>
+                </div>
+            </div>
+
+            <!-- 🏛️ Stage Orchestrator Bar v63.0 (Hub Edition Refined) -->
+            <div class="stage-orchestrator-bar animate-reveal">
+                <div class="portfolio-search-wrapper">
+                    <i class="fas fa-search search-icon-node"></i>
+                    <input type="text" id="portfolioSearchNode" placeholder="Search Node..."
+                        class="portfolio-search-node" autocomplete="off">
+                </div>
+
+                <div class="orchestrator-view-controller">
+                    <a href="{% url 'my_hotels' %}" id="manage-portfolio-btn"
+                        class="orchestrator-view-btn !w-auto h-auto px-8 py-3.5 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary-600 hover:border-primary-500/50 hover:shadow-[0_0_30px_rgba(37,99,235,0.3)] transition-all active:scale-95 flex items-center gap-3">
+                        <i class="fas fa-layer-group text-[12px]"></i>
+                        Manage Portfolio
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="portfolioNodeContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        {% for h in all_hotels %}
+        <div class="hotel-card-wrapper portfolio-node-item group cursor-pointer kinetic-shimmer rounded-[3rem]"
+            data-hotel-node-id="{{ h.id }}" data-node-name="{{ h.name|lower }}"
+            style="--stagger-index: {{ forloop.counter0 }}">
+            <div
+                class="executive-card zenith-node p-10 rounded-[3rem] shadow-xl shadow-black/20 relative z-10 overflow-hidden transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl {% if h.is_live %}node-live{% elif h.status == 'PENDING' %}node-pending{% else %}node-draft{% endif %}">
+                <!-- Refractive Shimmer Layer -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
+                </div>
+
+                <!-- Header -->
+                <div class="flex justify-between items-start mb-10">
+                    <div class="icon-box group-hover:shadow-lg">
+                        <i class="fas fa-hotel text-2xl group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="flex flex-col items-end gap-2">
+                        <span class="status-tag">
+                            {% if h.is_live %}LIVE{% elif h.status == 'PENDING' %}VERIFYING{% else %}DRAFT{% endif %}
+                        </span>
+                        <span class="text-[9px] font-bold text-slate-400/60 uppercase tracking-widest">Node #{{h.id|stringformat:"04d" }}</span>
+                    </div>
+                </div>
+
+                <!-- Identity -->
+                <div class="mb-10">
+                    <h4
+                        class="text-3xl font-display font-bold text-white group-hover:text-primary-400 transition-colors truncate mb-2">
+                        {{ h.name }}</h4>
+                    <div
+                        class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        <i class="fas fa-location-dot text-[8px]"></i>
+                        <span>{{ h.city }}, {{ h.country }}</span>
+                    </div>
+                </div>
+
+                <!-- Action -->
+                <div class="flex gap-4">
+                    <a href="{% url 'dashboard_specific' h.id %}" class="flex-1 btn-ultra">
+                        Command Center
+                    </a>
+                    <a href="{% url 'edit_hotel' h.id %}"
+                        class="w-16 py-5 bg-white/5 border border-white/5 text-slate-400 hover:text-primary-400 hover:border-primary-500/30 hover:bg-white/10 rounded-2xl flex items-center justify-center transition-all active:scale-95">
+                        <i class="fas fa-pen-to-square text-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- ══ Property Insight Matrix (v30.0) ══ -->
+    <div id="propertyInsightConsole" class="hidden">
+        <div
+            class="premium-glass rounded-[3rem] p-12 border border-slate-100 shadow-2xl shadow-slate-200/40 insight-reveal relative overflow-hidden bg-white">
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-50/50 to-transparent pointer-events-none"></div>
+            <div class="relative z-10">
+                <div class="flex items-center justify-between mb-10">
+                    <div class="flex items-center gap-5">
+                        <div id="propIcon"
+                            class="w-16 h-16 rounded-[1.5rem] bg-indigo-600/10 text-indigo-600 flex items-center justify-center text-2xl shadow-inner icon-pulse-aura">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                        <div>
+                            <h4 id="propTitle" class="text-3xl font-display font-bold text-white tracking-tight">
+                                Property Deep-Dive</h4>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span id="propTag"
+                                    class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-widest border border-emerald-100/50">NODE
+                                    ACTIVE</span>
+                                <span id="propLocation"
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Registry ID
+                                    #0001</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <a id="propCommandLink" href="#"
+                            class="px-8 py-4 bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-primary-600 transition-all shadow-xl shadow-slate-900/10">
+                            Enter Command Center
+                        </a>
+                        <button
+                            onclick="document.getElementById('propertyInsightConsole').classList.add('hidden'); document.querySelectorAll('.hotel-card-wrapper').forEach(c => c.classList.remove('selected-card-prism'))"
+                            class="w-12 h-12 rounded-full bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center border border-white/5">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="propInsightContent" class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <!-- Dynamic Node Metrics Swapped via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ Enterprise Performance Spectrum (v32.0) ══ -->
+<div class="space-y-8 mt-[8rem]">
+    <div class="flex items-center justify-between px-2">
+        <div class="flex items-center gap-4">
+            <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
+            <div>
+                <h3 class="text-2xl font-display font-bold text-white tracking-tight">Enterprise Performance
+                    Spectrum</h3>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Global Revenue Flow &
+                    Yield Velocity</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 p-1 bg-white/5 rounded-xl border border-white/5">
+            <button
+                class="px-4 py-2 rounded-lg bg-white/10 shadow-sm text-[9px] font-black text-white uppercase border border-white/5">Spectrum
+                Mode</button>
+            <button
+                class="px-4 py-2 rounded-lg text-[9px] font-black text-slate-500 uppercase hover:text-white transition-colors">Node
+                Mode</button>
+        </div>
+    </div>
+
+    <div
+        class="premium-glass spectrum-silk-card rounded-[3rem] p-12 border border-white/10 shadow-2xl shadow-black/40 relative overflow-hidden group">
+        <div
+            class="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 via-transparent to-primary-500/5 pointer-events-none">
+        </div>
+
+        <div class="relative z-10">
+            <div class="flex items-end justify-between h-[300px] gap-4 px-4 border-b border-white/5 pb-2"
+                id="spectrumChart">
+                <!-- High-Fidelity CSS Chart bars -->
+                {% for h in all_hotels %}
+                <div class="flex-1 bg-white/5 rounded-t-2xl hover:bg-emerald-500/50 transition-all duration-700 cursor-help relative group/spectrum shadow-inner spectrum-bar"
+                    data-node-height="{% cycle '45' '65' '85' '55' '75' %}" style="opacity: 0.8;">
+                    <div
+                        class="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white text-[9px] px-3 py-1.5 rounded-lg opacity-0 group-hover/spectrum:opacity-100 transition-opacity whitespace-nowrap z-20 shadow-xl border border-white/5">
+                        <span class="font-black">Node: {{ h.name }}</span><br>
+                        ₹{{ total_revenue|floatformat:0 }} · Growth Node
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Portfolio Health Matrix (v32.2) -->
+            <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 px-4">
+                <div class="space-y-2">
+                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Network Health</span>
+                    <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 w-[92%] shadow-[0_0_15px_rgba(16,185,129,0.4)]"></div>
+                    </div>
+                    <p class="text-[10px] font-bold text-slate-500">92% Operational</p>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Growth Velocity</span>
+                    <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-primary-500 w-[65%] shadow-[0_0_15px_rgba(59,130,246,0.3)]"></div>
+                    </div>
+                    <p class="text-[10px] font-bold text-slate-500">+12% Yield Lift</p>
+                </div>
+            </div>
+            <div class="flex justify-between mt-6 px-4 pt-6 border-t border-white/5">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Aggregate Registry Q1 - Q4
+                    Performance Delta</span>
+                <div class="flex gap-6">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
+                        <span class="text-[9px] font-bold text-slate-500 uppercase">Live Yield</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-white/10 border border-white/5"></div>
+                        <span class="text-[9px] font-bold text-slate-500 uppercase">Projected Node</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ Strategic Marketing Portfolio (Global Offers) ══ -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <div class="space-y-8">
+        <div class="flex items-center justify-between px-2">
+            <div class="flex items-center gap-4">
+                <div class="w-2 h-8 bg-white/20 rounded-full"></div>
+                <div>
+                    <h3 class="text-2xl font-display font-bold text-white tracking-tight">Active Campaign Portfolio
+                    </h3>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Cross-Node Marketing
+                        Distribution</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            {% for offer in global_offers %}
+            <div
+                class="silk-node-card p-8 rounded-[2.5rem] border border-white/5 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 group relative overflow-hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-primary-600 text-white flex items-center justify-center text-xl shadow-lg shadow-primary-600/20">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="text-right">
+                        <span
+                            class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[8px] font-black uppercase tracking-widest rounded-lg border border-white/5">{{
+                            offer.status|upper }}</span>
+                        <p class="text-[9px] font-bold text-slate-500 mt-2">Exp: {{ offer.end_date|date:"M d" }}</p>
+                    </div>
+                </div>
+                <h4 class="text-xl font-display font-bold text-white mb-2 tracking-tight">{{ offer.title }}</h4>
+                <p class="text-[11px] text-slate-400 mb-6 leading-relaxed">{{ offer.description|truncatewords:15 }}</p>
+                <div class="flex items-center justify-between border-t border-white/5 pt-6">
+                    <div class="flex -space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-[8px] font-black border-2 border-white"
+                            title="{{ offer.hotel.name }}">{{ offer.hotel.name|slice:":2"|upper }}</div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[12px] font-black text-primary-400">₹{{ offer.discount_value }}{% if offer.discount_type == 'PERCENTAGE' %}%{% endif %} Strategic Lift</span>
+                        <i
+                            class="fas fa-arrow-right text-[10px] text-slate-500 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="p-12 text-center bg-white/5 rounded-[2.5rem] border-2 border-dashed border-white/5">
+                <i class="fas fa-rocket text-3xl text-white/10 mb-4"></i>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">No Active Global Campaigns</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ══ Consolidated Reputation Registry (Aggregate Reviews) ══ -->
+    <div class="space-y-8">
+        <div class="flex items-center justify-between px-2">
+            <div class="flex items-center gap-4">
+                <div class="w-2 h-8 bg-amber-500/20 rounded-full"></div>
+                <div>
+                    <h3 class="text-2xl font-display font-bold text-white tracking-tight">Global Reputation Registry
+                    </h3>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Aggregated
+                        Cross-Node Feedback Stream</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="silk-node-card rounded-[3rem] p-8 border border-white/5 space-y-6">
+            {% for review in global_reviews %}
+            <div
+                class="bg-white/5 p-6 rounded-3xl shadow-sm border border-white/5 hover:bg-white/10 transition-all duration-500 group/review relative overflow-hidden">
+                <div
+                    class="absolute left-0 top-0 bottom-0 w-1 {% cycle 'bg-emerald-500' 'bg-indigo-500' 'bg-amber-500' 'bg-primary-500' %} group-hover:w-2 transition-all">
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-[10px] font-black shadow-lg">
+                            {{ review.guest_name|slice:":2"|upper }}</div>
+                        <div>
+                            <h5 class="text-[12px] font-bold text-white">{{ review.guest_name }} · <span
+                                    class="text-slate-500 text-[10px]">Verified Guest</span></h5>
+                            <div class="flex items-center gap-1 text-amber-500 text-[8px] mt-0.5">
+                                {% for idx in "12345" %}
+                                <i
+                                    class="fas fa-star {% if forloop.counter > review.rating %}text-white/10{% endif %}"></i>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <span
+                        class="text-[9px] font-black {% if review.rating >= 4 %}text-emerald-400 bg-emerald-500/10{% else %}text-amber-400 bg-amber-500/10{% endif %} uppercase tracking-widest px-2 py-1 rounded">{%if review.rating >= 4 %}Excellent{% else %}Average{% endif %}</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed italic pr-4">"{{ review.comment }}"</p>
+                <div class="mt-4 pt-4 border-t border-white/5 flex items-center gap-3">
+                    <div
+                        class="w-6 h-6 rounded-lg bg-primary-500/10 text-primary-400 flex items-center justify-center text-[8px]">
+                        <i class="fas fa-building text-[7px]"></i></div>
+                    <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Node: {{review.hotel.name }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="p-12 text-center border-2 border-dashed border-white/5 rounded-[2.5rem]">
+                <i class="fas fa-comment-slash text-3xl text-white/10 mb-4"></i>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">No Global Reviews found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/hoteladmin/global_dashboard.js' %}" defer></script>
+{% endblock %}

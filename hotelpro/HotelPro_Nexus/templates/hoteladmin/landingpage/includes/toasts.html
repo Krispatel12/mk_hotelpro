@@ -1,0 +1,21 @@
+<!-- Toast Container -->
+<div class="toast-container" id="global-toast-container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="premium-toast {{ message.tags }}" id="msg-{{ forloop.index }}">
+        <div class="toast-icon">
+            {% if message.tags == 'success' %}<i class="fas fa-check"></i>
+            {% elif message.tags == 'error' %}<i class="fas fa-times"></i>
+            {% else %}<i class="fas fa-info"></i>{% endif %}
+        </div>
+        <div class="toast-content">
+            <div class="toast-header">{{ message.tags|upper|default:"NOTICE" }}</div>
+            <div class="toast-msg">{{ message }}</div>
+        </div>
+        <div class="toast-close">
+            <i class="fas fa-times"></i>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Identity | HotelPro Premium</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/user_nexus/verify_otp.css' %}">
+</head>
+
+<body>
+    <div class="side-panel">
+        <div class="glass-box gb-1"></div>
+        <div class="brand-wrap">
+            <!-- Professional Authentication Illustration (Restored) -->
+            <div class="auth-protocol-viz">
+                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="60" cy="60" r="58" stroke="url(#vizGrad)" stroke-width="1" opacity="0.3" />
+                    <circle cx="60" cy="60" r="45" stroke="url(#vizGrad)" stroke-width="0.5" stroke-dasharray="4 4"
+                        opacity="0.2" />
+                    <path d="M60 35V45M60 75V85M35 60H45M75 60H85" stroke="var(--accent)" stroke-width="2"
+                        stroke-linecap="round" opacity="0.5" />
+                    <g filter="url(#glowFilter)">
+                        <path d="M48 65C48 58.3726 53.3726 53 60 53C66.6274 53 72 58.3726 72 65V75H48V65Z"
+                            fill="url(#vizGrad)" />
+                        <path d="M54 53V48C54 44.6863 56.6863 42 60 42C63.3137 42 66 44.6863 66 48V53"
+                            stroke="url(#vizGrad)" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="60" cy="64" r="3" fill="#020617" />
+                    </g>
+                    <defs>
+                        <linearGradient id="vizGrad" x1="48" y1="42" x2="72" y2="75" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="white" />
+                            <stop offset="100%" stop-color="var(--accent)" />
+                        </linearGradient>
+                        <filter id="glowFilter" x="40" x2="80" y="35" y2="85" filterUnits="userSpaceOnUse">
+                            <feGaussianBlur stdDeviation="3" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                </svg>
+            </div>
+            <div class="brand-logo">
+                <i class="fas fa-hotel"></i>
+                <h1 class="brand-name">Hotel<strong>PRO</strong></h1>
+            </div>
+            <p class="brand-tagline">Multi-factor identity preservation protocol. Safeguarding your hospitality
+                enterprise assets.
+            </p>
+            <div class="indicators">
+                <div class="indicator i-cyan"></div>
+                <div class="indicator i-red"></div>
+                <div class="indicator i-amber"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-panel">
+        <div class="aurora-glow"></div>
+        <div class="arc-container">
+            <svg viewBox="0 0 620 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="blueGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#0b1bad" />
+                        <stop offset="100%" stop-color="#05126a" />
+                    </linearGradient>
+                    <linearGradient id="lightGrad" x1="0" y1="0" x2="1" y2="0.2">
+                        <stop offset="0%" stop-color="#1e3af0" stop-opacity="0.9" />
+                        <stop offset="100%" stop-color="#3b59f7" stop-opacity="0.6" />
+                    </linearGradient>
+                </defs>
+                <path d="M0,0 C380,0 380,900 0,900 Z" fill="#020617" opacity="0.6" />
+                <path d="M0,0 C440,0 440,900 0,900 Z" fill="#07102a" />
+                <path d="M0,0 C500,0 500,900 0,900 Z" fill="url(#blueGrad)" />
+                <path d="M0,0 C550,0 550,900 0,900 Z" fill="url(#lightGrad)" opacity="0.85" />
+                <path d="M0,0 C585,0 585,900 0,900 Z" fill="#3b59f7" opacity="0.45" />
+                <path d="M0,0 C605,0 605,900 0,900 L620,900 L620,0 Z" fill="#ffffff" />
+            </svg>
+        </div>
+
+        <div class="form-card">
+            <!-- Group Identity Illustration -->
+            <div class="users-group-viz">
+                <svg width="100" height="60" viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left User -->
+                    <g opacity="0.3">
+                        <circle cx="35" cy="40" r="12" fill="url(#userGradCard-otp)" />
+                        <path d="M11 74C11 64.0589 19.0589 56 29 56H41C50.9411 56 59 64.0589 59 74V80H11V74Z"
+                            fill="url(#userGradCard-otp)" />
+                    </g>
+                    <!-- Right User -->
+                    <g opacity="0.3">
+                        <circle cx="105" cy="40" r="12" fill="url(#userGradCard-otp)" />
+                        <path d="M81 74C81 64.0589 89.0589 56 99 56H111C120.941 56 129 64.0589 129 74V80H81V74Z"
+                            fill="url(#userGradCard-otp)" />
+                    </g>
+                    <!-- Center User (Primary) -->
+                    <g filter="url(#groupGlowCard-otp)">
+                        <circle cx="70" cy="30" r="16" fill="url(#userGradCard-otp)" />
+                        <path d="M42 68C42 56.9543 50.9543 48 62 48H78C89.0457 48 98 56.9543 98 68V78H42V68Z"
+                            fill="url(#userGradCard-otp)" />
+                    </g>
+                    <defs>
+                        <linearGradient id="userGradCard-otp" x1="42" y1="14" x2="98" y2="78"
+                            gradientUnits="userSpaceOnUse">
+                            <stop stop-color="var(--primary)" />
+                            <stop offset="100%" stop-color="var(--primary-dark)" />
+                        </linearGradient>
+                        <filter id="groupGlowCard-otp" x="30" y="10" width="80" height="85"
+                            filterUnits="userSpaceOnUse">
+                            <feGaussianBlur stdDeviation="5" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                </svg>
+            </div>
+            <div class="header-logo">
+                <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    class="header-logo-svg">
+                    <rect width="40" height="40" rx="10" fill="var(--primary)" fill-opacity="0.1" />
+                    <path d="M12 30V14C12 12.8954 12.8954 12 14 12H26C27.1046 12 28 12.8954 28 14V30"
+                        stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" />
+                    <path d="M16 18H18M22 18H24M16 22H18M22 22H24M16 26H18M22 26H24" stroke="var(--primary)"
+                        stroke-width="2" stroke-linecap="round" />
+                    <path d="M20 30V26" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" />
+                </svg>
+                <span>Hotel<strong>PRO</strong></span>
+            </div>
+
+            <div class="identity-illustration">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
+                        stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                        d="M6 21V19C6 17.9391 6.42143 16.9217 7.17157 16.1716C7.92172 15.4214 8.93913 15 10 15H14C15.0609 15 16.0783 15.4214 16.8284 16.1716C17.5786 16.9217 18 17.9391 18 19V21"
+                        stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="12" cy="12" r="10" stroke="var(--primary)" stroke-width="1.5" opacity="0.3" />
+                    <path d="M12 15V17" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M12 19V20" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+            </div>
+
+            <h1 class="form-title"><b>Verify</b> Identity</h1>
+            <p class="form-subtitle">We have transmitted a 6-digit security signature to <b>{{ email }}</b>.</p>
+
+            <form method="POST" id="otp-form">
+                {% csrf_token %}
+                <input type="text" id="otp-hidden" name="otp" maxlength="6" class="hidden-input" autofocus>
+
+                <div class="otp-display">
+                    <div class="otp-box" id="box-1"></div>
+                    <div class="otp-box" id="box-2"></div>
+                    <div class="otp-box" id="box-3"></div>
+                    <div class="otp-box" id="box-4"></div>
+                    <div class="otp-box" id="box-5"></div>
+                    <div class="otp-box" id="box-6"></div>
+                </div>
+
+                <button type="submit" class="btn" id="verify-btn">
+                    VALIDATE SIGNATURE <i class="fas fa-shield-check"></i>
+                </button>
+            </form>
+
+            <div class="resend-wrap">
+                <span id="timer-text">Security window remains open for <b id="countdown">60</b>s</span>
+                <button type="button" class="resend-btn" id="resend-btn" disabled>Resend Protocol</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/user_nexus/verify_otp.js' %}" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,264 @@
+/* ══════════════════════════════════════════════════
+   CUSTOMER HOTEL DETAILS STYLES - LUXURY EDITION
+══════════════════════════════════════════════════ */
+
+.hotel-header {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hotel-name {
+    font-family: var(--font-serif);
+    font-size: 56px;
+    font-weight: 400;
+    color: white;
+    margin-bottom: 12px;
+    letter-spacing: -2px;
+}
+
+.hotel-meta {
+    font-size: 16px;
+    color: var(--text-2);
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    font-weight: 300;
+}
+
+.star-badge {
+    background: rgba(216, 201, 181, 0.15);
+    color: var(--beige);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(216, 201, 181, 0.2);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 20px;
+    height: 600px;
+    border-radius: 32px;
+    overflow: hidden;
+    margin-bottom: 60px;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+}
+
+.gallery-main,
+.gallery-sub {
+    transition: all 0.5s ease;
+}
+
+.gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.gallery-img:hover {
+    transform: scale(1.05);
+}
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+}
+
+.content-section {
+    margin-bottom: 60px;
+}
+
+.section-title {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 400;
+    color: white;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.description-text {
+    font-size: 18px;
+    color: var(--text-2);
+    line-height: 1.8;
+    font-weight: 300;
+}
+
+.room-card {
+    display: flex;
+    gap: 32px;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 32px;
+    padding: 32px;
+    margin-bottom: 32px;
+    transition: all 0.4s ease;
+}
+
+.room-card:hover {
+    border-color: rgba(216, 201, 181, 0.3);
+    transform: translateY(-8px);
+}
+
+.room-img {
+    width: 300px;
+    height: 200px;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+.room-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.room-name {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    color: white;
+    margin-bottom: 12px;
+}
+
+.room-features {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.feature-tag {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--text-2);
+}
+
+.room-price .amount {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--beige);
+}
+
+.review-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 32px;
+    margin-bottom: 24px;
+}
+
+.booking-widget {
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 32px;
+    padding: 40px;
+    position: sticky;
+    top: 140px;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+}
+
+.offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.offer-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1.5px dashed rgba(216, 201, 181, 0.2);
+    border-radius: 24px;
+    padding: 24px;
+    display: flex;
+    gap: 20px;
+    transition: all 0.4s ease;
+    cursor: default;
+}
+
+.offer-card:hover {
+    background: rgba(216, 201, 181, 0.05);
+    border-color: rgba(216, 201, 181, 0.4);
+    transform: translateY(-4px);
+}
+
+.offer-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(216, 201, 181, 0.1);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--beige);
+}
+
+.strategy-urgent .offer-icon {
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+}
+
+.strategy-early .offer-icon {
+    background: rgba(245, 158, 11, 0.1);
+    color: #fbbf24;
+}
+
+.offer-info {
+    flex: 1;
+}
+
+.offer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.offer-strategy {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-3);
+}
+
+.offer-discount {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--beige);
+}
+
+.strategy-urgent .offer-discount {
+    color: #f87171;
+}
+
+.offer-name {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    color: white;
+    margin-bottom: 8px;
+}
+
+.offer-code {
+    font-size: 12px;
+    color: var(--text-2);
+    margin-bottom: 8px;
+}
+
+.offer-expiry {
+    font-size: 12px;
+    color: var(--text-3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}

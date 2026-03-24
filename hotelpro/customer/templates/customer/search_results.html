@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Hotels</title>
+    <link rel="stylesheet" href="{% static 'customer/search_results.css' %}">
+</head>
+<body>
+<div class="navbar">HotelPro</div>
+<form method="POST">
+    {% csrf_token %}
+
+    <h1 class="page-title">Available Hotels</h1>
+
+    <section class="results-section">
+        <div class="hotel-container">
+            {% if rooms %}
+                {% for room in rooms %}
+                <div class="hotel-card">
+                    <h3 class="hotel-name">{{ room.hotel.hotel_name }}</h3>
+                    <p><strong>Location:</strong> {{ room.hotel.city }}</p>
+                    <p><strong>Price:</strong> ₹{{room.price_per_night}} / night</p>
+                    <a href="{% url 'auth' %}" class="btn-book">Book Now</a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-result">No hotels found.</p>
+            {% endif %}
+        </div>
+    </section>
+
+</form>
+
+</body>
+</html>

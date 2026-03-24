@@ -1,0 +1,38 @@
+{% extends "superadmin/base.html" %}
+
+{% block content %}
+
+<h2>Payments Management</h2>
+<hr>
+
+<div class="row">
+
+  <!-- Generate Commission -->
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body text-center">
+        <h4>Generate Monthly Commission</h4>
+        <br>
+        <a href="/super/payments/generate/" class="btn btn-primary">
+          Generate
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Invoices -->
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body text-center">
+        <h4>View All Invoices</h4>
+        <br>
+        <a href="/super/payments/invoices/" class="btn btn-success">
+          View Invoices
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

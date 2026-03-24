@@ -1,0 +1,52 @@
+{% load static %}
+<section id="cta" class="py-32 relative overflow-hidden">
+    <!-- CTA Background Glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-500/10 rounded-full blur-[160px] animate-pulse-slow"></div>
+
+    <div class="container mx-auto px-6 relative z-10">
+        <div class="ultra-glow-card glass-panel-heavy p-16 md:p-24 rounded-[4rem] text-center space-y-10 max-w-5xl mx-auto border-indigo-500/20 dark:border-white/10 shadow-2xl dark:shadow-[0_0_100px_rgba(59,130,246,0.1)] reveal-up">
+            <div class="space-y-6">
+                <span class="text-[10px] font-bold text-primary-600 dark:text-primary-400 uppercase tracking-[0.3em]">Ready to Evolve?</span>
+                <h2 class="text-5xl md:text-7xl font-display font-extrabold text-slate-900 dark:text-white leading-tight tracking-tight">
+                    Join the Future of <br> <span class="text-gradient">Hotel Management</span>
+                </h2>
+                <p class="text-slate-600 dark:text-slate-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                    Start your 14-day free trial today. No credit card required. Experience the power of AI-driven hospitality.
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
+                <div class="magnetic-wrap w-full sm:w-auto">
+                    <a href="{% url 'signup' %}" class="px-12 py-5 rounded-2xl bg-primary-500 text-white font-bold text-base shadow-2xl shadow-primary-500/30 hover:scale-105 transition-all block text-center">
+                        Get Started for Free
+                    </a>
+                </div>
+                <div class="magnetic-wrap w-full sm:w-auto">
+                    <a href="#contact" class="px-12 py-5 rounded-2xl glass-panel-heavy text-slate-900 dark:text-white font-bold text-base hover:bg-slate-50 dark:hover:bg-white/5 transition-all block text-center border-slate-200/50 dark:border-white/10">
+                        Talk to an Expert
+                    </a>
+                </div>
+            </div>
+
+            <!-- Trust Markers -->
+            <div class="pt-12 grid grid-cols-2 md:grid-cols-4 gap-8 opacity-70 dark:opacity-40">
+                <div class="flex flex-col items-center gap-2">
+                    <span class="text-2xl font-bold text-slate-900 dark:text-white">99.9%</span>
+                    <span class="text-[8px] font-bold uppercase tracking-widest text-slate-500">Uptime</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <span class="text-2xl font-bold text-slate-900 dark:text-white">24/7</span>
+                    <span class="text-[8px] font-bold uppercase tracking-widest text-slate-500">Support</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <span class="text-2xl font-bold text-slate-900 dark:text-white">Secured</span>
+                    <span class="text-[8px] font-bold uppercase tracking-widest text-slate-500">ISO 27001</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <span class="text-2xl font-bold text-slate-900 dark:text-white">Global</span>
+                    <span class="text-[8px] font-bold uppercase tracking-widest text-slate-500">Multi-region</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,39 @@
+{% load static %}
+<html>
+<head>
+    <title>Confirm Booking</title>
+    <link rel="stylesheet" href="{% static 'customer/confirmbooking.css' %}">
+</head>
+<body>
+
+<div class="navbar">HotelPro</div>
+
+<div class="confirm-container">
+
+    <h2>Booking Confirmation</h2>
+
+    <div class="section">
+        <h3>Customer Details</h3>
+        <p><strong>Name:</strong> {{ customer.name }}</p>
+        <p><strong>Email:</strong> {{ customer.email }}</p>
+        <p><strong>Mobile:</strong> {{ customer.mobile }}</p>
+    </div>
+
+    <div class="section">
+        <h3>Booking Details</h3>
+        <p><strong>Check-in Date:</strong> {{ booking.check_in }}</p>
+        <p><strong>Check-out Date:</strong> {{ booking.check_out }}</p>
+        <p><strong>Room Type:</strong> {{ booking.room_type }}</p>
+        <p><strong>Guests:</strong> {{ booking.guests }}</p>
+        <p class="price"><strong>Total Price:</strong> ₹ {{ booking.total_price }}</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="confirm-btn">Confirm Booking</button>
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Sentinel AI Command Center | HotelPro{% endblock %}
+
+
+{% block extra_head %}
+<link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/hoteladmin/sentinel_dashboard.css' %}">
+{% endblock %}
+
+{% block page_title %}Sentinel Intelligence Alpha{% endblock %}
+{% block page_subtitle %}
+<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+    <span>
+        {% if is_global %}
+        Global Empire Core — Portfolio-Wide Strategic Command
+        {% else %}
+        AI Command Center — {{ hotel.name }}
+        {% endif %}
+    </span>
+    <a href="{% if is_global %}{% url 'ai_dashboard_specific' hotel_id=hotel.id %}{% else %}{% url 'ai_dashboard_specific' hotel_id=0 %}{% endif %}"
+        class="cc-pill" style="text-decoration: none; padding: 6px 14px; font-size: 10px;">
+        <i class="fas {% if is_global %}fa-hotel{% else %}fa-globe-americas{% endif %}"></i>
+        {% if is_global %}Switch to {{ hotel.name }}{% else %}Switch to Empire Mode{% endif %}
+    </a>
+</div>
+{% endblock %}
+
+{% block dashboard_content %}
+<div id="sentinelRoot">
+    <div class="cc-grid">
+
+        <!-- ① Chat With AI -->
+        <a href="{% if is_global %}{% url 'ai_chat_specific' hotel_id=0 %}{% else %}{% url 'ai_chat_specific' hotel_id=hotel.id %}{% endif %}"
+            class="cc-card card-chat" id="card-chat">
+            <div class="glow-layer"></div>
+            <div class="corner-halo"></div>
+            <div class="cc-head">
+                <div class="cc-icon"><i class="fas fa-brain"></i></div>
+                <div class="cc-pill">
+                    <div class="cc-dot"></div>Neural Link Active
+                </div>
+            </div>
+            <div class="cc-name">Chat With AI</div>
+            <div class="cc-desc">
+                {% if is_global %}
+                Conversational engine for portfolio-wide strategy, chain-level analytics, and multi-property reasoning.
+                {% else %}
+                Conversational intelligence for hotel analytics, strategic reasoning, and natural language property
+                insights.
+                {% endif %}
+            </div>
+            <div class="cc-foot">
+                <span class="cc-cta">Launch Node <i class="fas fa-long-arrow-alt-right"></i></span>
+                <div class="cc-btn"><i class="fas fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- ② Agent Tasks -->
+        <a href="{% if is_global %}{% url 'ai_tasks_specific' hotel_id=0 %}{% else %}{% url 'ai_tasks_specific' hotel_id=hotel.id %}{% endif %}"
+            class="cc-card card-tasks" id="card-tasks">
+            <div class="glow-layer"></div>
+            <div class="corner-halo"></div>
+            <div class="cc-head">
+                <div class="cc-icon"><i class="fas fa-microchip"></i></div>
+                <div class="cc-pill">
+                    <div class="cc-dot"></div>System Online
+                </div>
+            </div>
+            <div class="cc-name">Agent Tasks</div>
+            <div class="cc-desc">
+                {% if is_global %}
+                Autonomic empire engine — deploy and monitor AI-driven operational protocols across the entire
+                portfolio.
+                {% else %}
+                Autonomic workflow engine — schedule, deploy and monitor AI-driven operational protocols across your
+                property.
+                {% endif %}
+            </div>
+            <div class="cc-foot">
+                <span class="cc-cta">Open Queue <i class="fas fa-long-arrow-alt-right"></i></span>
+                <div class="cc-btn"><i class="fas fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- ③ AI Analyst -->
+        <a href="{% if is_global %}{% url 'ai_analyst_specific' hotel_id=0 %}{% else %}{% url 'ai_analyst_specific' hotel_id=hotel.id %}{% endif %}"
+            class="cc-card card-analyst" id="card-analyst">
+            <div class="glow-layer"></div>
+            <div class="corner-halo"></div>
+            <div class="cc-head">
+                <div class="cc-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="cc-pill">
+                    <div class="cc-dot"></div>Monitoring Markets
+                </div>
+            </div>
+            <div class="cc-name">AI Analyst</div>
+            <div class="cc-desc">
+                {% if is_global %}
+                Strategic intelligence engine extracting chain-level benchmarks and portfolio performance vectors.
+                {% else %}
+                Market intelligence engine extracting predictive revenue strategies and competitive benchmarks from
+                real-time signals.
+                {% endif %}
+            </div>
+            <div class="cc-foot">
+                <span class="cc-cta">View Reports <i class="fas fa-long-arrow-alt-right"></i></span>
+                <div class="cc-btn"><i class="fas fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- ④ Agent Live -->
+        <a href="{% if is_global %}{% url 'ai_live_specific' hotel_id=0 %}{% else %}{% url 'ai_live_specific' hotel_id=hotel.id %}{% endif %}"
+            class="cc-card card-live" id="card-live">
+            <div class="glow-layer"></div>
+            <div class="corner-halo"></div>
+            <div class="cc-head">
+                <div class="cc-icon"><i class="fas fa-satellite-dish"></i></div>
+                <div class="cc-pill">
+                    <div class="cc-dot"></div>Uplink Ready
+                </div>
+            </div>
+            <div class="cc-name">Agent Live</div>
+            <div class="cc-desc">
+                {% if is_global %}
+                Global multimodal interface — voice synthesis and visual context recognition for group-level operations.
+                {% else %}
+                Real-time multimodal interaction — live voice synthesis, visual context recognition and instant
+                strategic responses.
+                {% endif %}
+            </div>
+            <div class="cc-foot">
+                <span class="cc-cta">Initiate Session <i class="fas fa-long-arrow-alt-right"></i></span>
+                <div class="cc-btn"><i class="fas fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/hoteladmin/ai_dashboard.js' %}"></script>
+{% endblock %}

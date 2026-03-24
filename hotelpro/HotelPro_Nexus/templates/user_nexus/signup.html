@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join HotelPRO | Enterprise Hospitality Platform</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/user_nexus/signup.css' %}">
+</head>
+
+<body>
+
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="page-wrapper">
+
+        <!-- ═══════════════════════════════════ LEFT PANEL ═══════════════════════════════════ -->
+        <div class="side-panel">
+            <div class="grid-layer"></div>
+            <div class="mesh-layer"></div>
+
+            <!-- Hero Icon Block System -->
+            <div class="hero-block-area">
+                <div class="hero-glow-ring"></div>
+                <div class="hero-block">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <!-- Satellite blocks -->
+                <div class="sat-block sat-1"><i class="fas fa-key"></i></div>
+                <div class="sat-block sat-2"><i class="fas fa-chart-pie"></i></div>
+                <div class="sat-block sat-3"><i class="fas fa-wifi"></i></div>
+                <div class="sat-block sat-4"><i class="fas fa-bell-concierge"></i></div>
+            </div>
+
+            <!-- Brand Content -->
+            <div class="brand-content">
+                <h1 class="brand-name">Hotel<strong>PRO</strong></h1>
+                <p class="brand-tagline">The enterprise-grade platform powering the world's finest hotels. Built for
+                    operators who demand excellence.</p>
+
+                <!-- Floating Feature Cards -->
+                <div class="feature-cards">
+                    <div class="feat-card">
+                        <div class="feat-card-icon"><i class="fas fa-cloud"></i></div>
+                        <div class="feat-card-label">Cloud PMS</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-card-icon"><i class="fas fa-chart-mixed"></i></div>
+                        <div class="feat-card-label">Revenue AI</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-card-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="feat-card-label">Instant Sync</div>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="stat-row">
+                    <div class="stat">
+                        <div class="stat-num" id="counter-hotels">0</div>
+                        <div class="stat-label">Hotels</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <div class="stat-num" id="counter-rooms">0</div>
+                        <div class="stat-label">Rooms</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <div class="stat-num" id="counter-uptime">0</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                </div>
+
+                <!-- Trust Strip -->
+                <div class="trust-strip">
+                    <div class="trust-badge">
+                        <i class="fas fa-shield-check"></i> SOC 2 Certified
+                    </div>
+                    <div class="trust-sep"></div>
+                    <span class="trust-text">Trusted by 12,000+ properties</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════ RIGHT PANEL ═══════════════════════════════════ -->
+        <div class="form-panel">
+            <div class="aurora-glow"></div>
+
+            <!-- Arc Divider -->
+            <div class="arc-container">
+                <svg viewBox="0 0 620 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="arcG1" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#0b1bad" />
+                            <stop offset="100%" stop-color="#05126a" />
+                        </linearGradient>
+                        <linearGradient id="arcG2" x1="0" y1="0" x2="1" y2=".2">
+                            <stop offset="0%" stop-color="#1e3af0" stop-opacity=".9" />
+                            <stop offset="100%" stop-color="#3b59f7" stop-opacity=".6" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,0 C380,0 380,900 0,900 Z" fill="#020617" opacity=".55" />
+                    <path d="M0,0 C440,0 440,900 0,900 Z" fill="#07102a" />
+                    <path d="M0,0 C500,0 500,900 0,900 Z" fill="url(#arcG1)" />
+                    <path d="M0,0 C550,0 550,900 0,900 Z" fill="url(#arcG2)" opacity=".85" />
+                    <path d="M0,0 C585,0 585,900 0,900 Z" fill="#3b59f7" opacity=".4" />
+                    <path d="M0,0 C605,0 605,900 0,900 L620,900 L620,0 Z" fill="#ffffff" />
+                </svg>
+            </div>
+
+            <!-- FORM CARD -->
+            <div class="form-card">
+
+                <!-- Logo -->
+                <div class="header-logo">
+                    <div class="header-logo-icon">
+                        <svg width="22" height="22" viewBox="0 0 40 40" fill="none">
+                            <path d="M12 30V14C12 12.9 12.9 12 14 12H26C27.1 12 28 12.9 28 14V30"
+                                stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" />
+                            <path d="M16 18H18M22 18H24M16 22H18M22 22H24M16 26H18M22 26H24" stroke="var(--primary)"
+                                stroke-width="2" stroke-linecap="round" />
+                            <path d="M20 30V26" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <span>Hotel<strong>PRO</strong></span>
+                </div>
+
+                <!-- Title -->
+                <div class="header-title-wrap">
+                    <h1 class="form-title"><b>Join</b> HotelPro</h1>
+                    <p class="form-subtitle">Complete 3 simple steps to get started.</p>
+                </div>
+
+                <!-- Progress track -->
+                <div class="progress-track" id="progress-track">
+                    <div class="prog-step active" id="prog-1"></div>
+                    <div class="prog-step" id="prog-2"></div>
+                    <div class="prog-step" id="prog-3"></div>
+                </div>
+
+                <!-- Django alerts -->
+                {% if messages %}
+                {% for message in messages %}
+                <div
+                    class="alert alert-{% if message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}error{% endif %} show">
+                    <i
+                        class="fas {% if message.tags == 'success' %}fa-circle-check{% elif message.tags == 'warning' %}fa-triangle-exclamation{% else %}fa-exclamation-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <!-- JS Status Alert -->
+                <div class="alert" id="js-alert">
+                    <i class="fas fa-exclamation-circle" id="js-alert-icon"></i>
+                    <span id="js-alert-msg">Error message here</span>
+                </div>
+
+                <!-- Step Wrapper -->
+                <div class="step-wrapper" id="step-wrapper">
+
+                    <!-- ── STEP 1: Account Info ── -->
+                    <div class="step active" id="step-1">
+                        <div class="step-icon-wrap"><i class="fas fa-user-plus"></i></div>
+                        <div class="input-group">
+                            <input type="text" id="username" placeholder=" " autocomplete="name" maxlength="50">
+                            <label for="username">User Name</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" id="email" placeholder=" " autocomplete="email">
+                            <label for="email">User Email</label>
+                        </div>
+                        <button class="btn-primary" id="send-otp-btn" type="button">
+                            SEND OTP <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+
+                    <!-- ── STEP 2: OTP Verification ── -->
+                    <div class="step" id="step-2">
+                        <div class="step-icon-wrap"><i class="fas fa-shield-halved"></i></div>
+                        <p class="otp-instruction">
+                            Enter the 6-digit OTP sent to<br>
+                            <strong id="display-email"></strong>
+                        </p>
+
+                        <!-- OTP Digit Boxes -->
+                        <div class="otp-container" id="otp-container">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-0">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-1">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-2">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-3">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-4">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-5">
+                        </div>
+
+                        <!-- Timer badge -->
+                        <div class="otp-timer">
+                            <span id="otp-timer-label">Expires in</span>
+                            <span class="otp-timer-badge" id="otp-timer-badge">
+                                <span class="timer-dot"></span>
+                                <span id="otp-countdown">0:30</span>
+                            </span>
+                        </div>
+
+                        <!-- Smart action button: VERIFY ↔ RESEND -->
+                        <div class="otp-action-wrap">
+                            <!-- Shown while timer runs -->
+                            <button class="btn-primary" id="verify-otp-btn" type="button" disabled>
+                                VERIFY OTP <i class="fas fa-check-circle"></i>
+                            </button>
+                            <!-- Shown after timer expires -->
+                            <button class="btn-resend btn-hidden" id="resend-otp-btn" type="button">
+                                RESEND OTP <i class="fas fa-rotate-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Back only -->
+                        <div class="back-btn-container">
+                            <button class="link-btn" id="back-btn" type="button">
+                                <i class="fas fa-arrow-left"></i>&nbsp; Back to Account Info
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ── STEP 3: Password ── -->
+                    <div class="step" id="step-3">
+                        <form method="POST" id="signup-form" data-api-send-otp="{% url 'api_send_otp' %}"
+                            data-api-verify-otp="{% url 'api_verify_otp' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="username" id="final-username">
+                            <input type="hidden" name="email" id="final-email">
+                            <div class="step-icon-wrap"><i class="fas fa-lock"></i></div>
+                            <div class="input-group">
+                                <input type="password" id="password" name="password" placeholder=" "
+                                    autocomplete="new-password">
+                                <label for="password">Security Password</label>
+                                <button type="button" class="password-toggle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="strength-meter">
+                                <div id="strength-bar" class="strength-bar"></div>
+                            </div>
+                            <div class="input-group">
+                                <input type="password" id="confirm_password" name="confirm_password" placeholder=" "
+                                    autocomplete="new-password">
+                                <label for="confirm_password">Confirm Password</label>
+                                <button type="button" class="password-toggle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="security-checklist">
+                                <div class="check-item" id="req-len"><i class="fas fa-circle-dot"></i> 8+ characters
+                                </div>
+                                <div class="check-item" id="req-case"><i class="fas fa-circle-dot"></i> Upper &
+                                    Lowercase</div>
+                                <div class="check-item" id="req-num"><i class="fas fa-circle-dot"></i> Number included
+                                </div>
+                                <div class="check-item" id="req-sym"><i class="fas fa-circle-dot"></i> Special character
+                                </div>
+                                <div class="check-item" id="req-match"><i class="fas fa-circle-dot"></i> Passwords match
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary" id="create-btn" disabled>
+                                CREATE ACCOUNT <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <span>Already have an account?</span>
+                    <a href="{% url 'login' %}">Sign in here</a>
+                </div>
+            </div><!-- /form-card -->
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ JAVASCRIPT ═══════════════════════════════════ -->
+    <script src="{% static 'js/user_nexus/signup.js' %}"></script>
+</body>
+
+</html>

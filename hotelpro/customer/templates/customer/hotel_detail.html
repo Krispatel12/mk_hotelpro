@@ -1,0 +1,212 @@
+{% extends "customer/base.html" %}
+{% load static %}
+{% block title %}{{ hotel.name }} - Booking & Details | HotelPro{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'customer/css/details.css' %}">
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'customer/js/details.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="hotel-header">
+    <div>
+        <h1 class="hotel-name">{{ hotel.name }}</h1>
+        <div class="hotel-meta">
+            <span class="star-badge"><i class="fas fa-star"></i> {{ hotel.star_rating }} Stars</span>
+            <span><i class="fas fa-location-dot" style="color:var(--text-3);"></i> {{ hotel.city }}, {{hotel.state}}</span>
+            <span><i class="fas fa-comment-dots" style="color:var(--text-3);"></i> {{ review_count }} Reviews
+                ({{avg_rating }}★ Avg)</span>
+        </div>
+    </div>
+</div>
+
+<div class="gallery-grid">
+    {% for photo in hotel.gallery.all %}
+    <div class="gallery-item">
+        <img src="{{ photo.media_file.url }}" alt="Hotel Photo {{ forloop.counter }}" class="gallery-img">
+    </div>
+    {% empty %}
+    <div style="padding:60px;text-align:center;background:rgba(255,255,255,0.03);border-radius:24px;border:1px solid rgba(255,255,255,0.06);">
+        <p style="color:rgba(255,255,255,0.4); font-size:16px;">No photos available for this hotel.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="grid-layout">
+
+    <!-- Left Column -->
+    <div>
+        <!-- About -->
+        <div class="content-section">
+            <h2 class="section-title">About this Hotel</h2>
+            <p class="description-text">
+                {{ hotel.narrative|default:"Experience premium comfort and unmatched hospitality. This property offers the perfect blend of modern amenities and localized charm."|linebreaksbr }}
+            </p>
+        </div>
+
+        <!-- Offers -->
+        {% if active_offers %}
+        <div class="content-section">
+            <h2 class="section-title">Elite Offers & Packages</h2>
+            <div class="offers-grid">
+                {% for offer in active_offers %}
+                <div class="offer-card strategy-{{ offer.strategy|lower }}">
+                    <div class="offer-icon">
+                        {% if offer.strategy == 'URGENT' %}<i class="fas fa-bolt"></i>
+                        {% elif offer.strategy == 'EARLY' %}<i class="fas fa-sun"></i>
+                        {% else %}<i class="fas fa-gift"></i>{% endif %}
+                    </div>
+                    <div class="offer-info">
+                        <div class="offer-header">
+                            <span class="offer-strategy">{{ offer.get_strategy_display }}</span>
+                            <span class="offer-discount">{{ offer.discount_percent }}% OFF</span>
+                        </div>
+                        <h4 class="offer-name">{{ offer.name }}</h4>
+                        {% if offer.code %}
+                        <div class="offer-code">Code: <strong>{{ offer.code }}</strong></div>
+                        {% endif %}
+                        <div class="offer-expiry">
+                            <i class="far fa-clock"></i> Valid until {{ offer.expiration_date|date:"d M Y" }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Rooms -->
+        <div class="content-section">
+            <h2 class="section-title">Available Rooms</h2>
+            {% for room in rooms %}
+            <div class="room-card">
+                {% with primary_photo=room.photos.first %}
+                {% if primary_photo %}
+                <img src="{{ primary_photo.media_file.url }}" class="room-img" alt="{{ room.name }}">
+                {% else %}
+                <div class="room-img"
+                    style="display:flex;align-items:center;justify-content:center;font-size:32px;color:#cbd5e1;"><i
+                        class="fas fa-bed"></i></div>
+                {% endif %}
+                {% endwith %}
+
+                <div class="room-details">
+                    <div class="room-name">{{ room.name }}</div>
+                    <div class="room-features">
+                        <span class="feature-tag"><i class="fas fa-user-group" style="color:var(--accent);"></i> Max
+                            {{room.max_guests }} Guests</span>
+                        <span class="feature-tag"><i class="fas fa-bed" style="color:var(--accent);"></i>
+                            {{room.room_class }}</span>
+                    </div>
+                    <p style="font-size:13px; color:var(--text-2); margin-bottom:16px;">
+                        Breakfast included • Free WiFi • Free cancellation 48h prior
+                    </p>
+
+                    <div class="room-footer">
+                        <div class="room-price">
+                            <div class="amount">₹{{ room.base_price|floatformat:0 }}</div>
+                            <div class="unit">per night</div>
+                        </div>
+                        <a href="{% url 'customer:book_room' room.id %}"
+                            data-base-url="{% url 'customer:book_room' room.id %}"
+                            class="btn btn-primary btn-book-room">
+                            Book Room
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div
+                style="padding:60px;text-align:center;background:rgba(255,255,255,0.03);border-radius:24px;border:1px solid rgba(255,255,255,0.06);">
+                <p style="color:rgba(255,255,255,0.4); font-size:16px;">No rooms are currently available for booking.
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Reviews -->
+        <div class="content-section">
+            <h2 class="section-title">Guest Reviews</h2>
+
+            <!-- Write a Review Form -->
+            {% if user.is_authenticated and user.role == 'customer' %}
+            <div class="review-card" style="margin-bottom:32px;">
+                <h3
+                    style="font-family:var(--font-serif);font-size:22px;font-weight:400;margin-bottom:24px;color:white;">
+                    Leave a Review</h3>
+                <form method="POST" action="{% url 'customer:add_review' hotel.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="guest_name" value="{{ user.username }}">
+                    <div class="form-group">
+                        <label>Rating (1-7)</label>
+                        <select name="rating" class="form-control" required style="max-width:200px;">
+                            <option value="7">★★★★★★★ (7) - Excellent</option>
+                            <option value="6">★★★★★★☆ (6) - Very Good</option>
+                            <option value="5">★★★★★☆☆ (5) - Good</option>
+                            <option value="4">★★★★☆☆☆ (4) - Average</option>
+                            <option value="3">★★★☆☆☆☆ (3) - Below Average</option>
+                            <option value="2">★★☆☆☆☆☆ (2) - Poor</option>
+                            <option value="1">★☆☆☆☆☆☆ (1) - Very Poor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Review</label>
+                        <textarea name="comment" class="form-control" placeholder="Tell others about your experience..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-outline"><i class="fas fa-paper-plane"></i> Submit
+                        Review</button>
+                </form>
+            </div>
+            {% endif %}
+
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-header">
+                    <div>
+                        <div class="reviewer-name">{{ review.guest_name }}</div>
+                        <div class="review-rating">
+                            {% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{%endif%}{%endfor %} </div>
+                        </div>
+                        <div class="review-date">{{ review.created_at|date:"d M Y" }}</div>
+                    </div>
+                    <div class="review-text">{{ review.comment }}</div>
+                </div>
+                {% empty %}
+                <p style="color:var(--text-2); font-size:14px;">No reviews yet. Be the first to leave one!</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Right Column (Sticky Dates Setup) -->
+        <div>
+            <div class="booking-widget">
+                <h3
+                    style="font-size:18px;font-weight:800;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);">
+                    <i class="fas fa-calendar" style="color:var(--accent);"></i> Select Dates
+                </h3>
+                <p style="font-size:13px;color:var(--text-2);margin-bottom:20px;line-height:1.5;">
+                    Add your trip dates to view detailed pricing and immediately proceed to booking from the room list.
+                </p>
+
+                <div class="form-group">
+                    <label>Check-in Date</label>
+                    <input type="date" id="global_check_in" class="form-control" onchange="updateBookingLinks()">
+                </div>
+                <div class="form-group">
+                    <label>Check-out Date</label>
+                    <input type="date" id="global_check_out" class="form-control" onchange="updateBookingLinks()">
+                </div>
+
+                <div style="margin-top:24px; font-size:12px; color:var(--text-3); display:flex; gap:8px;">
+                    <i class="fas fa-check-circle" style="color:var(--success);margin-top:2px;"></i>
+                    <div>Dates apply automatically to all "Book Room" buttons on this page.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

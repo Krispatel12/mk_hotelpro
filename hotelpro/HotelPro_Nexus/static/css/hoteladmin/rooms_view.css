@@ -1,0 +1,1631 @@
+/* ============================================================
+   ROOMS DUAL VIEW — Professional Layout System
+   Views: Grid (Card) | List (Table Row)
+   ============================================================ */
+
+@property --border-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes borderFlow {
+    from { --border-angle: 0deg; }
+    to { --border-angle: 360deg; }
+}
+
+/* ── Container ─────────────────────────────────────────────── */
+.inventory-container {
+    transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── View Toggle Buttons ───────────────────────────────────── */
+.view-toggle-btn {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    background-color: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.view-toggle-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0.75rem;
+    background: white;
+    transform: scale(0.7);
+    opacity: 0;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+}
+
+.view-toggle-btn:hover {
+    color: #334155;
+}
+
+.view-toggle-btn:hover::after {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.view-toggle-btn i {
+    position: relative;
+    z-index: 1;
+}
+
+.view-toggle-btn.active {
+    color: white;
+}
+
+.view-toggle-btn.active::after {
+    background: #0f172a;
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+}
+
+
+/* == GRID VIEW (Default) ===================================== */
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 2rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 1024px) {
+    .inventory-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* 🏔️ Zenith Obsidian Base - Global Card Reset */
+.premium-glass {
+    background: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 🔍 Anti-Glare Search Protocol */
+#inventory-search {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #f1f5f9 !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+#inventory-search::placeholder {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+#inventory-search:focus {
+    background: #0f172a !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+}
+.room-card {
+    background: #ffffff; /* We'll keep this but override for Elite */
+    transition:
+        transform 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+        box-shadow 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 0.3s ease,
+        padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: cardReveal 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+/* Obsidian Deep Foundation - Forcing Professional Zenith Slate by Default */
+.room-card {
+    background: #0f172a !important; /* Unified Obsidian Primary */
+    border: 1.5px solid rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Master Text Contrast Engine - Ensures visibility on all dark/vibrant surfaces */
+.room-card h3,
+.room-card p,
+.room-card span:not(.category-badge),
+.room-card div:not(.category-badge),
+.room-card i {
+    color: #f8fafc !important; /* High contrast silver/white */
+}
+
+.room-card .text-slate-900,
+.room-card .text-slate-800,
+.room-card .text-slate-700,
+.room-card .text-slate-600,
+.room-card .text-slate-500,
+.room-card .text-slate-400,
+.room-card .text-slate-300 {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.room-card .text-slate-400,
+.room-card .price-label {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Elite Glass Controls - Fixing the "White Block" Button Issue */
+.room-card .bg-white,
+.room-card .bg-slate-50,
+.room-card .bg-slate-100 {
+    background: rgba(255, 255, 255, 0.04) !important;
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: white !important;
+}
+
+.room-card .bg-white:hover,
+.room-card .bg-slate-50:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.room-card .action-cluster button,
+.room-card .action-cluster a {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.09);
+}
+
+@keyframes cardReveal {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger cards on reveal */
+.room-card:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.room-card:nth-child(2) {
+    animation-delay: 0.10s;
+}
+
+.room-card:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.room-card:nth-child(4) {
+    animation-delay: 0.20s;
+}
+
+.room-card:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.room-card:nth-child(6) {
+    animation-delay: 0.30s;
+}
+
+
+/* ── Hide/Show helpers (default: grid) ─────────────────────── */
+.show-on-list {
+    display: none;
+}
+
+.hide-on-list {
+    display: flex;
+}
+
+
+/* == LIST VIEW (Elite Ribbon Mode) ========================== */
+
+.view-list-mode .inventory-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+/* Base List Layering */
+.view-list-mode .room-card {
+    border-radius: 1.25rem !important;
+    overflow: hidden;
+    left: 0;
+}
+
+.view-list-mode .room-card .info-wrapper {
+    display: flex;
+}
+
+/* Hide Grid-heavy elements in list */
+.view-list-mode .hide-on-list {
+    display: none !important;
+}
+
+.view-list-mode .show-on-list {
+    display: flex;
+}
+
+/* ── Entrance re-animation on view switch ──────────────────── */
+@keyframes listRowReveal {
+    from {
+        opacity: 0;
+        transform: translateX(-12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.view-list-mode .room-card {
+    animation: listRowReveal 0.4s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.view-list-mode .room-card:nth-child(1) {
+    animation-delay: 0.03s;
+}
+
+.view-list-mode .room-card:nth-child(2) {
+    animation-delay: 0.07s;
+}
+
+.view-list-mode .room-card:nth-child(3) {
+    animation-delay: 0.11s;
+}
+
+.view-list-mode .room-card:nth-child(4) {
+    animation-delay: 0.15s;
+}
+
+.view-list-mode .room-card:nth-child(5) {
+    animation-delay: 0.19s;
+}
+
+.view-list-mode .room-card:nth-child(6) {
+    animation-delay: 0.23s;
+}
+
+/* ── Status Pulse Effect ─────────────────────────────────── */
+.status-pulse {
+    position: relative;
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+    animation: statusPulse 2s infinite;
+}
+
+@keyframes statusPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+
+/* ── View Switcher wrapper pill ────────────────────────────── */
+.view-switcher-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.3rem;
+    background: rgba(15, 23, 42, 0.05);
+    border-radius: 1rem;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+/* == ELITE ANALYTICS CARDS (Blue & Green Zenith Themes) ================= */
+.analytics-card {
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 📊 Zenith Blue Theme - Categories Metrics */
+.analytics-card[data-type="categories"] {
+    background: 
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.2), transparent 70%),
+        #0f172a !important;
+    border-radius: 2.5rem !important;
+    box-shadow: 
+        0 40px 100px -20px rgba(0, 0, 0, 0.6),
+        0 0 30px 5px rgba(37, 99, 235, 0.1),
+        inset 0 0 20px rgba(255, 255, 255, 0.02) !important;
+}
+
+.analytics-card[data-type="categories"],
+.analytics-card[data-type="categories"] span,
+.analytics-card[data-type="categories"] i,
+.analytics-card[data-type="categories"] .text-slate-900,
+.analytics-card[data-type="categories"] .text-primary-600 {
+    color: white !important;
+}
+
+.analytics-card[data-type="categories"] span.text-slate-400 {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.analytics-card[data-type="categories"] .bg-primary-50 {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 🌿 Zenith Green Theme - Inventory Metrics */
+.analytics-card[data-type="inventory"] {
+    background: 
+        radial-gradient(circle at top right, rgba(16, 185, 129, 0.2), transparent 70%),
+        #0f172a !important;
+    border-radius: 2.5rem !important;
+    box-shadow: 
+        0 40px 100px -20px rgba(0, 0, 0, 0.6),
+        0 0 30px 5px rgba(16, 185, 129, 0.1),
+        inset 0 0 20px rgba(255, 255, 255, 0.02) !important;
+}
+
+.analytics-card[data-type="inventory"],
+.analytics-card[data-type="inventory"] span,
+.analytics-card[data-type="inventory"] i,
+.analytics-card[data-type="inventory"] .text-emerald-600,
+.analytics-card[data-type="inventory"] .text-emerald-700 {
+    color: white !important;
+}
+
+.analytics-card[data-type="inventory"] span.text-slate-400 {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.analytics-card[data-type="inventory"] .bg-emerald-50 {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Glassmorphic Icon Housing for Analytics */
+.analytics-card .w-14.h-14 {
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.analytics-card:hover .w-14.h-14 {
+    background: rgba(255, 255, 255, 0.25) !important;
+    transform: scale(1.1) rotate(5deg);
+}
+
+.analytics-card:active {
+    transform: scale(0.97) translateY(2px);
+    transition: all 0.1s ease;
+}
+
+.analytics-card[data-type="categories"]:active {
+    box-shadow: 0 20px 50px -10px rgba(30, 58, 138, 0.6) !important;
+}
+
+.analytics-card[data-type="inventory"]:active {
+    box-shadow: 0 20px 50px -10px rgba(6, 78, 59, 0.6) !important;
+}
+
+/* == ELITE CONTROLS & SEARCH ================================ */
+
+@keyframes categoryPulse {
+    0% {
+        border-color: rgba(226, 232, 240, 1);
+        box-shadow: 0 0 0 0 rgba(226, 232, 240, 0);
+    }
+
+    50% {
+        border-color: var(--pulse-color);
+        box-shadow: 0 0 20px 0 var(--pulse-shadow);
+    }
+
+    100% {
+        border-color: rgba(226, 232, 240, 1);
+        box-shadow: 0 0 0 0 rgba(226, 232, 240, 0);
+    }
+}
+
+.search-icon-pulse {
+    animation: searchPulse 4s infinite;
+}
+
+@keyframes searchPulse {
+
+    0%,
+    100% {
+        opacity: 0.4;
+        transform: translateY(-50%) scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1.1);
+        color: #4f46e5;
+    }
+}
+
+#inventory-search:focus {
+    background: white;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1), 0 10px 30px rgba(79, 70, 229, 0.05);
+}
+
+.elite-dropdown-menu {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.15),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.4) !important;
+}
+
+.portfolio-option {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.portfolio-option::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+}
+
+.portfolio-option:hover::before,
+.portfolio-option.active::before {
+    opacity: 1;
+}
+
+.portfolio-option:hover,
+.portfolio-option.active {
+    color: white !important;
+    padding-left: 1.75rem !important;
+}
+
+.portfolio-option.active {
+    background: transparent !important;
+    /* Managed by ::before */
+}
+
+/* Filtering Animations */
+.neural-hidden {
+    display: none !important;
+}
+
+.room-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#empty-inventory-state.show {
+    display: flex !important;
+    animation: stateReveal 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes stateReveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* == CATEGORY GROUPING SYSTEM =============================== */
+
+.category-section {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.category-icon-frame {
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+.category-icon-frame i {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+/* Category Specific Glass Accents */
+.category-icon-frame[data-category="PLATINUM"] {
+    color: #e2e8f0;
+}
+
+.category-icon-frame[data-category="ELITE"] {
+    color: #c084fc;
+}
+
+.category-icon-frame[data-category="EXECUTIVE"] {
+    color: #94a3b8;
+}
+
+.category-icon-frame[data-category="LUXURY"] {
+    color: #fb7185;
+}
+
+.category-icon-frame[data-category="SUITE"] {
+    color: #fbbf24;
+}
+
+.category-icon-frame[data-category="PREMIUM"] {
+    color: #f97316;
+}
+
+.category-icon-frame[data-category="STANDARD"] {
+    color: #60a5fa;
+}
+
+.category-icon-frame[data-category="DELUXE"] {
+    color: #a78bfa;
+}
+
+.category-icon-frame[data-category="CLUB"] {
+    color: #2dd4bf;
+}
+
+.category-icon-frame[data-category="ECONOMY"] {
+    color: #34d399;
+}
+
+.category-section:hover .category-icon-frame {
+    transform: scale(1.15) rotate(-8deg);
+    border-color: currentColor !important;
+    box-shadow: 0 15px 45px rgba(15, 23, 42, 0.12);
+}
+
+/* == ELITE ANIMATED BORDER SYSTEM =========================== */
+
+/* Elite Living Edge - Unified Animation System */
+.elite-animated-border {
+    position: relative;
+    background: clip-padding;
+}
+
+.elite-animated-border::before {
+    content: "";
+    position: absolute;
+    inset: -1.5px;
+    /* High-fidelity thin border */
+    padding: 1.5px;
+    background: conic-gradient(from var(--border-angle),
+            transparent 0deg,
+            transparent 120deg,
+            var(--border-color, #4f46e5) 180deg,
+            transparent 240deg,
+            transparent 360deg);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: destination-out;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    animation: borderRotate 3s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Specific Border Radii for different card types */
+.category-parent-card.elite-animated-border::before {
+    border-radius: 3.6rem;
+}
+
+.room-card.elite-animated-border::before {
+    border-radius: 2.1rem;
+}
+
+.analytics-card.elite-animated-border::before {
+    border-radius: 2.1rem;
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes borderRotate {
+    to {
+        --border-angle: 360deg;
+    }
+}
+
+.elite-animated-border:hover::before {
+    opacity: 1;
+}
+
+/* == PROFESSIONAL TIP CALIBRATION == */
+.bg-indigo-600 {
+    background: rgba(79, 70, 229, 0.4) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.category-parent-card {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--category-bg, rgba(255, 255, 255, 0.5)) !important;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    box-shadow:
+        0 40px 100px -20px var(--category-glow, rgba(15, 23, 42, 0.05)),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+.category-parent-card:hover {
+    transform: translateY(-5px);
+    background: var(--category-bg-hover, rgba(255, 255, 255, 0.6)) !important;
+    box-shadow:
+        0 60px 120px -30px var(--category-glow, rgba(15, 23, 42, 0.1)),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Room Card Stylings - Unified Obsidian Framework */
+.room-card {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    position: relative;
+    border-radius: 2rem !important;
+}
+
+/* Premium Texture Overlay - Dark Zenith Blend */
+.room-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%, rgba(0, 0, 0, 0.2) 100%);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+}
+
+.room-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.room-card:hover::after {
+    opacity: 0.8;
+}
+
+.room-card:active {
+    transform: translateY(-2px) scale(0.98);
+    transition: all 0.1s ease;
+}
+
+/* Child Border Animation Speed Override */
+.room-card.elite-animated-border::before {
+    animation-duration: 2.5s;
+    /* Faster animation for child cards to feel more "active" */
+}
+
+/* Color Themes (Applied to Parent & Child) */
+.category-parent-card[data-category="PLATINUM"],
+.room-card[data-category="PLATINUM"] {
+    --border-color: #cbd5e1;
+}
+
+.category-parent-card[data-category="ELITE"],
+.room-card[data-category="ELITE"] {
+    --border-color: #94a3b8;
+}
+
+.category-parent-card[data-category="EXECUTIVE"],
+.room-card[data-category="EXECUTIVE"] {
+    --border-color: #1e293b;
+}
+
+.category-parent-card[data-category="LUXURY"],
+.room-card[data-category="LUXURY"] {
+    --border-color: #059669;
+}
+
+.category-parent-card[data-category="SUITE"],
+.room-card[data-category="SUITE"] {
+    --border-color: #d97706;
+}
+
+.category-parent-card[data-category="PREMIUM"],
+.room-card[data-category="PREMIUM"] {
+    --border-color: #ea580c;
+}
+
+.category-parent-card[data-category="STANDARD"],
+.room-card[data-category="STANDARD"] {
+    --border-color: #3b82f6;
+}
+
+.category-parent-card[data-category="DELUXE"],
+.room-card[data-category="DELUXE"] {
+    --border-color: #8b5cf6;
+}
+
+.category-parent-card[data-category="CLUB"],
+.room-card[data-category="CLUB"] {
+    --border-color: #0d9488;
+}
+
+.category-parent-card[data-category="ECONOMY"],
+.room-card[data-category="ECONOMY"] {
+    --border-color: #10b981;
+}
+
+.category-parent-card[data-category="LUXURY"],
+.room-card[data-category="LUXURY"] {
+    --border-color: #f43f5e;
+}
+
+/* == ZENITH ELITE CARD SYSTEM (Obsidian Glass Series) ============ */
+.room-card.vibrant-card {
+    transition: all 0.7s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    border: none !important;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05) !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* Attractive Animated Border Layer */
+.room-card.vibrant-card::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    padding: 2px;
+    border-radius: inherit;
+    background: conic-gradient(
+        from var(--border-angle),
+        transparent 20%,
+        var(--sig-glow, #4f46e5) 45%,
+        transparent 50%,
+        transparent 70%,
+        var(--sig-glow, #4f46e5) 95%,
+        transparent 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: borderFlow 4s linear infinite;
+    z-index: 3;
+    opacity: 0.4;
+    transition: opacity 0.4s ease;
+}
+
+.room-card.vibrant-card:hover::before {
+    opacity: 1;
+    animation-duration: 2.5s;
+}
+
+.room-card.vibrant-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 50%);
+    pointer-events: none;
+    z-index: 2;
+    transition: all 0.6s ease;
+}
+
+.room-card.vibrant-card:hover {
+    transform: translateY(-12px) scale(1.02) !important;
+    box-shadow:
+        0 40px 100px -20px var(--sig-glow, rgba(0, 0, 0, 0.15)),
+        0 0 30px 10px var(--sig-glow, transparent) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Volumetric Outer Glow Logic */
+.room-card.vibrant-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 50%);
+    pointer-events: none;
+    z-index: 2;
+    transition: all 0.6s ease;
+}
+
+.room-card.vibrant-card:hover::after {
+    opacity: 0.6;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 70%);
+}
+
+.room-card.vibrant-card .text-slate-900,
+.room-card.vibrant-card .text-slate-800,
+.room-card.vibrant-card .text-slate-700,
+.room-card.vibrant-card .text-slate-600,
+.room-card.vibrant-card .text-slate-400,
+.room-card.vibrant-card h3 {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.room-card.vibrant-card .text-slate-400 {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.room-card.vibrant-card .bg-slate-50,
+.room-card.vibrant-card .bg-slate-100,
+.room-card.vibrant-card .bg-white {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
+}
+
+.room-card.vibrant-card .border-y,
+.room-card.vibrant-card .border-slate-50,
+.room-card.vibrant-card .border-slate-100 {
+    border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Category Specific Zenith Gradients */
+.room-card.vibrant-card[data-category="DELUXE"] {
+    background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important;
+    --sig-glow: rgba(79, 70, 229, 0.4);
+}
+
+.room-card.vibrant-card[data-category="STANDARD"] {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%) !important;
+    --sig-glow: rgba(14, 165, 233, 0.4);
+}
+
+.room-card.vibrant-card[data-category="SUITE"] {
+    background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%) !important;
+    --sig-glow: rgba(245, 158, 11, 0.4);
+}
+
+.room-card.vibrant-card[data-category="LUXURY"] {
+    background: linear-gradient(135deg, #f43f5e 0%, #9f1239 100%) !important;
+    --sig-glow: rgba(244, 63, 94, 0.4);
+}
+
+.room-card.vibrant-card[data-category="ECONOMY"],
+.room-card.vibrant-card[data-category="PREMIUM"] {
+    background: linear-gradient(135deg, #10b981 0%, #065f46 100%) !important;
+    --sig-glow: rgba(16, 185, 129, 0.4);
+}
+
+.room-card.vibrant-card[data-category="PREMIUM"] {
+    background: linear-gradient(135deg, #f43f5e 0%, #9f1239 100%) !important;
+    --sig-glow: rgba(244, 63, 94, 0.4);
+}
+
+.room-card.vibrant-card[data-category="EXECUTIVE"] {
+    background: linear-gradient(135deg, #0f172a 0%, #020617 100%) !important;
+    --sig-glow: rgba(15, 23, 42, 0.5);
+}
+
+.room-card.vibrant-card[data-category="CLUB"] {
+    background: linear-gradient(135deg, #0d9488 0%, #115e59 100%) !important;
+    --sig-glow: rgba(13, 148, 136, 0.4);
+}
+
+.room-card.vibrant-card[data-category="ECONOMY"] {
+    background: linear-gradient(135deg, #64748b 0%, #334155 100%) !important;
+    --sig-glow: rgba(100, 116, 139, 0.4);
+}
+
+
+.room-card.vibrant-card[data-category="ELITE"] {
+    background: linear-gradient(135deg, #8b5cf6 0%, #5b21b6 100%) !important;
+    --sig-glow: rgba(139, 92, 246, 0.4);
+}
+
+.room-card.vibrant-card .deploy-room-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    transition: all 0.4s ease !important;
+}
+
+.room-card.vibrant-card .deploy-room-btn:hover {
+    background: white !important;
+    color: #1e293b !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.room-card.vibrant-card .deploy-room-btn i {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.room-card.vibrant-card .deploy-room-btn:hover i {
+    color: #4f46e5 !important;
+}
+
+/* Parent Specific Tints */
+
+.category-parent-card[data-category="PLATINUM"] {
+    --category-bg: rgba(15, 23, 42, 0.45);
+    --category-bg-hover: rgba(15, 23, 42, 0.6);
+    --category-glow: rgba(148, 163, 184, 0.15);
+}
+
+.category-parent-card[data-category="ELITE"] {
+    --category-bg: rgba(20, 15, 35, 0.5); /* Deep Amethyst */
+    --category-bg-hover: rgba(30, 20, 50, 0.65);
+    --category-glow: rgba(139, 92, 246, 0.2);
+}
+
+.category-parent-card[data-category="EXECUTIVE"] {
+    --category-bg: rgba(15, 23, 42, 0.5);
+    --category-bg-hover: rgba(15, 23, 42, 0.7);
+    --category-glow: rgba(255, 255, 255, 0.05);
+}
+
+.category-parent-card[data-category="LUXURY"] {
+    --category-bg: rgba(20, 10, 30, 0.4); /* Dark Obsidian Purple */
+    --category-bg-hover: rgba(30, 15, 45, 0.5);
+    --category-glow: rgba(244, 63, 94, 0.2);
+}
+
+.category-parent-card[data-category="SUITE"] {
+    --category-bg: rgba(30, 20, 10, 0.4);
+    --category-bg-hover: rgba(45, 30, 15, 0.5);
+    --category-glow: rgba(217, 119, 6, 0.2);
+}
+
+.category-parent-card[data-category="PREMIUM"] {
+    --category-bg: rgba(35, 15, 10, 0.4);
+    --category-bg-hover: rgba(50, 20, 15, 0.5);
+    --category-glow: rgba(234, 88, 12, 0.2);
+}
+
+.category-parent-card[data-category="STANDARD"] {
+    --category-bg: rgba(15, 20, 42, 0.45);
+    --category-bg-hover: rgba(20, 30, 60, 0.55);
+    --category-glow: rgba(59, 130, 246, 0.2);
+}
+
+.category-parent-card[data-category="DELUXE"] {
+    --category-bg: rgba(20, 10, 40, 0.45); /* Elite Purple Obsidian */
+    --category-bg-hover: rgba(30, 20, 60, 0.55);
+    --category-glow: rgba(139, 92, 246, 0.25);
+}
+
+.category-parent-card[data-category="CLUB"] {
+    --category-bg: rgba(10, 35, 35, 0.4);
+    --category-bg-hover: rgba(15, 50, 50, 0.5);
+    --category-glow: rgba(13, 148, 136, 0.2);
+}
+
+.category-parent-card[data-category="ECONOMY"] {
+    --category-bg: rgba(10, 30, 25, 0.4);
+    --category-bg-hover: rgba(15, 45, 35, 0.5);
+    --category-glow: rgba(16, 185, 129, 0.2);
+}
+
+/* Visibility Overrides for Dark Containers */
+.category-parent-card h2 {
+    color: #f8fafc !important;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.category-parent-card .text-slate-400 {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.category-parent-card .bg-gradient-to-r {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%) !important;
+}
+
+/* Analytics Card Styles */
+.analytics-card {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.8) !important;
+}
+
+.analytics-card:hover {
+    transform: translateY(-8px);
+    background: white !important;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.12);
+}
+
+.analytics-card[data-type="categories"] {
+    --border-color: #4f46e5;
+}
+
+.analytics-card[data-type="inventory"] {
+    --border-color: #10b981;
+}
+
+/* == CATEGORY SIGNATURE SYSTEM =============================== */
+
+.signature-accent-bar {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 40px;
+    border-radius: 0 4px 4px 0;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.room-card:hover .signature-accent-bar {
+    opacity: 1;
+    height: 60px;
+}
+
+/* Category Specific Signatures (V2 Executive Muted Palette) */
+
+/* Platinum: Ultra-White Porcelain */
+.room-card[data-category="PLATINUM"] .category-badge {
+    background: linear-gradient(135deg, #f8fafc, #ffffff);
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.room-card[data-category="PLATINUM"] .signature-accent-bar {
+    background: linear-gradient(180deg, #f8fafc, #ffffff);
+    border-right: 1px solid #e2e8f0;
+}
+
+.room-card[data-category="PLATINUM"] .category-dot {
+    background: #cbd5e1;
+}
+
+.room-card[data-category="PLATINUM"]:hover {
+    --pulse-color: #f8fafc;
+    --pulse-shadow: rgba(248, 250, 252, 0.4);
+    animation: categoryPulse 2s infinite ease-in-out;
+    box-shadow: 0 15px 35px -10px rgba(148, 163, 184, 0.15);
+    border-color: #f8fafc;
+}
+
+.room-card[data-category="PLATINUM"]:hover .group-hover\:category-text {
+    color: #64748b !important;
+}
+
+/* Elite: Silver Pearl */
+.room-card[data-category="ELITE"] .category-badge {
+    background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.room-card[data-category="ELITE"] .signature-accent-bar {
+    background: linear-gradient(180deg, #e2e8f0, #f8fafc);
+}
+
+.room-card[data-category="ELITE"] .category-dot {
+    background: #94a3b8;
+}
+
+.room-card[data-category="ELITE"]:hover {
+    --pulse-color: #cbd5e1;
+    --pulse-shadow: rgba(203, 213, 225, 0.4);
+    animation: categoryPulse 2s infinite ease-in-out;
+    box-shadow: 0 15px 35px -10px rgba(148, 163, 184, 0.2);
+    border-color: #cbd5e1;
+}
+
+.room-card[data-category="ELITE"]:hover .group-hover\:category-text {
+    color: #475569 !important;
+}
+
+/* Executive: Midnight Slate */
+.room-card[data-category="EXECUTIVE"] .category-badge {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: white;
+}
+
+.room-card[data-category="EXECUTIVE"] .signature-accent-bar {
+    background: linear-gradient(180deg, #1e293b, #334155);
+}
+
+.room-card[data-category="EXECUTIVE"] .category-dot {
+    background: #1e293b;
+}
+
+.room-card[data-category="EXECUTIVE"]:hover {
+    --pulse-color: #334155;
+    --pulse-shadow: rgba(51, 65, 85, 0.3);
+    animation: categoryPulse 2s infinite ease-in-out;
+    box-shadow: 0 15px 35px -10px rgba(15, 23, 42, 0.25);
+    border-color: #334155;
+}
+
+.room-card[data-category="EXECUTIVE"]:hover .group-hover\:category-text {
+    color: #1e293b !important;
+}
+
+/* Luxury: Forest Emerald */
+.room-card[data-category="LUXURY"] .category-badge {
+    background: linear-gradient(135deg, #065f46, #059669);
+    color: white;
+}
+
+.room-card[data-category="LUXURY"] .signature-accent-bar {
+    background: linear-gradient(180deg, #065f46, #059669);
+}
+
+.room-card[data-category="LUXURY"] .category-dot {
+    background: #065f46;
+}
+
+.room-card[data-category="LUXURY"]:hover {
+    --pulse-color: #059669;
+    --pulse-shadow: rgba(5, 150, 105, 0.3);
+    animation: categoryPulse 2s infinite ease-in-out;
+    box-shadow: 0 15px 35px -10px rgba(5, 150, 105, 0.15);
+    border-color: #059669;
+}
+
+.room-card[data-category="LUXURY"]:hover .group-hover\:category-text {
+    color: #065f46 !important;
+}
+
+/* Suite: Burnished Gold */
+.room-card[data-category="SUITE"] .category-badge {
+    background: linear-gradient(135deg, #92400e, #d97706);
+    color: white;
+}
+
+.room-card[data-category="SUITE"] .signature-accent-bar {
+    background: linear-gradient(180deg, #92400e, #d97706);
+}
+
+.room-card[data-category="SUITE"] .category-dot {
+    background: #92400e;
+}
+
+.room-card[data-category="SUITE"]:hover {
+    --pulse-color: #d97706;
+    --pulse-shadow: rgba(217, 119, 6, 0.3);
+    animation: categoryPulse 2s infinite ease-in-out;
+    box-shadow: 0 15px 35px -10px rgba(217, 119, 6, 0.15);
+    border-color: #d97706;
+}
+
+.room-card[data-category="SUITE"]:hover .group-hover\:category-text {
+    color: #92400e !important;
+}
+
+/* Premium: Deep Amber */
+.room-card[data-category="PREMIUM"] .category-badge {
+    background: linear-gradient(135deg, #9a3412, #ea580c);
+    color: white;
+}
+
+.room-card[data-category="PREMIUM"] .signature-accent-bar {
+    background: linear-gradient(180deg, #9a3412, #ea580c);
+}
+
+.room-card[data-category="PREMIUM"] .category-dot {
+    background: #9a3412;
+}
+
+.room-card[data-category="PREMIUM"]:hover {
+    --pulse-color: #ea580c;
+    --pulse-shadow: rgba(234, 88, 12, 0.3);
+    animation: categoryPulse 2s infinite ease-in-out;
+    box-shadow: 0 15px 35px -10px rgba(234, 88, 12, 0.15);
+    border-color: #ea580c;
+}
+
+.room-card[data-category="PREMIUM"]:hover .group-hover\:category-text {
+    color: #f97316 !important; /* Luminous Orange */
+    text-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
+}
+
+/* Standard: Corporate Navy */
+.room-card[data-category="STANDARD"] .category-badge {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    color: white;
+}
+
+.room-card[data-category="STANDARD"] .signature-accent-bar {
+    background: linear-gradient(180deg, #1e40af, #3b82f6);
+}
+
+.room-card[data-category="STANDARD"] .category-dot {
+    background: #1e40af;
+}
+
+.room-card[data-category="STANDARD"]:hover {
+    --pulse-color: #3b82f6;
+    --pulse-shadow: rgba(59, 130, 246, 0.3);
+    animation: categoryPulse 2s infinite ease-in-out;
+    box-shadow: 0 15px 35px -10px rgba(59, 130, 246, 0.15);
+    border-color: #3b82f6;
+}
+
+.room-card[data-category="STANDARD"]:hover .group-hover\:category-text {
+    color: #60a5fa !important; /* Luminous Blue */
+    text-shadow: 0 0 15px rgba(96, 165, 250, 0.3);
+}
+
+/* Deluxe: Dark Violet */
+.room-card[data-category="DELUXE"] .category-badge {
+    background: linear-gradient(135deg, #5b21b6, #8b5cf6);
+    color: white;
+}
+
+.room-card[data-category="DELUXE"] .signature-accent-bar {
+    background: linear-gradient(180deg, #5b21b6, #8b5cf6);
+}
+
+.room-card[data-category="DELUXE"] .category-dot {
+    background: #5b21b6;
+}
+
+.room-card[data-category="DELUXE"]:hover {
+    --pulse-color: #8b5cf6;
+    --pulse-shadow: rgba(139, 92, 246, 0.3);
+    animation: categoryPulse 2s infinite ease-in-out;
+    box-shadow: 0 15px 35px -10px rgba(139, 92, 246, 0.15);
+    border-color: #8b5cf6;
+}
+
+.room-card[data-category="DELUXE"]:hover .group-hover\:category-text {
+    color: #a78bfa !important; /* Luminous Violet */
+    text-shadow: 0 0 15px rgba(167, 139, 250, 0.3);
+}
+
+/* Club: Ocean Teal */
+.room-card[data-category="CLUB"] .category-badge {
+    background: linear-gradient(135deg, #115e59, #0d9488);
+    color: white;
+}
+
+.room-card[data-category="CLUB"] .signature-accent-bar {
+    background: linear-gradient(180deg, #115e59, #0d9488);
+}
+
+.room-card[data-category="CLUB"] .category-dot {
+    background: #115e59;
+}
+
+.room-card[data-category="CLUB"]:hover {
+    --pulse-color: #0d9488;
+    --pulse-shadow: rgba(13, 148, 136, 0.3);
+    animation: categoryPulse 2s infinite ease-in-out;
+    box-shadow: 0 15px 35px -10px rgba(13, 148, 136, 0.15);
+    border-color: #0d9488;
+}
+
+.room-card[data-category="CLUB"]:hover .group-hover\:category-text {
+    color: #2dd4bf !important; /* Luminous Teal */
+    text-shadow: 0 0 15px rgba(45, 212, 191, 0.3);
+}
+
+/* Economy: Steel Grey */
+.room-card[data-category="ECONOMY"] .category-badge {
+    background: linear-gradient(135deg, #475569, #64748b);
+    color: white;
+}
+
+.room-card[data-category="ECONOMY"] .signature-accent-bar {
+    background: linear-gradient(180deg, #475569, #64748b);
+}
+
+.room-card[data-category="ECONOMY"] .category-dot {
+    background: #475569;
+}
+
+.room-card[data-category="ECONOMY"]:hover {
+    --pulse-color: #64748b;
+    --pulse-shadow: rgba(100, 116, 139, 0.3);
+    animation: categoryPulse 2s infinite ease-in-out;
+    box-shadow: 0 15px 35px -10px rgba(100, 116, 139, 0.15);
+    border-color: #64748b;
+}
+
+.room-card[data-category="ECONOMY"]:hover .group-hover\:category-text {
+    color: #94a3b8 !important; /* Silver Slate */
+    text-shadow: 0 0 15px rgba(148, 163, 184, 0.2);
+}
+
+
+/* List View Override - Professional SaaS Balance */
+.view-list-mode .inventory-grid {
+    gap: 1.25rem !important;
+}
+
+.view-list-mode .room-card {
+    padding: 0.75rem 1.5rem !important;
+    /* Slimmer vertical ribbon */
+    border-radius: 1.25rem !important;
+    min-height: 100px;
+}
+
+.view-list-mode .room-card .info-wrapper {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 1.75rem !important;
+}
+
+.view-list-mode .visual-asset {
+    width: 65px !important;
+    /* Slightly smaller in list view for "Ribbon" feel */
+    height: 65px !important;
+    border-radius: 0.85rem !important;
+}
+
+.view-list-mode .info-matrix {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.view-list-mode .card-header {
+    margin-bottom: 0 !important;
+    flex-grow: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 2.5rem !important;
+}
+
+.view-list-mode .card-header h3 {
+    font-size: 1.15rem !important;
+    margin-bottom: 2px !important;
+}
+
+.view-list-mode .action-cluster {
+    order: 2 !important;
+    gap: 0.75rem !important;
+}
+
+.view-list-mode .card-footer {
+    border-top: none !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    gap: 2.5rem !important;
+}
+
+.view-list-mode .price-section {
+    text-align: right !important;
+    min-width: 110px !important;
+}
+
+.view-list-mode .price-section .text-2xl,
+.view-list-mode .price-section .text-3xl {
+    font-size: 1.5rem !important;
+}
+
+.view-list-mode .signature-accent-bar {
+    top: 0;
+    transform: none;
+    height: 100% !important;
+    opacity: 1;
+    width: 4px;
+    border-radius: 0;
+    box-shadow: 2px 0 10px var(--pulse-shadow, rgba(0, 0, 0, 0.05));
+}
+
+.view-list-mode .room-card:hover {
+    transform: translateX(8px) !important;
+}
+
+/* Specific Border Radii for List Mode */
+.view-list-mode .room-card.elite-animated-border::before {
+    border-radius: 1.6rem !important;
+}
+
+
+/* == Floating Tip Guidance (Refined SaaS Orchestration) ======= */
+
+#bk-room-tip-popup {
+    opacity: 0;
+    transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#bk-room-tip-popup.show {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: all !important;
+    z-index: 999999 !important;
+    animation: tipBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+        tipFloat 3s ease-in-out infinite 0.8s;
+}
+
+@keyframes tipBounce {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes tipFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+#bk-room-tip-popup .bg-emerald-600,
+#bk-room-tip-popup .bg-indigo-600 {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+}
+
+/* Shimmer for the hero button */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-shimmer {
+    animation: shimmer 2s infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LIGHT MODE (CLEAN SAAS) OVERRIDES - v10.0 Rooms & Inventory Elite
+   ───────────────────────────────────────────────────────────────────────── */
+
+html.light-mode .inventory-container {
+    background: #f8fafc !important;
+}
+
+html.light-mode .room-card {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light-mode .room-card:hover {
+    background: #ffffff !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(37, 99, 235, 0.1) !important;
+}
+
+html.light-mode .room-card h3,
+html.light-mode .room-card p,
+html.light-mode .room-card span:not(.category-badge),
+html.light-mode .room-card div:not(.category-badge),
+html.light-mode .room-card i {
+    color: #0f172a !important;
+}
+
+html.light-mode .room-card .text-slate-400,
+html.light-mode .room-card .price-label,
+html.light-mode .room-card .text-slate-500 {
+    color: #64748b !important;
+}
+
+html.light-mode .room-card .bg-white,
+html.light-mode .room-card .bg-slate-50,
+html.light-mode .room-card .bg-slate-100 {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+html.light-mode .room-card .bg-white:hover {
+    background: #e2e8f0 !important;
+    color: #2563eb !important;
+}
+
+html.light-mode .room-card::after {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.02), transparent 50%, rgba(0, 0, 0, 0.02) 100%) !important;
+}
+
+html.light-mode .room-card {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+}
+
+html.light-mode .room-card h3 {
+    color: #0f172a !important;
+}
+
+html.light-mode .room-card span,
+html.light-mode .room-card div:not(.category-badge):not(.btn-ultra),
+html.light-mode .room-card i:not(.protected-icon) {
+    color: #475569 !important;
+}
+
+html.light-mode .room-card .price-section span:last-child {
+    color: #0f172a !important;
+}
+
+html.light-mode .room-card .category-badge {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* Analytics Cards in Light Mode */
+html.light-mode .analytics-card[data-type="categories"] {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 20px 50px rgba(37, 99, 235, 0.08) !important;
+}
+
+html.light-mode .analytics-card[data-type="categories"] h2,
+html.light-mode .analytics-card[data-type="categories"] p,
+html.light-mode .analytics-card[data-type="categories"] span,
+html.light-mode .analytics-card[data-type="categories"] i {
+    color: #1e3a8a !important;
+}
+
+html.light-mode .analytics-card[data-type="inventory"] {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 20px 50px rgba(16, 185, 129, 0.08) !important;
+}
+
+html.light-mode .analytics-card[data-type="inventory"] h2,
+html.light-mode .analytics-card[data-type="inventory"] p,
+html.light-mode .analytics-card[data-type="inventory"] span,
+html.light-mode .analytics-card[data-type="inventory"] i {
+    color: #064e3b !important;
+}
+
+/* Category Sections Light Mode */
+html.light-mode .category-parent-card {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light-mode .category-icon-frame {
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+}
+
+/* View Switcher Refinement */
+html.light-mode .view-switcher-pill {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode .view-toggle-btn::after {
+    background: #ffffff;
+}
+
+html.light-mode .view-toggle-btn.active::after {
+    background: #0f172a;
+}

@@ -1,0 +1,50 @@
+{% extends 'hoteladmin/landingpage/base.html' %}
+{% load static %}
+
+{% block title %}HotelPro AI | Next-Gen Hospitality Intelligence{% endblock %}
+
+{% block content %}
+<div class="space-y-0">
+    <!-- 1. Hero Section -->
+    {% include 'hoteladmin/landingpage/includes/hero.html' %}
+
+    <div class="reveal-up">
+        <!-- 2. AI Agent Section (AI Assistant) -->
+        {% include 'hoteladmin/landingpage/includes/ai_assistant_section.html' %}
+    </div>
+
+    <div class="reveal-up">
+        <!-- 3. Features Section -->
+        {% include 'hoteladmin/landingpage/includes/features.html' %}
+    </div>
+
+    <div class="reveal-up">
+        <!-- 4. Dashboard Preview (repurposed How it Works) -->
+        {% include 'hoteladmin/landingpage/includes/how_it_works_section.html' %}
+    </div>
+
+    <div class="reveal-up">
+        <!-- 5. Testimonials Section -->
+        {% include 'hoteladmin/landingpage/includes/testimonials.html' %}
+    </div>
+
+    <div class="reveal-up">
+        <!-- 6. Pricing Section -->
+        {% include 'hoteladmin/landingpage/includes/pricing.html' %}
+    </div>
+
+    <div class="reveal-up">
+        <!-- 7. CTA Section -->
+        {% include 'hoteladmin/landingpage/includes/cta.html' %}
+    </div>
+
+    <div class="reveal-up">
+        <!-- 8. FAQ Section -->
+        {% include 'hoteladmin/landingpage/includes/faq.html' %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{# Core interactions are handled in base.html via landing_interactions.js #}
+{% endblock %}

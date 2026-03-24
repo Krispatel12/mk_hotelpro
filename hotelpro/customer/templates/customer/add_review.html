@@ -1,0 +1,37 @@
+</form><!DOCTYPE html>
+<html>
+<head>
+    <title>Add Review</title>
+</head>
+<body>
+
+<h2>Add Review</h2>
+<hr>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>Rating (1-5):</label><br>
+    <input type="number" name="rating" min="1" max="5" required>
+    <br><br>
+
+    <label>Comment:</label><br>
+    <textarea name="comment" rows="4" cols="40" required></textarea>
+    <br><br>
+
+    <label>Recommend:</label><br>
+    <select name="recommend" required>
+        <option value="">-- Select --</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+    </select>
+    <br><br>
+
+    <button type="submit">Submit Review</button>
+</form>
+
+<br>
+<a href="{% url 'hotels:hotel_dashboard' %}">⬅ Back</a>
+
+</body>
+</html>

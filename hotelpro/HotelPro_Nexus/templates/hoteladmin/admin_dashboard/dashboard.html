@@ -1,0 +1,455 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Hotel Onboarding | HotelPro{% endblock %}
+
+{% block page_title %}WelCome Back: {{ hotel.name }}{% endblock %}
+{% block back_link %}
+<a href="{% url 'dashboard' %}" class="zenith-back-btn">
+    <i class="fas fa-chevron-left"></i>
+</a>
+{% endblock %}
+{% block page_subtitle %}Complete your hotel setup to start attracting guests.{% endblock %}
+
+{% block extra_head %}
+<!-- High-performance layout utilities -->
+<link rel="stylesheet" href="{% static 'css/hoteladmin/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/hoteladmin/portfolio_strip.css' %}">
+<link rel="stylesheet" href="{% static 'css/hoteladmin/dual_view_shared.css' %}">
+<script src="{% static 'js/hoteladmin/portfolio_search.js' %}" defer></script>
+{% endblock %}
+
+
+{% block dashboard_content %}
+<div class="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 pb-24">
+
+    <!-- ══ Global Portfolio Strip (v26.0) ══ -->
+    <div class="space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 px-2 border-b border-white/5 pb-10">
+            <div class="flex items-center gap-3">
+                <div class="w-1.5 h-6 bg-white/20 rounded-full"></div>
+                <h4 class="text-sm font-black text-white uppercase tracking-[0.2em]">Enterprise Portfolio</h4>
+            </div>
+
+            <!-- 🏛️ Stage Orchestrator Bar v63.0 (Zenith Refined) -->
+            <div class="stage-orchestrator-bar animate-reveal">
+                <div class="portfolio-search-wrapper">
+                    <i class="fas fa-search search-icon-node"></i>
+                    <input type="text" id="portfolioSearchNode" placeholder="Search Node..."
+                        class="portfolio-search-node" autocomplete="off">
+                </div>
+
+                <div class="orchestrator-view-controller">
+                    <a href="{% url 'dashboard' %}" id="unified-hub-btn"
+                        class="orchestrator-view-btn !w-auto h-auto px-6 py-3 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary-600 hover:border-primary-500/50 hover:shadow-[0_0_30px_rgba(37,99,235,0.3)] transition-all active:scale-95 flex items-center gap-3">
+                        Unified Hub 
+                        <i class="fas fa-arrow-right text-[8px] animate-pulse"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="portfolioNodeContainer" class="flex gap-6 overflow-x-auto pb-6 scrollbar-hide -mx-4 px-4 snap-x">
+            {% for h in all_hotels %}
+            <div class="portfolio-node-item min-w-[340px] max-w-[340px] snap-start" data-node-name="{{ h.name|lower }}">
+                <a href="{% url 'dashboard_specific' h.id %}"
+                    class="block p-1 rounded-[2.1rem] {% if h.id == hotel.id %}active-node-border-wrapper{% endif %} group transition-all duration-500 hover:-translate-y-1">
+
+                    <div
+                        class="p-6 rounded-[2rem] silk-node-card border {% if h.id == hotel.id %}border-transparent{% else %}border-white/5 shadow-2xl shadow-black/20{% endif %} relative overflow-hidden h-full">
+                        {% if h.id == hotel.id %}
+                        <div class="absolute top-0 right-0 p-3 z-20">
+                            <div
+                                class="bg-primary-600 text-white text-[7px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-primary-600/30 animate-pulse">
+                                ACTIVE NODE</div>
+                        </div>
+                        {% endif %}
+
+                        <div class="flex items-center gap-5 relative z-10">
+                            <div
+                                class="w-12 h-12 rounded-2xl {% if h.id == hotel.id %}bg-primary-600 text-white shadow-xl shadow-primary-600/20{% else %}bg-white/5 text-white/20 group-hover:bg-primary-500/10 group-hover:text-primary-400{% endif %} flex items-center justify-center transition-all duration-500">
+                                <i class="fas fa-hotel text-lg"></i>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <h5 class="text-sm font-bold text-white truncate leading-tight">{{ h.name }}</h5>
+                                <div class="flex items-center gap-2 mt-1">
+                                    {% if h.is_live %}
+                                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 status-pulse"></div>
+                                    <span
+                                        class="text-[8px] font-black text-emerald-400 uppercase tracking-widest">Live</span>
+                                    {% else %}
+                                    <div class="w-1.5 h-1.5 rounded-full bg-white/10"></div>
+                                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">{{h.status }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Info Reveal on Selected -->
+                        {% if h.id == hotel.id %}
+                        <div
+                            class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between animate-in slide-in-from-top-2 duration-500">
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-[7px] font-black text-slate-500 uppercase tracking-[0.2em]">Operational
+                                    state</span>
+                                <span class="text-[9px] font-bold text-white uppercase">Registry Verified</span>
+                            </div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-[10px]">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+            <!-- Add New Node Shortcut -->
+            <div class="min-w-[340px] max-w-[340px] snap-start">
+                <a href="{% url 'hotel_onboarding' %}?reset=true"
+                    class="block p-6 rounded-[2rem] bg-white/5 border border-dashed border-white/10 group transition-all duration-500 hover:bg-white/10 hover:border-primary-500/30 hover:-translate-y-1">
+                    <div class="flex items-center gap-5">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-white/5 text-white/20 flex items-center justify-center transition-all duration-500 group-hover:text-primary-400">
+                            <i class="fas fa-plus text-lg"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <h5
+                                class="text-sm font-bold text-white group-hover:text-primary-400 transition-colors uppercase tracking-widest">
+                                Register Node</h5>
+                            <span class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-1">Add new
+                                property</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Operational State Header -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+        <!-- Progress Mastery Card -->
+        <div class="lg:col-span-8 silk-node-card rounded-[3rem] p-12 relative overflow-hidden group">
+            <!-- Background Decoration -->
+            <div
+                class="absolute -right-24 -top-24 w-96 h-96 bg-primary-600/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-primary-600/10 transition-colors duration-1000">
+            </div>
+
+            <div class="relative z-10 flex flex-col h-full justify-between">
+                <div class="flex items-start justify-between mb-12">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-primary-600 status-pulse"></span>
+                            <h3 class="text-3xl font-display font-bold text-slate-900 tracking-tight">Your Progress</h3>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span
+                                class="px-5 py-2 rounded-2xl bg-slate-900 text-white text-[10px] font-bold uppercase tracking-[0.3em] shadow-xl">
+                                {% if progress < 50 %}STARTING{% elif progress < 80 %}ALMOST THERE{%else%}READY{%endif%}
+                                    </span>
+                                    <span
+                                        class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">Step
+                                        {{ hotel.onboarding_step }} of 4 complete</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span
+                            class="text-7xl font-display font-bold text-slate-900 leading-none tracking-tighter">{{progress}}%</span>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-3">Complete
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div
+                        class="h-6 bg-slate-100/50 rounded-full p-1.5 border border-slate-200 shadow-inner relative group/bar">
+                        <div class="progress-bar-fill h-full bg-gradient-to-r from-blue-600 via-primary-500 to-cyan-400 rounded-full relative shadow-[0_0_20px_rgba(37,99,235,0.3)]"
+                            data-progress="{{ progress }}">
+                            <div
+                                class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none">
+                            </div>
+                            <div
+                                class="absolute top-0 right-0 h-full w-24 bg-gradient-to-r from-transparent to-white/40 animate-pulse">
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] italic px-2">
+                        <span>Start</span>
+                        <span>Ready to Go Live</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Status Protocol -->
+        <div class="lg:col-span-4 space-y-8">
+            {% if hotel.status == 'PENDING' %}
+            <div
+                class="h-full silk-node-card rounded-[3rem] p-10 flex flex-col justify-between border-l-[10px] border-amber-500">
+                <div class="space-y-6">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center text-xl shadow-inner">
+                        <i class="fas fa-microchip status-pulse"></i>
+                    </div>
+                    <h4 class="text-xl font-display font-bold text-slate-800">Verification in progress</h4>
+                    <p class="text-xs font-semibold text-slate-400 leading-relaxed uppercase tracking-widest">We are
+                        currently reviewing your property details. This usually takes 24-48 hours.</p>
+                </div>
+                <div class="pt-8">
+                    <span
+                        class="text-[10px] font-bold text-amber-600 uppercase tracking-[0.2em] flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span> STATUS: UNDER REVIEW
+                    </span>
+                </div>
+            </div>
+            {% elif hotel.status == 'REJECTED' %}
+            <div
+                class="h-full silk-node-card rounded-[3rem] p-10 flex flex-col justify-between border-l-[10px] border-rose-600">
+                <div class="space-y-6">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl shadow-inner">
+                        <i class="fas fa-triangle-exclamation"></i>
+                    </div>
+                    <h4 class="text-xl font-display font-bold text-slate-800">Information Needed</h4>
+                    <p class="text-xs font-semibold text-slate-400 leading-relaxed uppercase tracking-widest">
+                        {{hotel.verification_remarks|default:"We need more information to verify your property. Please
+                        check your documents." }}</p>
+                </div>
+                <div class="pt-8">
+                    <a href="{% url 'hotel_onboarding' %}"
+                        class="inline-flex items-center gap-2 text-[10px] font-bold text-rose-600 uppercase tracking-[0.2em] group hover:translate-x-1 transition-all">
+                        FIX NOW <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="h-full silk-node-card rounded-[3rem] p-10 flex flex-col justify-between">
+                <div class="space-y-6">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center text-xl shadow-inner">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4 class="text-xl font-display font-bold text-slate-800">Get More Bookings</h4>
+                    <p class="text-xs font-semibold text-slate-400 leading-relaxed uppercase tracking-widest">Finish
+                        your setup to start receiving bookings and increasing your revenue.</p>
+                </div>
+                <div class="pt-8">
+                    <a href="{% url 'hotel_onboarding' %}"
+                        class="inline-flex items-center gap-2 text-[10px] font-bold text-primary-600 uppercase tracking-[0.2em] group hover:translate-x-1 transition-all">
+                        CONTINUE SETUP <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ══ Hotel Details Panel ══ -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+        <!-- Left: Property Identity Card -->
+        <div class="lg:col-span-5 silk-node-card rounded-[2.5rem] p-10 relative overflow-hidden">
+            <div
+                class="absolute -top-12 -right-12 w-48 h-48 bg-primary-600/5 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <div class="relative z-10">
+                <!-- Header -->
+                <div class="flex items-start justify-between mb-8">
+                    <div>
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Property
+                            Identity</span>
+                        <h3 class="text-2xl font-display font-bold text-slate-900 tracking-tight mt-1">{{ hotel.name }}
+                        </h3>
+                        <span
+                            class="inline-flex items-center gap-1.5 mt-2 text-[10px] font-bold text-primary-600 uppercase tracking-widest">
+                            <i class="fas fa-tags text-[8px]"></i> {{
+                            hotel.get_category_display|default:hotel.category}}
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1 pt-1">
+                        {% for i in "12345" %}
+                        <i
+                            class="fas fa-star text-xs {% if forloop.counter <= hotel.star_rating %}text-amber-400{% else %}text-slate-200{% endif %}"></i>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Info Grid -->
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50/60">
+                        <div
+                            class="w-8 h-8 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shrink-0 text-sm">
+                            <i class="fas fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Address</p>
+                            <p class="text-sm font-semibold text-slate-800 leading-relaxed">{{ hotel.address }},
+                                {{hotel.city }}, {{ hotel.state }} — {{ hotel.pincode }}</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center gap-3 p-4 rounded-2xl bg-slate-50/60">
+                            <div
+                                class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 text-sm">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Phone
+                                </p>
+                                <p class="text-xs font-bold text-slate-800">{{ hotel.contact_number|default:"—" }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 rounded-2xl bg-slate-50/60">
+                            <div
+                                class="w-8 h-8 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center shrink-0 text-sm">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Website
+                                </p>
+                                <p class="text-xs font-bold text-slate-800 truncate">{{ hotel.website|default:"—" }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 rounded-2xl bg-slate-50/60">
+                            <div
+                                class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 text-sm">
+                                <i class="fas fa-arrow-right-to-bracket"></i>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Check-In
+                                </p>
+                                <p class="text-xs font-bold text-slate-800">{{ hotel.check_in_time|default:"—" }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 rounded-2xl bg-slate-50/60">
+                            <div
+                                class="w-8 h-8 rounded-xl bg-rose-100 text-rose-500 flex items-center justify-center shrink-0 text-sm">
+                                <i class="fas fa-arrow-right-from-bracket"></i>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
+                                    Check-Out</p>
+                                <p class="text-xs font-bold text-slate-800">{{ hotel.check_out_time|default:"—" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <a href="{% url 'edit_hotel' hotel.id %}"
+                    class="mt-8 w-full flex items-center justify-center gap-3 py-4 bg-slate-900 hover:bg-primary-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl transition-all duration-300 shadow-xl shadow-slate-900/10 active:scale-95">
+                    <i class="fas fa-pen-to-square"></i> Edit Property Details
+                </a>
+            </div>
+        </div>
+
+        <!-- Right: Stats + Rooms + Media -->
+        <div class="lg:col-span-7 space-y-8">
+
+            <!-- Quick Stats Row -->
+            <div class="grid grid-cols-3 gap-6">
+                <div class="silk-node-card rounded-2xl p-6 text-center shadow-lg">
+                    <span class="text-3xl font-display font-bold text-slate-900">{{ rooms|length }}</span>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Room Types</p>
+                </div>
+                <div class="silk-node-card rounded-2xl p-6 text-center shadow-lg">
+                    <span class="text-3xl font-display font-bold text-slate-900">{{ image_count }}</span>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Photos</p>
+                </div>
+                <div class="premium-glass rounded-2xl p-6 border border-white/60 text-center shadow-lg">
+                    <span
+                        class="text-[11px] font-black uppercase tracking-wider {% if hotel.status == 'APPROVED' %}text-emerald-600{% elif hotel.status == 'PENDING' %}text-amber-500{% else %}text-rose-500{% endif %}">
+                        {{ hotel.status }}
+                    </span>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Status</p>
+                </div>
+            </div>
+
+            <!-- Room Categories -->
+            <div class="silk-node-card rounded-[2rem] p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]"><i
+                            class="fas fa-bed mr-2"></i>Room Inventory</span>
+                    <a href="{% url 'edit_hotel' hotel.id %}#inventory"
+                        class="text-[9px] font-bold text-primary-600 uppercase tracking-widest hover:underline">Manage
+                        →</a>
+                </div>
+                {% if rooms %}
+                <div class="space-y-4">
+                    {% for room in rooms %}
+                    <!-- Sleek Room Card (Mockup Style) -->
+                    <div
+                        class="flex items-center justify-between p-5 rounded-[1.5rem] bg-[#FAFAFA] border-[1.5px] border-[#F1F5F9] group hover:bg-white hover:border-[#E2E8F0] hover:shadow-[0_4px_15px_rgba(0,0,0,0.03)] transition-all duration-300">
+                        <div class="flex items-center gap-5">
+                            <!-- Icon Box -->
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-[#EEF2FF] text-[#6366F1] flex items-center justify-center text-lg shrink-0">
+                                <i class="fas fa-door-open"></i>
+                            </div>
+                            <!-- Info -->
+                            <div class="flex flex-col gap-1">
+                                <p
+                                    class="text-[17px] font-display font-bold text-[#1E293B] capitalize leading-none tracking-tight">
+                                    {{ room.name }}</p>
+                                <p class="text-[10px] font-extrabold text-[#94A3B8] uppercase tracking-[0.1em]">{{
+                                    room.room_class }} · MAX {{ room.max_guests }} GUESTS</p>
+                            </div>
+                        </div>
+                        <!-- Price & Units -->
+                        <div class="flex flex-col items-end gap-1">
+                            <p class="text-[18px] font-display font-black text-[#1E293B] leading-none tracking-tight">
+                                ₹{{ room.base_price }}</p>
+                            <p class="text-[11px] font-bold text-[#94A3B8] lowercase">{{ room.inventory_count }} units
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8 text-slate-400">
+                    <i class="fas fa-bed text-3xl mb-3 opacity-30"></i>
+                    <p class="text-xs font-bold uppercase tracking-widest">No rooms added yet.</p>
+                    <a href="{% url 'add_room' hotel.id %}" class="btn btn-primary">
+                        <span
+                            class="text-[10px] font-bold text-primary-600 mt-2 inline-block uppercase tracking-widest hover:underline">Add
+                            Rooms →</span>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Photo Gallery Strip -->
+            {% if gallery %}
+            <div class="silk-node-card rounded-[2rem] p-8">
+                <div class="flex items-center justify-between mb-5">
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]"><i
+                            class="fas fa-images mr-2"></i>Property Gallery</span>
+                    <a href="{% url 'edit_hotel' hotel.id %}#galleryUploadZone"
+                        class="text-[9px] font-bold text-primary-600 uppercase tracking-widest hover:underline">Manage
+                        →</a>
+                </div>
+                <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                    {% for img in gallery|slice:":8" %}
+                    <img src="{{ img.media_file.url }}" alt="Property photo"
+                        class="w-24 h-20 rounded-2xl object-cover border border-slate-200 shrink-0 hover:scale-105 transition-transform cursor-pointer shadow-sm">
+                    {% endfor %}
+                    {% if image_count > 8 %}
+                    <div
+                        class="w-24 h-20 rounded-2xl bg-slate-100 border border-slate-200 shrink-0 flex items-center justify-center text-slate-400 font-bold text-sm">
+                        +{{ image_count|add:"-8" }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/hoteladmin/dashboard.js' %}" defer></script>
+{% endblock %}

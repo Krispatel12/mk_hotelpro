@@ -1,0 +1,190 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}AI Agent Analyst | HotelPro{% endblock %}
+
+{% block back_link %}
+<a href="{% url 'ai_dashboard' %}" class="zenith-back-btn">
+    <i class="fas fa-chevron-left"></i>
+</a>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/hoteladmin/sentinel_dashboard.css' %}">
+{% endblock %}
+
+{% block page_title %}AI Agent Analyst{% endblock %}
+{% block page_subtitle %}
+{% if is_global %}
+Global Empire Core — Portfolio-Wide Strategic Command
+{% else %}
+High-Density Market Intelligence &amp; Revenue Analysis — {{ hotel.name }}
+{% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+<div data-theme="{{ request.user.ai_theme_mode }}" id="sentinelRoot">
+    <div class="sentinel-wrap">
+
+        {# Sidebar - Insights List #}
+        <aside id="sessionsSidebar">
+            <div class="sidebar-section-header">
+                <span class="sidebar-section-label">AI Insights</span>
+            </div>
+            <div class="sessions-list-wrap">
+                {% for insight in insights %}
+                <div class="insight-item insight-priority-{{ insight.priority }}">
+                    <span class="insight-meta">{{ insight.category }}</span>
+                    <p class="insight-title">{{ insight.title|truncatechars:45 }}</p>
+                    {% if insight.trend %}
+                    <span class="insight-trend trend-{{ insight.trend|lower }}">
+                        {% if insight.trend == 'POSITIVE' %}▲{% elif insight.trend == 'NEGATIVE' %}▼{% else %}→{% endif %} {{ insight.trend }}
+                    </span>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div class="insight-empty-state">
+                    <i class="fas fa-lightbulb"></i>
+                    <p>No AI insights yet.<br>Chat with the AI to generate analysis.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </aside>
+
+        {# Main Content #}
+        <main id="chatArea">
+            <div class="analyst-container">
+                <header class="analyst-header">
+                    <h2>Intelligence Summary</h2>
+                    <p>
+                        {% if is_global %}Portfolio-wide revenue telemetry and performance analytics.{% else %}Real-time data from {{ hotel.name }}.{% endif %}
+                    </p>
+                </header>
+
+                {# Revenue Metrics Row #}
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Total Revenue</span>
+                        <div class="metric-value">${{ total_revenue|floatformat:0 }}</div>
+                        <div class="chart-placeholder"></div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">This Month</span>
+                        <div class="metric-value">${{ rev_this_month|floatformat:0 }}</div>
+                        {% if rev_growth != 0 %}
+                        <div class="rev-growth {% if rev_growth > 0 %}growth-up{% else %}growth-down{% endif %}">
+                            {% if rev_growth > 0 %}▲{% else %}▼{% endif %} {{ rev_growth|floatformat:1 }}% vs last month
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Avg Booking Value</span>
+                        <div class="metric-value">${{ avg_booking_value|floatformat:0 }}</div>
+                        <div class="meta-text">{{ bookings_this_month }} bookings in 30d</div>
+                    </div>
+                </div>
+
+                {# Reviews & Sentiment Row #}
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Avg Rating</span>
+                        <div class="metric-value">{{ avg_rating|floatformat:1 }} ⭐</div>
+                        <div class="meta-text">{{ total_reviews }} total reviews</div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Positive Reviews</span>
+                        <div class="metric-value" style="color:#10b981">{{ positive_reviews }}</div>
+                        <div class="sentiment-bar-track">
+                            <div class="sentiment-bar pos-bar"
+                                style="--width: {% if total_reviews > 0 %}{% widthratio positive_reviews total_reviews 100 %}{% else %}0{% endif %}%">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Negative Reviews</span>
+                        <div class="metric-value" style="color:#f87171">{{ negative_reviews }}</div>
+                        <div class="sentiment-bar-track">
+                            <div class="sentiment-bar neg-bar"
+                                style="--width: {% if total_reviews > 0 %}{% widthratio negative_reviews total_reviews 100 %}{% else %}0{% endif %}%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# AI Insights Full Card #}
+                {% if insights %}
+                <div class="metric-card full-width">
+                    <h4 class="insight-section-title">
+                        <i class="fas fa-lightbulb"></i>
+                        AI Strategic Insights
+                    </h4>
+                    {% for insight in insights %}
+                    <div class="insight-node fade-up" style="--delay: {{ forloop.counter0 }}">
+                        <div class="insight-icon-circle">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div style="flex:1">
+                            <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px">
+                                <span class="insight-node-title">{{ insight.title }}</span>
+                                {% if insight.trend %}
+                                <span class="trend-badge trend-{{ insight.trend|lower }}">
+                                    {% if insight.trend == 'POSITIVE' %}<i class="fas fa-arrow-up mr-1"></i>{% elif insight.trend == 'NEGATIVE' %}<i class="fas fa-arrow-down mr-1"></i>{% endif %}
+                                    {{ insight.trend }}
+                                </span>
+                                {% endif %}
+                                <span class="insight-node-meta">{{ insight.category }}</span>
+                            </div>
+                            {% if insight.narrative %}
+                            <p class="insight-narrative">{{ insight.narrative }}</p>
+                            {% endif %}
+                            {% if insight.metric_value %}
+                            <div class="insight-metric-tag">
+                                <i class="fas fa-chart-bar mr-2"></i> {{ insight.metric_value }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </main>
+
+        {# Right Panel #}
+        <aside id="rightPanel">
+            <span class="rp-label">Portfolio Overview</span>
+
+            {% if is_global %}
+            <div class="portfolio-list">
+                {% for h in all_hotels %}
+                <div class="portfolio-item">
+                    <p class="portfolio-item-name">{{ h.name }}</p>
+                    <p class="portfolio-item-meta">{{ h.city }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="insight-card mt-0">
+                <h6 class="quick-nav-label">Quick Navigate</h6>
+                <div class="quick-nav-list">
+                    <a href="{% if is_global %}/ai-tasks/0/{% else %}/ai-tasks/{{ hotel.id }}/{% endif %}" class="quick-nav-btn">
+                        <i class="fas fa-tasks"></i> AI Tasks
+                    </a>
+                    <a href="{% if is_global %}/ai-chat/0/{% else %}/ai-chat/{{ hotel.id }}/{% endif %}" class="quick-nav-btn">
+                        <i class="fas fa-comment-dots"></i> AI Chat
+                    </a>
+                    <a href="{% if is_global %}/ai-live/0/{% else %}/ai-live/{{ hotel.id }}/{% endif %}" class="quick-nav-btn">
+                        <i class="fas fa-satellite-dish"></i> AI Live
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="sentinelConfig" data-hotel-id="{% if is_global %}0{% else %}{{ hotel.id }}{% endif %}" data-csrf="{{ csrf_token }}"
+    src="{% static 'js/hoteladmin/sentinel_dashboard.js' %}?v=2"></script>
+{% endblock %}

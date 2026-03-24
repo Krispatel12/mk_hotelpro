@@ -1,0 +1,48 @@
+{% load static %}
+<section id="faq" class="py-32 relative overflow-hidden">
+    <div class="container mx-auto px-6 max-w-4xl relative z-10">
+        <div class="text-center mb-20 reveal-up">
+            <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full glass-panel-heavy border-indigo-500/20 dark:border-white/10 group hover:border-primary-500/30 transition-all duration-500 cursor-pointer mb-6">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-500 shadow-[0_0_8px_#3b82f6]"></span>
+                <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-[0.3em]">Knowledge Base</span>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-display font-bold text-slate-900 dark:text-white tracking-tight">Frequently Asked Questions</h2>
+            <p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed mt-6">Everything you need to know about the HotelPro AI ecosystem and its integration patterns.</p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Question 1 -->
+            <div class="ultra-glow-card glass-panel-heavy rounded-[2.5rem] border-slate-200/50 dark:border-white/5 overflow-hidden hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-all reveal-up stagger-1 shadow-xl">
+                <button class="w-full flex items-center justify-between p-10 text-left group">
+                    <span class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">How does the AI assistant work?</span>
+                    <i class="fas fa-plus text-slate-600 text-sm group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-transform"></i>
+                </button>
+                <div class="px-10 pb-10 text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
+                    Our AI integrates directly with your property management system to handle guest inquiries, optimize room assignments, and provide real-time revenue recommendations.
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="ultra-glow-card glass-panel-heavy rounded-[2.5rem] border-slate-200/50 dark:border-white/5 overflow-hidden hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-all reveal-up stagger-2 shadow-xl">
+                <button class="w-full flex items-center justify-between p-10 text-left group">
+                    <span class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">Can I import my existing hotel data?</span>
+                    <i class="fas fa-plus text-slate-600 text-sm group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-transform"></i>
+                </button>
+                <div class="px-10 pb-10 text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
+                    Yes. We support one-click migration from most major legacy PMS platforms. Our onboarding wizard guides you through inventory mapping in under 10 minutes.
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="ultra-glow-card glass-panel-heavy rounded-[2.5rem] border-slate-200/50 dark:border-white/5 overflow-hidden hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-all reveal-up stagger-3 shadow-xl">
+                <button class="w-full flex items-center justify-between p-10 text-left group">
+                    <span class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">Is my property data secured?</span>
+                    <i class="fas fa-plus text-slate-600 text-sm group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-transform"></i>
+                </button>
+                <div class="px-10 pb-10 text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
+                    Security is our highest priority. We use bank-level AES-256 encryption and multi-region backups. All financial data is handled via certified PCI-compliant gateways.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

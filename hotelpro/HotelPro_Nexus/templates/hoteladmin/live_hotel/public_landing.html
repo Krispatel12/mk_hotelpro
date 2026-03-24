@@ -1,0 +1,262 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ hotel.name }} | Direct Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --accent: #10b981;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        h1, h2, h3, .font-display { font-family: 'Outfit', sans-serif; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- ── NAV ──────────────────────── -->
+    <nav class="fixed top-0 w-full z-50 glass-panel py-4 px-6 md:px-12 flex items-center justify-between transition-all duration-300">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                <i class="fas fa-hotel"></i>
+            </div>
+            <span class="text-xl font-extrabold tracking-tight uppercase">{{ hotel.name }}</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 font-semibold text-sm uppercase tracking-wider">
+            <a href="#rooms" class="hover:text-primary-600 transition-colors">Rooms</a>
+            <a href="#gallery" class="hover:text-primary-600 transition-colors">Gallery</a>
+            <a href="#location" class="hover:text-primary-600 transition-colors">Location</a>
+        </div>
+        <a href="#rooms" class="bg-primary-600 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-primary-600/20 hover:scale-105 transition-all">
+            Book Now
+        </a>
+    </nav>
+
+    <!-- ── HERO ──────────────────────── -->
+    <section class="relative h-[85vh] overflow-hidden flex items-end pb-20 px-6 md:px-12">
+        {% if hotel.gallery.first %}
+        <img src="{{ hotel.gallery.first.media_file.url }}" class="absolute inset-0 w-full h-full object-cover" alt="{{ hotel.name }}">
+        {% else %}
+        <div class="absolute inset-0 bg-slate-200"></div>
+        {% endif %}
+        <div class="absolute inset-0 hero-gradient"></div>
+        
+        <div class="relative z-10 max-w-4xl animate-fade-in">
+            <div class="inline-flex items-center gap-2 bg-accent/20 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md">
+                <i class="fas fa-star text-[10px]"></i> {{ hotel.status|default:"Executive" }} Property
+            </div>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none mb-6">
+                Redefining <br> <span class="text-primary-400">Luxury</span> Living.
+            </h1>
+            <p class="text-lg md:text-xl text-white/80 max-w-2xl font-medium leading-relaxed">
+                {{ hotel.description|default:"Experience world-class hospitality and personalized service at our premium property. Your perfect stay begins here."|truncatewords:40 }}
+            </p>
+        </div>
+    </section>
+
+    <!-- ── ROOMS ──────────────────────── -->
+    <section id="rooms" class="py-24 px-6 md:px-12 container mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+            <div class="reveal-up">
+                <h2 class="text-sm font-black text-primary-600 uppercase tracking-[0.3em] mb-4">Accommodation</h2>
+                <h3 class="text-4xl md:text-5xl font-extrabold tracking-tight">Select Your Sanctuary</h3>
+            </div>
+            <p class="text-slate-500 font-medium max-w-md">
+                Starting from <span class="text-slate-900 font-bold font-display text-2xl">${{ min_price }}</span> per night.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {% for room in rooms %}
+            <div class="group bg-white rounded-[2.5rem] overflow-hidden border border-slate-200/60 shadow-xl hover:shadow-2xl transition-all duration-500 reveal-up">
+                <div class="relative h-72 overflow-hidden">
+                    {% if room.photos.first %}
+                    <img src="{{ room.photos.first.media_file.url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="{{ room.name }}">
+                    {% else %}
+                    <div class="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400">No View Available</div>
+                    {% endif %}
+                    <div class="absolute top-6 left-6 bg-white/90 backdrop-blur px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                        {{ room.get_room_class_display }}
+                    </div>
+                </div>
+                <div class="p-8 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-2xl font-bold">{{ room.name }}</h4>
+                        <div class="text-primary-600 font-black font-display text-xl">${{ room.base_price }}<span class="text-xs text-slate-400 font-medium">/nt</span></div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4 text-xs font-bold text-slate-500 uppercase tracking-wider border-y border-slate-100 py-4">
+                        <span class="flex items-center gap-2"><i class="fas fa-users text-primary-500"></i> Max {{ room.max_guests }}</span>
+                        {% for amenity in room.amenities|slice:":3" %}
+                        <span class="flex items-center gap-2"><i class="fas fa-check text-accent"></i> {{ amenity }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <button onclick="openBookingModal('{{ room.id }}', '{{ room.name }}', {{ room.base_price }})" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold text-sm tracking-widest uppercase hover:bg-primary-600 transition-all shadow-xl">
+                        Reserve Suite
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ── MODAL ──────────────────────── -->
+    <div id="booking-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 backdrop-blur-xl bg-dark-950/20">
+        <div class="bg-white w-full max-w-lg rounded-[3rem] shadow-2xl overflow-hidden relative">
+            <button onclick="closeBookingModal()" class="absolute top-8 right-8 text-slate-400 hover:text-slate-900 transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <div class="p-12 space-y-8">
+                <div>
+                    <h3 class="text-3xl font-black mb-2" id="modal-room-name">Reserve Your Stay</h3>
+                    <p class="text-slate-500 font-medium">Secure your booking at {{ hotel.name }}.</p>
+                </div>
+
+                <form id="booking-form" class="space-y-6">
+                    <input type="hidden" id="modal-room-id">
+                    
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Full Name</label>
+                        <input type="text" id="guest-name" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary-500 transition-all outline-none font-semibold">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Email Address</label>
+                            <input type="email" id="guest-email" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary-500 outline-none font-semibold text-sm">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Phone Number</label>
+                            <input type="tel" id="guest-phone" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary-500 outline-none font-semibold text-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Check In</label>
+                            <input type="date" id="check-in" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 outline-none font-semibold text-sm">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Check Out</label>
+                            <input type="date" id="check-out" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 outline-none font-semibold text-sm">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="w-full bg-primary-600 text-white py-5 rounded-2xl font-black text-xs tracking-widest uppercase shadow-2xl shadow-primary-600/30 hover:scale-[1.02] transition-all">
+                        Complete Reservation
+                    </button>
+                </form>
+
+                <div id="success-message" class="hidden text-center space-y-4">
+                    <div class="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-check text-3xl"></i>
+                    </div>
+                    <h4 class="text-2xl font-black">Booking Confirmed!</h4>
+                    <p class="text-slate-500">Your reference: <span id="booking-ref" class="font-bold text-slate-900 tracking-widest"></span></p>
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-widest pt-4">Redirecting to home...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── FOOTER ──────────────────────── -->
+    <footer class="bg-white border-t border-slate-200 py-12 px-6 md:px-12 text-center text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
+        &copy; 2026 Powered by <span class="text-primary-600">HotelPro Zenith</span>. Direct Booking Integrity Guaranteed.
+    </footer>
+
+    <script>
+        function openBookingModal(roomId, roomName, price) {
+            document.getElementById('modal-room-id').value = roomId;
+            document.getElementById('modal-room-name').innerText = roomName;
+            document.getElementById('booking-modal').classList.remove('hidden');
+            document.getElementById('booking-modal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            
+            // Set default dates
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            document.getElementById('check-in').value = today.toISOString().split('T')[0];
+            document.getElementById('check-out').value = tomorrow.toISOString().split('T')[0];
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+            document.getElementById('booking-modal').classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('booking-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+
+            const payload = {
+                roomId: document.getElementById('modal-room-id').value,
+                guestName: document.getElementById('guest-name').value,
+                guestEmail: document.getElementById('guest-email').value,
+                guestPhone: document.getElementById('guest-phone').value,
+                checkIn: document.getElementById('check-in').value,
+                checkOut: document.getElementById('check-out').value
+            };
+
+            try {
+                const response = await fetch(`/api/hotel/p/{{ hotel.id }}/book/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    document.getElementById('booking-form').classList.add('hidden');
+                    document.getElementById('success-message').classList.remove('hidden');
+                    document.getElementById('booking-ref').innerText = result.booking_ref;
+                    setTimeout(() => location.reload(), 5000);
+                } else {
+                    alert(result.message);
+                    btn.innerText = 'Complete Reservation';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                alert('Connection failure. Protocol aborted.');
+                btn.innerText = 'Complete Reservation';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

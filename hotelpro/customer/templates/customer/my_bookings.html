@@ -1,0 +1,98 @@
+{% extends "customer/base.html" %}
+{% load static %}
+{% block title %}My Bookings | HotelPro{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'customer/css/bookings.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>My Travel History</h1>
+        <p style="color:var(--text-2); margin-top:4px;">Manage and view your past and upcoming stays.</p>
+    </div>
+    <a href="{% url 'customer:customer_home' %}" class="btn btn-primary"><i class="fas fa-search"></i> Find a Hotel</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(216, 201, 181, 0.1); color:var(--beige);"><i
+                class="fas fa-suitcase-rolling"></i></div>
+        <div class="stat-info">
+            <div class="value">{{ stats.total }}</div>
+            <div class="label">Total Stays</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(16, 185, 129, 0.1); color:#10b981;"><i
+                class="fas fa-calendar-check"></i></div>
+        <div class="stat-info">
+            <div class="value">{{ stats.confirmed }}</div>
+            <div class="label">Confirmed</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(239, 68, 68, 0.1); color:#ef4444;"><i class="fas fa-ban"></i>
+        </div>
+        <div class="stat-info">
+            <div class="value">{{ stats.cancelled }}</div>
+            <div class="label">Cancelled</div>
+        </div>
+    </div>
+</div>
+
+<div>
+    {% for b in bookings %}
+    <div class="booking-card">
+        <div class="booking-img">
+            {% with primary=b.hotel.gallery.first %}
+            {% if primary %}
+            <img src="{{ primary.media_file.url }}" alt="{{ b.hotel.name }}">
+            {% else %}
+            <i class="fas fa-hotel"></i>
+            {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="booking-body">
+            <div>
+                {% if b.status == 'CONFIRMED' %}
+                <div class="status-badge status-confirmed"><i class="fas fa-check"></i> Confirmed</div>
+                {% elif b.status == 'CANCELLED' %}
+                <div class="status-badge status-cancelled"><i class="fas fa-times"></i> Cancelled</div>
+                {% else %}
+                <div class="status-badge status-pending"><i class="fas fa-clock"></i> {{ b.status }}</div>
+                {% endif %}
+
+                <div class="b-hotel">{{ b.hotel.name }}</div>
+                <div class="b-loc"><i class="fas fa-location-dot"></i> {{ b.hotel.city }}, {{ b.hotel.state }}</div>
+            </div>
+
+            <div class="b-grid">
+                <div>
+                    <div class="b-detail-label">Dates</div>
+                    <div class="b-detail-val">{{ b.check_in|date:"d M y" }} — {{ b.check_out|date:"d M y" }}</div>
+                </div>
+                <div>
+                    <div class="b-detail-label">Room Type</div>
+                    <div class="b-detail-val">{{ b.room_category.name }}</div>
+                </div>
+                <div class="b-price">
+                    <div class="b-amount">₹{{ b.total_revenue|floatformat:0 }}</div>
+                    <div class="b-ref">Ref: {{ b.reference }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-bookings-card">
+        <i class="fas fa-suitcase-rolling"></i>
+        <h3>No bookings found</h3>
+        <p>You haven't made any bookings yet. Start your luxury journey today.</p>
+        <a href="{% url 'customer:customer_home' %}" class="btn btn-primary">Explore Hotels</a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

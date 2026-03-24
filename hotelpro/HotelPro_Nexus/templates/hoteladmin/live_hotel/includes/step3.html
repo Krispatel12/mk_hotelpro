@@ -1,0 +1,242 @@
+<!-- STEP 3: Identity & Legal Verification -->
+<div class="onboarding-step" id="step-3">
+    <div class="step-header-elite mb-40">
+
+    </div>
+    <div class="premium-card">
+        <h1 class="step-title"><i class="fas fa-shield-halved"></i> <b>Compliance Vault</b></h1>
+        <p class="step-description">Upload your ID and certificates to verify your hotel.</p>
+
+        <div class="form-grid">
+
+            <!-- ─── 3A. Identity Verification ─── -->
+            <div class="full-width">
+                <label class="section-subtitle"><i class="fas fa-user-shield"></i> 3A. Identity Proof</label>
+
+                <div class="elite-dossier-card mt-20">
+
+                    <!-- Header Row: Toggle + Badge -->
+                    <div class="compliance-header">
+                        <div class="radio-toggle-group" id="idTypeToggle">
+                            <label class="toggle-option">
+                                <input type="radio" name="id_type" value="AADHAAR" checked>
+                                <span><i class="fas fa-id-card"></i>&nbsp;Aadhaar</span>
+                            </label>
+                            <label class="toggle-option">
+                                <input type="radio" name="id_type" value="PAN">
+                                <span><i class="fas fa-receipt"></i>&nbsp;PAN Card</span>
+                            </label>
+                            <label class="toggle-option">
+                                <input type="radio" name="id_type" value="PASSPORT">
+                                <span><i class="fas fa-passport"></i>&nbsp;Passport</span>
+                            </label>
+                        </div>
+                        <div class="compliance-badge seal-hologram">
+                            <i class="fas fa-shield-check"></i>
+                            <span>SECURELY STORED</span>
+                        </div>
+                    </div>
+
+                    <!-- ID Number + Upload -->
+                    <div class="dense-grid mt-20 gap-24">
+
+                        <!-- ID Number Input -->
+                        <div class="col-6">
+                            <label for="id_number_input" id="idTypeLabel" class="field-label-elite">
+                                <i class="fas fa-hashtag color-secondary"></i>
+                                <span id="idTypeLabelText">Aadhaar Number</span>
+                            </label>
+                            <input type="text" name="id_number" id="id_number_input" placeholder="e.g. 1234 5678 9012"
+                                class="elite-input" autocomplete="off" required>
+                        </div>
+
+                        <!-- Primary ID Upload -->
+                        <div class="col-6">
+                            <label class="field-label-elite">
+                                <i class="fas fa-shield-check color-secondary"></i>
+                                Upload ID Photo/Scan
+                            </label>
+                            <div class="upload-dossier-zone" id="zone-doc-mandatory" data-input="input-doc-mandatory">
+                                <!-- Hidden real file input -->
+                                <input type="file" id="input-doc-mandatory" name="doc_mandatory"
+                                    accept=".jpg,.jpeg,.png,.pdf,.heic" class="dossier-file-input">
+                                <!-- Placeholder (visible before upload) -->
+                                <div class="upload-placeholder" id="ph-doc-mandatory">
+                                    <div class="upload-icon-ring">
+                                        <i class="fas fa-fingerprint"></i>
+                                    </div>
+                                    <div class="upload-text-stack">
+                                        <div class="text-bold-90">
+                                            Click or drag &amp; drop
+                                        </div>
+                                        <div class="text-muted-75">
+                                            JPG, PNG, PDF — max 5 MB
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- File badge (visible after upload) -->
+                                <div class="file-status-badge" id="badge-doc-mandatory">
+                                    <div class="file-icon-box">
+                                        <i class="fas fa-file-lines" id="icon-doc-mandatory"></i>
+                                    </div>
+                                    <div class="file-info-main">
+                                        <span class="file-name-text" id="name-doc-mandatory">—</span>
+                                        <span class="file-meta-text" id="meta-doc-mandatory">—</span>
+                                    </div>
+                                    <div class="status-actions">
+                                        <button type="button" class="view-document-btn" data-zone="zone-doc-mandatory"
+                                            title="Preview document">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="remove-file-btn" data-zone="zone-doc-mandatory"
+                                            title="Remove file">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- /dense-grid -->
+
+                    <!-- Info hint -->
+                    <div class="doc-upload-hint">
+                        <i class="fas fa-circle-info color-secondary"></i>
+                        Upload a clear, high-resolution scan. Accepted: JPG, PNG, PDF &mdash; Max 5 MB.
+                    </div>
+
+                </div><!-- /elite-dossier-card 3A -->
+            </div>
+
+            <!-- ─── 3B. Regulatory Compliance ─── -->
+            <div class="full-width">
+                <label class="section-subtitle"><i class="fas fa-file-invoice-dollar"></i> 3B. Hotel
+                    Certificates</label>
+
+                <div class="dense-grid mt-20 gap-24">
+
+                    <!-- ── Govt. Certificate Card ── -->
+                    <div class="col-6">
+                        <div class="elite-dossier-card">
+                            <div class="compliance-badge w-fit mb-24">
+                                <i class="fas fa-gavel"></i> Govt. Certificate
+                            </div>
+
+                            <label for="govt_reg_number" class="field-label-elite">
+                                <i class="fas fa-building-columns color-secondary"></i>
+                                Registration Number
+                            </label>
+                            <input type="text" name="govt_reg_number" id="govt_reg_number"
+                                placeholder="e.g. MH-12-HT-2024-0001" class="elite-input mb-20" maxlength="25" required>
+
+                            <label class="field-label-elite">
+                                <i class="fas fa-award color-secondary"></i>
+                                Upload Certificate
+                            </label>
+                            <div class="upload-dossier-zone" id="zone-doc-certificate"
+                                data-input="input-doc-certificate">
+                                <input type="file" id="input-doc-certificate" name="doc_certificate"
+                                    accept=".jpg,.jpeg,.png,.pdf" class="dossier-file-input">
+                                <div class="upload-placeholder" id="ph-doc-certificate">
+                                    <div class="upload-icon-ring blue-ring">
+                                        <i class="fas fa-stamp"></i>
+                                    </div>
+                                    <div class="upload-text-stack">
+                                        <div class="text-bold-90">
+                                            Upload Seal or Certificate</div>
+                                        <div class="text-muted-75">JPG,
+                                            PNG, PDF — max 5 MB</div>
+                                    </div>
+                                </div>
+                                <div class="file-status-badge" id="badge-doc-certificate">
+                                    <div class="file-icon-box">
+                                        <i class="fas fa-file-lines" id="icon-doc-certificate"></i>
+                                    </div>
+                                    <div class="file-info-main">
+                                        <span class="file-name-text" id="name-doc-certificate">—</span>
+                                        <span class="file-meta-text" id="meta-doc-certificate">—</span>
+                                    </div>
+                                    <div class="status-actions">
+                                        <button type="button" class="view-document-btn" data-zone="zone-doc-certificate"
+                                            title="Preview document">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="remove-file-btn" data-zone="zone-doc-certificate"
+                                            title="Remove file">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── GST Certificate Card ── -->
+                    <div class="col-6">
+                        <div class="elite-dossier-card">
+                            <div class="compliance-badge w-fit mb-24">
+                                <i class="fas fa-percent"></i> Tax Detail
+                            </div>
+
+                            <label for="gst_number" class="field-label-elite">
+                                <i class="fas fa-receipt color-secondary"></i>
+                                GST Number
+                            </label>
+                            <input type="text" name="gst_number" id="gst_number" placeholder="e.g. 27AAPFU0939F1ZV"
+                                class="elite-input mb-20" maxlength="15" required>
+
+                            <label class="field-label-elite">
+                                <i class="fas fa-file-shield color-secondary"></i>
+                                Upload GST Certificate
+                            </label>
+                            <div class="upload-dossier-zone" id="zone-doc-gst" data-input="input-doc-gst">
+                                <input type="file" id="input-doc-gst" name="doc_gst" accept=".jpg,.jpeg,.png,.pdf"
+                                    class="dossier-file-input">
+                                <div class="upload-placeholder" id="ph-doc-gst">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                    <div>
+                                        <div class="text-bold-90">Click
+                                            or drag &amp; drop</div>
+                                        <div class="text-muted-75">JPG,
+                                            PNG, PDF — max 5 MB</div>
+                                    </div>
+                                </div>
+                                <div class="file-status-badge" id="badge-doc-gst">
+                                    <div class="file-icon-box">
+                                        <i class="fas fa-file-lines" id="icon-doc-gst"></i>
+                                    </div>
+                                    <div class="file-info-main">
+                                        <span class="file-name-text" id="name-doc-gst">—</span>
+                                        <span class="file-meta-text" id="meta-doc-gst">—</span>
+                                    </div>
+                                    <div class="status-actions">
+                                        <button type="button" class="view-document-btn" data-zone="zone-doc-gst"
+                                            title="Preview document">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="remove-file-btn" data-zone="zone-doc-gst"
+                                            title="Remove file">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /dense-grid -->
+            </div>
+
+        </div><!-- /form-grid -->
+
+        <div class="button-group">
+            <button type="button" class="btn btn-outline prev-step" data-target="2">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button type="button" class="btn btn-primary next-step" data-target="4">
+                Review &amp; Submit <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+    </div>
+</div>

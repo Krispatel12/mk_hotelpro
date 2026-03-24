@@ -1,0 +1,195 @@
+{% extends "customer/base.html" %}
+{% load static %}
+
+{% block title %}Find Your Perfect Hotel Stay — HotelPro{% endblock %}
+
+{% block extra_head %}
+<!-- Luxury Serif and UI Fonts are already in base.html -->
+<link rel="stylesheet" href="{% static 'customer/css/landing.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero" style="--hero-img: url('{% static 'customer/img/hero_luxury.png' %}');">
+    <div class="hero-content">
+        <div class="hero-badge">Verified Hotels Only</div>
+        <h1>Find Your <span>Perfect</span><br>Hotel Stay</h1>
+        <p>Discover hand-verified hotels with transparent pricing, real reviews, and instant booking confirmation.</p>
+
+        <!-- Glassmorphism Capsule Search -->
+        <form action="{% url 'customer:customer_home' %}" method="GET">
+            <div class="search-box">
+                <div class="search-field-wrap">
+                    <label class="search-field-label">Where to?</label>
+                    <input type="text" name="q" class="search-field" placeholder="City or hotel name..."
+                        value="{{ request.GET.q }}">
+                </div>
+                <div class="search-field-wrap">
+                    <label class="search-field-label">City</label>
+                    <select name="city" class="search-field">
+                        <option value="">All Cities</option>
+                        {% for city in cities %}
+                        <option value="{{ city }}" {% if request.GET.city == city %}selected{% endif %}>{{ city }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="search-field-wrap">
+                    <label class="search-field-label">Minimum Stars</label>
+                    <select name="star" class="search-field">
+                        <option value="">Any Range</option>
+                        <option value="3">3+ Stars</option>
+                        <option value="4">4+ Stars</option>
+                        <option value="5">Exclusive 5 Star</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-search">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+    <div class="stat-item">
+        <div class="stat-number">{{ featured_hotels|length }}</div>
+        <div class="stat-text">Luxury Hotels</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ cities|length }}</div>
+        <div class="stat-text">Global Cities</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">100%</div>
+        <div class="stat-text">Verified Stays</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">24/7</div>
+        <div class="stat-text">VIP Support</div>
+    </div>
+</div>
+
+<!-- FEATURED HOTELS -->
+<div class="section">
+    <div class="section-header">
+        <div>
+            <h2>Featured Destinations</h2>
+            <p>Handpicked properties for an unforgettable experience</p>
+        </div>
+        <a href="{% url 'customer:customer_home' %}" class="view-all"
+            style="color:var(--text); text-decoration:none; font-weight:700; font-size:15px; border-bottom:2px solid var(--beige);">
+            Explore All <i class="fas fa-arrow-right" style="margin-left:8px;"></i>
+        </a>
+    </div>
+
+    <div class="hotels-grid">
+        {% for hotel in featured_hotels %}
+        <a href="{% url 'customer:hotel_detail' hotel.id %}" class="hotel-card">
+            <div class="hotel-img-wrap">
+                {% with primary_image=hotel.gallery.first %}
+                {% if primary_image %}
+                <img src="{{ primary_image.media_file.url }}" alt="{{ hotel.name }}" class="hotel-img" loading="lazy">
+                {% else %}
+                <div class="hotel-img"
+                    style="background:#f8fafc; display:flex; align-items:center; justify-content:center; font-size:48px; opacity:0.3;">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                {% endif %}
+                {% endwith %}
+                <div class="hotel-badge">Curated</div>
+            </div>
+            <div class="hotel-body">
+                <div class="hotel-name">{{ hotel.name }}</div>
+                <div class="hotel-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ hotel.city }}{% if hotel.state %}, {{ hotel.state }}{% endif %}
+                </div>
+                <div class="hotel-footer">
+                    <div style="font-size:14px; font-weight:700;">
+                        <i class="fas fa-star" style="color:#f59e0b;"></i> {{ hotel.star_rating }}
+                    </div>
+                    <div class="hotel-price">
+                        {% with cheapest=hotel.rooms.all|first %}
+                        {% if cheapest %}
+                        <span class="amount">₹{{ cheapest.base_price|floatformat:0 }}</span>
+                        <span class="unit">avg/night</span>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div style="grid-column:1/-1; text-align:center; padding:120px; color:var(--text-3);">
+            <i class="fas fa-hotel" style="font-size:48px; margin-bottom:24px; opacity:0.5;"></i>
+            <p>Our collection is currently being updated. Please check back shortly.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- WHY US -->
+<div class="section"
+    style="background:rgba(255,255,255,0.02); margin:0 -40px; padding:120px 40px; border-top:1px solid rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.05);">
+    <div class="section-header" style="justify-content:center; text-align:center; margin-bottom:80px;">
+        <div>
+            <h2>The HotelPro Standard</h2>
+            <p>Exceptional service, verified security, and best price guarantee</p>
+        </div>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon"
+                style="background:rgba(216,201,181,0.1); color:var(--beige); border:1px solid rgba(216,201,181,0.2);"><i
+                    class="fas fa-crown"></i></div>
+            <h3
+                style="font-family:var(--font-serif); font-size:24px; margin-bottom:16px; font-weight:400; color:white;">
+                Elite
+                Collection</h3>
+            <p style="font-size:15px; color:rgba(255,255,255,0.5); line-height:1.7;">Each property is meticulously
+                vetted for
+                premium service and luxury standards.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"
+                style="background:rgba(216,201,181,0.1); color:var(--beige); border:1px solid rgba(216,201,181,0.2);"><i
+                    class="fas fa-shield-alt"></i></div>
+            <h3
+                style="font-family:var(--font-serif); font-size:24px; margin-bottom:16px; font-weight:400; color:white;">
+                Bespoke
+                Security</h3>
+            <p style="font-size:15px; color:rgba(255,255,255,0.5); line-height:1.7;">State-of-the-art encryption and
+                verified
+                details for a truly protected journey.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"
+                style="background:rgba(216,201,181,0.1); color:var(--beige); border:1px solid rgba(216,201,181,0.2);"><i
+                    class="fas fa-concierge-bell"></i></div>
+            <h3
+                style="font-family:var(--font-serif); font-size:24px; margin-bottom:16px; font-weight:400; color:white;">
+                24/7
+                Concierge</h3>
+            <p style="font-size:15px; color:rgba(255,255,255,0.5); line-height:1.7;">Dedicated support at every mile,
+                ensuring
+                your stay exceeds all expectations.</p>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+    <div style="max-width:900px; margin:0 auto; position:relative; z-index:5;">
+        <h2>Ready for a Truly<br>Exceptional Stay?</h2>
+        <p
+            style="color:rgba(255,255,255,0.6); font-size:20px; margin-bottom:64px; max-width:600px; margin-left:auto; margin-right:auto;">
+            Unlock member-only rates at the world's most prestigious resorts.</p>
+        <a href="{% url 'customer:customer_signup' %}" class="btn-cta"
+            style="text-decoration:none; display:inline-block;">
+            Join the Collection <i class="fas fa-arrow-right" style="margin-left:12px;"></i>
+        </a>
+    </div>
+</div>
+{% endblock %}

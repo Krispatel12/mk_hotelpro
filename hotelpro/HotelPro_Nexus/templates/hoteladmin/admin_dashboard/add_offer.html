@@ -1,0 +1,487 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}{% if offer %}Edit Campaign{% else %}Create New Promotion{% endif %} | HotelPro Exclusive{% endblock %}
+
+{% block page_title %}{% if offer %}Edit Promotion{% else %}Create New Promotion{% endif %}{% endblock %}
+{% block page_subtitle %}{{ user_hotels.first.name|default:"Elite Portfolio Orchestration" }}{% endblock %}
+
+{% block extra_head %}
+<!-- Professional Tooling -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="{% static 'css/hoteladmin/dashboard/add_offer.css' %}">
+{% endblock %}
+
+{% block dashboard_content %}
+<main class="orchestration-canvas" id="mainDashboardCont">
+  <!-- Left Column: Strategic Configuration -->
+  <div class="strategic-config-column" style="display: flex; flex-direction: column; gap: var(--s-8);">
+
+    <!-- Section 1: Strategy Archetypes -->
+    <section class="form-card" aria-labelledby="archetype-heading" style="animation-delay: 0.1s;">
+      <header class="card-header-elite">
+        <div class="card-icon-box ripple-elite">
+          <i class="fas fa-chess-knight"></i>
+        </div>
+        <div class="header-meta">
+          <h2 id="archetype-heading" class="card-title-elite">Strategy Blueprint</h2>
+          <p class="card-subtitle-elite">Select an archetype to instantly prime your yield engine</p>
+        </div>
+      </header>
+
+      <div class="starters-grid" role="listbox" aria-label="Strategy Archetypes">
+        {% for code, name, icon, theme, subtitle in strategy_data %}
+        <div class="starter-card animate-elite" data-template="{{ theme }}" data-theme="{{ theme }}" role="option"
+          aria-selected="false" tabindex="0" style="--stagger: {{ forloop.counter0 }};">
+          <div class="starter-icon">
+            <i class="fas {{ icon }}"></i>
+          </div>
+          <div class="starter-body">
+            <span class="starter-pill">{{ code }}</span>
+            <h3 class="starter-title">{{ name }}</h3>
+            <p class="starter-sub">{{ subtitle }}</p>
+          </div>
+          <footer class="starter-footer">
+            <div class="schema-indicator">
+              <div class="schema-dot"></div>
+              <span class="schema-text">{% if theme == 'custom' %}ACTIVE WORKSPACE{% else %}SELECT SCHEMA{%endif%}</span>
+            </div>
+          </footer>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Section 2: Dossier Identity -->
+    <section class="form-card" aria-labelledby="identity-heading" style="animation-delay: 0.2s;">
+      <header class="card-header-elite">
+        <div class="card-icon-box">
+          <i class="fas fa-fingerprint"></i>
+        </div>
+        <div class="header-meta">
+          <h2 id="identity-heading" class="card-title-elite">Dossier Identity</h2>
+          <p class="card-subtitle-elite">Campaign Metadata &amp; Economic Logic</p>
+        </div>
+      </header>
+
+      <form id="strategicForm" method="POST"
+        action="{% if offer %}{% url 'edit_offer' offer.id %}{% else %}{% url 'add_offer' %}{% endif %}"
+        class="strategic-form">
+        {% csrf_token %}
+        <input type="hidden" name="perks" id="perksInput" value="{{ offer.perks|default:'' }}">
+        <select name="targeted_rooms" id="roomSelector" multiple style="display: none;"></select>
+        <div id="roomsData" style="display: none;">{{ rooms_by_hotel_json }}</div>
+
+        <!-- Hidden real date inputs for submitting to backend -->
+        <input type="hidden" name="start_date" id="startDateHidden"
+          value="{{ offer.start_date|date:'Y-m-d'|default:'' }}">
+        <input type="hidden" name="end_date" id="endDateHidden" value="{{ offer.end_date|date:'Y-m-d'|default:'' }}">
+
+        <div class="dossier-grid">
+
+          <!-- Promotion Title (full width) -->
+          <div class="field-wrap full-span" id="offerNameWrap">
+            <input type="text" id="offerName" name="name" class="field-input" placeholder=" " required
+              value="{{ offer.name|default:'' }}">
+            <label class="field-label" for="offerName">Promotion Title</label>
+          </div>
+
+          <!-- Promo Archetype -->
+          <div class="field-wrap" id="promoTypeWrap">
+            <select id="promoType" name="promo_type" class="field-input">
+              {% for code, label in promotion_types %}
+              <option value="{{ code }}" {% if offer.promo_type == code %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+            <label class="field-label">Promo Archetype</label>
+            <i class="fas fa-chevron-down field-select-arrow"></i>
+          </div>
+
+          <!-- Incentive Magnitude -->
+          <div class="field-wrap" id="magnitudeWrapper">
+            <input type="number" id="discountValue" name="discount_value" class="field-input" placeholder=" "
+              value="{{ offer.discount_value|default:0 }}" min="0">
+            <label class="field-label" for="discountValue">Incentive Magnitude</label>
+            <span class="mag-badge mag-sym">%</span>
+          </div>
+
+          <!-- Campaign Validity Window (full width) -->
+          <div class="full-span">
+            <div class="date-range-card" id="dateRangeCard">
+              <div class="drc-header">
+                <span class="drc-label">
+                  <i class="fas fa-calendar-check"></i>
+                  Campaign Validity Window
+                </span>
+                <button type="button" class="drc-clear" id="clearDatesBtn" title="Clear">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+
+              <div class="drc-slots">
+                <div class="drc-slot">
+                  <span class="drc-slot-lbl"><i class="fas fa-sign-in-alt" style="font-size:7px"></i> Starts</span>
+                  <span class="drc-slot-val" id="slotStart"><span class="drc-slot-placeholder">Pick start</span></span>
+                </div>
+                <i class="fas fa-long-arrow-alt-right drc-arrow"></i>
+                <div class="drc-slot">
+                  <span class="drc-slot-lbl"><i class="fas fa-sign-out-alt" style="font-size:7px"></i> Ends</span>
+                  <span class="drc-slot-val" id="slotEnd"><span class="drc-slot-placeholder">Pick end</span></span>
+                </div>
+              </div>
+
+              <div class="drc-footer">
+                <span class="drc-chip" id="drcChipNights"><i class="fas fa-moon" style="font-size:8px"></i> <span
+                    id="drcNightsTxt"></span></span>
+                <span class="drc-chip" id="drcChipStart"><i class="fas fa-play" style="font-size:7px"></i> <span
+                    id="drcStartTxt"></span></span>
+                <span class="drc-chip" id="drcChipEnd"><i class="fas fa-stop" style="font-size:7px"></i> <span
+                    id="drcEndTxt"></span></span>
+              </div>
+
+              <!-- Hidden flatpickr input (invisible, just triggers calendar) -->
+              <input type="text" id="bookingDates" name="booking_dates"
+                style="position:absolute;top:0;left:0;width:0;height:0;opacity:0;pointer-events:none;"
+                autocomplete="off" readonly>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </section>
+
+    <!-- Section 3: Asset Orchestration -->
+    <section class="form-card" aria-labelledby="asset-heading" style="animation-delay: 0.3s;">
+      <header class="card-header-elite">
+        <div class="card-icon-box">
+          <i class="fas fa-hotel"></i>
+        </div>
+        <div class="header-meta">
+          <h2 id="asset-heading" class="card-title-elite">Asset Orchestration</h2>
+          <p class="card-subtitle-elite">Property & Inventory Targeting</p>
+        </div>
+      </header>
+
+      <div class="targeting-stack" style="display: flex; flex-direction: column; gap: var(--s-12);">
+        <!-- Property Selection -->
+        <div class="sub-section">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-6);">
+            <div style="display: flex; align-items: center; gap: var(--s-6);">
+              <h4 class="input-label-elite" style="margin-bottom: 0;">Property Targeting</h4>
+              <div class="targeting-toolbar">
+                <button type="button" class="toolbar-btn btn-primary" id="selectAllHotelsBtn">
+                  <i class="fas fa-check-double mr-2"></i> Select All
+                </button>
+                <button type="button" class="toolbar-btn" id="clearAllHotelsBtn">
+                  <i class="fas fa-trash-alt mr-2"></i> Clear All
+                </button>
+              </div>
+            </div>
+            <div class="search-wrap-elite">
+              <i class="fas fa-search search-icon-inset"></i>
+              <input type="text" id="hotelSearchInput" class="input-elite" placeholder="Filter portfolio portfolio...">
+            </div>
+          </div>
+
+          <div class="asset-grid" id="hotelGrid">
+            {% for h in user_hotels %}
+            <div class="asset-card individual-hotel {% if h in offer.targeted_hotels.all %}active{% endif %}"
+              data-hotel-id="{{ h.id }}" data-hotel-name="{{ h.name }}">
+              <div class="asset-tick"><i class="fas fa-check"></i></div>
+
+              <div class="hotel-card-image">
+                {% with h.gallery.all|first as img %}
+                {% if img %}
+                <img src="{{ img.media_file.url }}" alt="{{ h.name }}">
+                {% else %}
+                <i class="fas fa-image"></i>
+                {% endif %}
+                {% endwith %}
+              </div>
+
+              <div class="card-info-stack">
+                <div class="card-meta-subtitle">PREMIUM PROPERTY</div>
+                <h5 class="card-main-title">{{ h.name }}</h5>
+                <div class="status-tag-active">
+                  LIVE ASSET
+                </div>
+              </div>
+              <input type="checkbox" name="targeted_hotels" value="{{ h.id }}" class="individual-hotel-input hidden" {%if h in offer.targeted_hotels.all %}checked{% endif %}>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Room Selection -->
+        <div class="sub-section" style="padding-top: var(--s-8); border-top: 1.5px solid var(--slate-50);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-6);">
+            <div style="display: flex; align-items: center; gap: var(--s-6);">
+              <h4 class="input-label-elite" style="margin-bottom: 0;">Room Eligibility</h4>
+              <div class="targeting-toolbar" id="roomToolbar" style="display: none;">
+                <button type="button" class="toolbar-btn btn-primary" id="selectAllRoomsFilteredBtn">
+                  <i class="fas fa-check-double mr-2"></i> Select All
+                </button>
+                <button type="button" class="toolbar-btn" id="clearRoomsBtn">
+                  <i class="fas fa-trash-alt mr-2"></i> Clear All
+                </button>
+              </div>
+            </div>
+            <div class="search-wrap-elite" id="roomSearchWrap" style="display: none;">
+              <i class="fas fa-search search-icon-inset"></i>
+              <input type="text" id="roomSearchInput" class="input-elite" placeholder="Filter inventory...">
+            </div>
+          </div>
+
+          <div class="room-mode-selector" style="display: flex; gap: var(--s-4); margin-bottom: var(--s-8);">
+            <div class="asset-card active room-mode-card" data-mode="ALL" style="flex: 1;">
+              <div class="asset-tick"><i class="fas fa-check"></i></div>
+              <div class="card-icon-square" style="background: var(--navy);"><i class="fas fa-th-large"></i></div>
+              <div class="card-info-stack">
+                <h5 class="card-main-title">All Rooms</h5>
+                <p class="card-meta-subtitle">Automated Distribution</p>
+              </div>
+              <input type="radio" name="room_selection_mode" value="ALL" class="mode-input hidden" checked>
+            </div>
+            <div class="asset-card room-mode-card" data-mode="SPECIFIC" style="flex: 1;">
+              <div class="asset-tick"><i class="fas fa-check"></i></div>
+              <div class="card-icon-square" style="background: var(--primary);"><i class="fas fa-sliders-h"></i></div>
+              <div class="card-info-stack">
+                <h5 class="card-main-title">Specific Rooms</h5>
+                <p class="card-meta-subtitle">Manual Selection</p>
+              </div>
+              <input type="radio" name="room_selection_mode" value="SPECIFIC" class="mode-input hidden">
+            </div>
+          </div>
+
+          <div id="roomCardWrapper">
+            <div id="roomCardGrid" class="asset-grid">
+              <!-- Dynamically Populated -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Experience Architecture -->
+    <section class="form-card" aria-labelledby="experience-heading" style="animation-delay: 0.4s;">
+      <header class="card-header-elite">
+        <div class="card-icon-box">
+          <i class="fas fa-sparkles"></i>
+        </div>
+        <div class="header-meta">
+          <h2 id="experience-heading" class="card-title-elite">Experience Architecture</h2>
+          <p class="card-subtitle-elite">Inclusion Bundles & Guest Perks</p>
+        </div>
+      </header>
+
+      <div class="perks-orchestrator" style="display: flex; flex-direction: column; gap: var(--s-8);">
+        <div class="perks-grid"
+          style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--s-4);">
+          {% for perk in default_perks %}
+          <div class="perk-card" style="--stagger: {{ forloop.counter0 }}">
+            <input type="checkbox" value="{{ perk }}" class="perk-input hidden">
+            <div class="perk-icon-wrapper">
+              <i class="fas fa-sparkles" data-perk-name="{{ perk }}"></i>
+            </div>
+            <span class="perk-name">{{ perk }}</span>
+            <div class="perk-tick"><i class="fas fa-check"></i></div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div id="customPerksContainer" class="perks-grid"
+          style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--s-4);"></div>
+
+        <div class="custom-perk-engine"
+          style="display: flex; gap: var(--s-4); padding-top: var(--s-6); border-top: 1.5px solid var(--slate-50);">
+          <input type="text" id="customPerkInput" class="input-elite" style="flex: 1;"
+            placeholder="Define custom inclusion...">
+          <button type="button" id="addCustomPerkBtn" class="shimmer-btn"
+            style="width: 56px; height: 56px; border-radius: var(--r-md); background: var(--navy); color: white; border: none; font-size: 1.25rem;">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+        <div id="customPerksContainer" style="display: flex; flex-wrap: wrap; gap: var(--s-2);"></div>
+      </div>
+    </section>
+
+    <!-- Section 5: Strategic Stacking -->
+    <section class="form-card" aria-labelledby="stack-heading" style="animation-delay: 0.5s;">
+      <header class="card-header-elite">
+        <div class="card-icon-box">
+          <i class="fas fa-layer-group"></i>
+        </div>
+        <div class="header-meta">
+          <h2 id="stack-heading" class="card-title-elite">Strategic Stacking</h2>
+          <p class="card-subtitle-elite">Audit Yield and Browse Promotions</p>
+        </div>
+      </header>
+
+      <div class="stacking-vibe-engine" style="display: flex; flex-direction: column; gap: var(--s-12);">
+        <div class="stack-track" id="stackTrack">
+          <div class="stack-pill right" id="stackPill"></div>
+          <div class="stack-option" id="stackLabelLeft">
+            <i class="fas fa-layer-group"></i> Stackable
+          </div>
+          <div class="stack-option active" id="stackLabelRight">
+            <i class="fas fa-lock"></i> Isolated
+          </div>
+          <input type="radio" name="is_stackable" id="radio-stackable-input" value="true" class="hidden">
+          <input type="radio" name="is_stackable" id="radio-isolated-input" value="false" class="hidden" checked>
+        </div>
+
+        <div id="combinableOffersSection"
+          style="padding-top: var(--s-6); border-top: 1.5px solid var(--slate-50); position: relative;">
+          <div id="stackingLockOverlay" class="co-overlay">
+            <div class="co-lock-badge">
+              <i class="fas fa-shield-alt" style="color: var(--gold); font-size: 1.25rem;"></i>
+              <span>Enable Stacking protocol to combine</span>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-6);">
+            <h4 class="input-label-elite">Available Combinations</h4>
+            <div style="position: relative; width: 280px;">
+              <i class="fas fa-search"
+                style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--slate-400);"></i>
+              <input type="text" id="offerSearchInput" class="input-elite" placeholder="Search dossier..."
+                style="height: 2.5rem; padding-left: 2.5rem; font-size: 0.8rem;">
+            </div>
+          </div>
+
+          <div class="asset-grid">
+            {% for off in existing_offers %}
+            <div class="asset-card co-card" data-offer-name="{{ off.name }}" data-discount-type="{{ off.promo_type }}"
+              data-discount-value="{{ off.discount_value }}" style="--stagger: {{ forloop.counter0 }}">
+              <div class="asset-tick"><i class="fas fa-check"></i></div>
+              <div class="card-info-stack" style="padding: 1.25rem;">
+                <div class="card-meta-subtitle">PREVIOUS CAMPAIGN</div>
+                <h5 class="card-main-title">{{ off.name }}</h5>
+                <div
+                  style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 12px;">
+                  <div class="status-tag-price" style="margin-top:0;">
+                    <i class="fas fa-percentage" style="font-size: 9px;"></i>
+                    {{ off.discount_percent }}% OFF
+                  </div>
+                  <span
+                    style="font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 900; color: var(--slate-400); letter-spacing: 0.1em;">{{
+                    off.code }}</span>
+                </div>
+              </div>
+              <input type="checkbox" name="combinable_offers" value="{{ off.id }}" class="co-input hidden">
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Persistence Logic -->
+    <div class="persistence-bar" style="display: flex; gap: var(--s-4);">
+      <button type="button" class="shimmer-btn"
+        style="flex: 1; height: 4rem; border-radius: var(--r-lg); border: 2px solid var(--slate-100); background: white; color: var(--navy); font-weight: 900; text-transform: uppercase; font-size: 0.8rem;">
+        <i class="fas fa-save mr-2"></i> Save Draft
+      </button>
+      <button type="submit" form="strategicForm" class="shimmer-btn"
+        style="flex: 2; height: 4rem; border-radius: var(--r-lg); background: var(--navy); color: white; border: none; font-weight: 900; text-transform: uppercase; font-size: 0.8rem; box-shadow: var(--shadow-elite);">
+        <i class="fas fa-rocket mr-2" style="color: var(--success);"></i> Activate Campaign
+      </button>
+    </div>
+  </div>
+
+  <!-- Right Column: Prediction Engine (Preview) -->
+  <aside class="preview-column">
+    <div class="preview-card animate-elite" style="animation-delay: 0.6s;">
+      <div class="preview-visual" style="position: relative; height: 260px; overflow: hidden;">
+        <img id="previewRoomImage"
+          src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800"
+          style="width: 100%; height: 100%; object-fit: cover; transition: all 0.5s var(--ease-premium);">
+        <div style="position: absolute; inset: 0; background: linear-gradient(transparent, rgba(15,23,42,0.95));"></div>
+        <div style="position: absolute; top: 1.5rem; left: 1.5rem;">
+          <span id="previewBadge"
+            style="background: white; color: var(--navy); padding: 0.5rem 1rem; border-radius: 100px; font-size: 10px; font-weight: 1000; text-transform: uppercase;">Promotion</span>
+        </div>
+        <div style="position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem;">
+          <h3 id="previewOfferLabel"
+            style="color: white; font-size: 1.75rem; font-weight: 1000; text-transform: uppercase;">OFFER TITLE</h3>
+        </div>
+      </div>
+
+      <div class="preview-body" style="padding: var(--s-8);">
+        <div style="margin-bottom: var(--s-8);">
+          <h4 id="previewRoomName" style="font-size: 1.5rem; font-weight: 1000; color: var(--navy);">All Room Categories
+          </h4>
+          <div style="display: flex; gap: var(--s-4); margin-top: 0.5rem;">
+            <span id="previewRoomClass" class="card-meta-subtitle">Dynamic Segments</span>
+            <span class="card-meta-subtitle"><i class="fas fa-users"></i> <span
+                id="previewRoomGuests">Mixed</span></span>
+          </div>
+        </div>
+
+        <div class="yield-projection"
+          style="background: var(--slate-50); border-radius: var(--r-xl); padding: var(--s-6); border: 1.5px solid var(--slate-100); margin-bottom: var(--s-8);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span
+              style="font-size: 0.55rem; font-weight: 1000; color: var(--slate-400); text-transform: uppercase;">Yield
+              Magnitude</span>
+            <span
+              style="font-size: 0.55rem; font-weight: 1000; color: var(--slate-400); text-transform: uppercase;">Baseline</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span id="previewValueText" style="font-size: 2.5rem; font-weight: 1000; color: var(--success);">20%
+              OFF</span>
+            <span id="previewBasePrice" style="font-size: 1.25rem; font-weight: 900; color: var(--navy);">---</span>
+          </div>
+        </div>
+
+        <button type="button" class="shimmer-btn" id="viewOfferStackBtn"
+          style="width: 100%; height: 4rem; border-radius: 100px; background: var(--primary); color: white; border: none; font-weight: 1000; text-transform: uppercase; font-size: 0.85rem; box-shadow: 0 20px 40px -10px var(--primary-soft);">
+          View Audit Stack
+          <div id="previewStackCount"
+            style="position: absolute; -top: 8px; -right: 8px; width: 24px; height: 24px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 3px solid white;">
+            1</div>
+        </button>
+      </div>
+    </div>
+  </aside>
+</main>
+<div class="offer-stack-modal fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-navy/60 backdrop-blur-md"
+  id="offerStackModal">
+  <div class="bg-white rounded-[40px] w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+    <div class="p-8 border-b border-slate-50 flex items-center justify-between">
+      <div>
+        <h4 class="text-2xl font-display font-black text-navy tracking-tight">Audit Grid</h4>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Simulating yield & stacking
+          across portfolio</p>
+      </div>
+      <button id="closeOfferStackModal"
+        class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-slate-100 transition-all">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-10 bg-[#f8fafc] grid grid-cols-2 gap-6" id="modalRoomGrid">
+      <!-- Managed by JS -->
+    </div>
+
+    <div id="offerStackList" style="display: none;"></div>
+
+    <div class="p-8 border-t border-slate-50 flex items-center justify-between bg-white">
+      <div id="modalGlobalStatus"
+        class="px-6 py-3 bg-emerald-50 rounded-2xl border border-emerald-100 text-emerald-600 text-[11px] font-black uppercase tracking-widest">
+        STACK: 0% + ₹0
+      </div>
+      <button id="modalDoneBtn"
+        class="px-10 py-4 bg-navy text-white rounded-2xl font-black uppercase text-xs tracking-[0.2em] shadow-xl shadow-navy/20">
+        Complete Audit
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="{% static 'js/hoteladmin/add_offer.js' %}"></script>
+<script src="{% static 'js/hoteladmin/dashboard/add_offer_inline.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,1094 @@
+{% extends "hoteladmin/admin_dashboard/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}Master Property Editor | {{ hotel.name }}{% endblock %}
+
+{% block back_link %}
+<a href="{% url 'my_hotels' %}" class="zenith-back-btn">
+    <i class="fas fa-chevron-left"></i>
+</a>
+{% endblock %}
+
+{% block extra_head %}
+<!-- Professional Editor Suite -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    /* Premium Single Page Architecture */
+    .master-editor-container {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 40px;
+        align-items: start;
+        padding-bottom: 150px;
+    }
+
+    /* Fixed Side Navigation - Dark Zenith */
+    .editor-sidebar {
+        position: sticky;
+        top: 40px;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-radius: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 30px;
+        box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        padding: 1.25rem 2.25rem;
+        margin-bottom: 0.75rem;
+        border-radius: 1.5rem;
+        color: #94a3b8;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        border: 1px solid transparent;
+    }
+
+    .sidebar-nav-item i {
+        font-size: 14px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .sidebar-nav-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #f8fafc;
+    }
+
+    .sidebar-nav-item.active {
+        background: rgba(37, 99, 235, 0.2);
+        color: #fff;
+        border: 1px solid rgba(37, 99, 235, 0.3);
+        box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+    }
+
+    /* Form Section Architecture - Zenith Dark */
+    .editor-section {
+        background: #0b0f1a;
+        border-radius: 40px;
+        padding: 80px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
+        margin-bottom: 50px;
+        scroll-margin-top: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .section-header {
+        margin-bottom: 40px;
+        border-left: 4px solid #00cef5;
+        padding-left: 24px;
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: 800;
+        color: #f8fafc;
+        letter-spacing: -0.02em;
+        margin-bottom: 8px;
+    }
+
+    .section-desc {
+        font-size: 13px;
+        color: #94a3b8;
+        font-weight: 500;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .input-group label {
+        font-size: 0.65rem;
+        font-weight: 900;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 4px;
+    }
+
+    .input-group label i {
+        color: #3b82f6;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 18px 24px;
+        background: rgba(2, 6, 23, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #f8fafc;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .identity-chroma label i, .identity-chroma .input-group label { color: #8b5cf6; }
+    .operations-chroma label i, .operations-chroma .input-group label { color: #06b6d4; }
+    .inventory-chroma label i, .inventory-chroma .input-group label { color: #818cf8; }
+    .compliance-chroma label i, .compliance-chroma .input-group label { color: #10b981; }
+    .media-chroma label i, .media-chroma .input-group label { color: #94a3b8; }
+
+    .identity-chroma .input-field { border-color: rgba(139, 92, 246, 0.2); }
+    .operations-chroma .input-field { border-color: rgba(6, 182, 212, 0.2); }
+    .inventory-chroma .input-field { border-color: rgba(129, 140, 248, 0.2); }
+    .compliance-chroma .input-field { border-color: rgba(16, 185, 129, 0.2); }
+
+    /* Neon Focus State */
+    .input-field:focus {
+        outline: none;
+        border-color: #3b82f6;
+        background: rgba(2, 6, 23, 0.7);
+        box-shadow: 0 0 0 1px #3b82f6, 0 10px 40px -10px rgba(37, 99, 235, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .inventory-chroma .input-field:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #818cf8;
+    }
+
+    /* 🌈 Zenith Prime: Refractive Mastery & Selection Aura */
+    .royale-card {
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s ease;
+        z-index: 1;
+        border: 2px solid rgba(255, 255, 255, 0.05);
+        background-color: #0b0f1a;
+        user-select: none;
+        transform-style: preserve-3d;
+        will-change: transform;
+    }
+
+    /* 🌪️ Zenith Absolute: Atmospheric Rays */
+    .royale-card::after {
+        content: '';
+        position: absolute;
+        inset: -100% -100%;
+        background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 3;
+        mix-blend-mode: soft-light;
+        transition: transform 0.1s linear;
+    }
+
+    /* Cinematic Light Sweep (V2) */
+    .light-sweep-overlay {
+        position: absolute;
+        top: 0;
+        left: -150%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+        transition: all 0.8s;
+        z-index: 4;
+        pointer-events: none;
+    }
+
+    .royale-card:hover .light-sweep-overlay {
+        left: 150%;
+    }
+
+    /* Parallax Internal Layers */
+    .parallax-layer-1 { transform: translateZ(20px); transition: transform 0.3s ease; }
+    .parallax-layer-2 { transform: translateZ(40px); transition: transform 0.3s ease; }
+    .parallax-layer-3 { transform: translateZ(60px); transition: transform 0.3s ease; }
+
+    /* 🌊 Zenith Imperial: Liquid Fluid Borders */
+    .royale-card::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        background: conic-gradient(from var(--liquid-angle, 0deg), 
+            transparent, 
+            var(--royale-accent, #00cef5), 
+            transparent 30%, 
+            var(--royale-accent, #00cef5) 50%, 
+            transparent 70%);
+        border-radius: inherit;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    /* 💎 Crystal Glass Texture */
+    .royale-card-grain {
+        position: absolute;
+        inset: 0;
+        background-image: url("https://www.transparenttextures.com/patterns/p6.png");
+        opacity: 0.05;
+        pointer-events: none;
+        z-index: 1;
+        mix-blend-mode: overlay;
+    }
+
+    /* Refractive Corner Glows */
+    .corner-glow {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, var(--royale-accent, #fff), transparent 70%);
+        opacity: 0;
+        z-index: 5;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        transition: opacity 0.3s ease;
+    }
+    .cg-tl { top: 0; left: 0; }
+    .cg-tr { top: 0; right: 0; }
+    .royale-card:hover .corner-glow { opacity: 0.15; }
+
+    .royale-card:hover::before,
+    .royale-card:focus-within::before,
+    .royale-card.selected-node::before {
+        opacity: 1;
+    }
+
+    .identity-chroma {
+        --royale-accent: #8b5cf6;
+        --royale-glow: rgba(139, 92, 246, 0.2);
+        --royale-border: #c4b5fd;
+        background: linear-gradient(135deg, #0b0f1a 0%, #1e1b4b 100%),
+            radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.15), transparent 40%),
+            radial-gradient(circle at 0% 100%, rgba(139, 92, 246, 0.08), transparent 40%) !important;
+    }
+
+    .operations-chroma {
+        --royale-accent: #06b6d4;
+        --royale-glow: rgba(6, 182, 212, 0.2);
+        --royale-border: rgba(6, 182, 212, 0.4);
+        background: linear-gradient(135deg, #0b0f1a 0%, #083344 100%) !important;
+    }
+
+    .inventory-chroma {
+        --royale-accent: #00f2ff;
+        --royale-glow: rgba(0, 242, 255, 0.15);
+        --royale-border: rgba(0, 242, 255, 0.3);
+        background: linear-gradient(165deg, #020617 0%, #0f172a 100%) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* 🌌 Void Internal Sync */
+    .inventory-chroma .section-title { color: #ffffff !important; }
+    .inventory-chroma .section-desc { color: rgba(255, 255, 255, 0.5) !important; }
+    .inventory-chroma .input-group label { color: #00f2ff !important; opacity: 0.9; }
+    .inventory-chroma .input-field { 
+        background: rgba(2, 6, 23, 0.6); 
+        border-color: rgba(255, 255, 255, 0.1); 
+        color: white;
+    }
+    .inventory-chroma .input-field:focus {
+        border-color: #00f2ff;
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+    }
+    .inventory-chroma .pill-item {
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.6);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    .inventory-chroma .pill-item.active {
+        background: #00f2ff;
+        color: #020617;
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+    }
+    .inventory-chroma .royale-card-grain {
+        opacity: 0.1;
+        mix-blend-mode: screen;
+        background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+    }
+
+    .compliance-chroma {
+        --royale-accent: #10b981;
+        --royale-glow: rgba(16, 185, 129, 0.2);
+        --royale-border: #6ee7b7;
+        background: linear-gradient(135deg, #0b0f1a 0%, #064e3b 100%),
+            radial-gradient(circle at 100% 0%, rgba(16, 185, 129, 0.15), transparent 40%),
+            radial-gradient(circle at 0% 100%, rgba(16, 185, 129, 0.08), transparent 40%) !important;
+    }
+
+    .media-chroma {
+        --royale-accent: #64748b;
+        --royale-glow: rgba(100, 116, 139, 0.2);
+        --royale-border: #cbd5e1;
+        background: linear-gradient(135deg, #0b0f1a 0%, #1e293b 100%),
+            radial-gradient(circle at 100% 0%, rgba(100, 116, 139, 0.15), transparent 40%) !important;
+    }
+
+    /* Atmospheric Light Sweep - Handled via overlay for better blending */
+
+    .textarea-field {
+        min-height: 140px;
+        resize: vertical;
+        padding: 24px !important;
+        line-height: 1.6 !important;
+    }
+
+    /* 💎 Zenith Royale Signatures */
+    .status-pulse {
+        animation: statusPulse 2s infinite;
+    }
+
+    @keyframes statusPulse {
+        0% {
+            transform: scale(0.95);
+            opacity: 0.8;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+        }
+
+        70% {
+            transform: scale(1);
+            opacity: 1;
+            box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+        }
+
+        100% {
+            transform: scale(0.95);
+            opacity: 0.8;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+    }
+
+    .reveal-editor-section {
+        animation: revealSection 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+    }
+
+    @keyframes revealSection {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* 🛡️ Compliance Tech-Cards */
+    .dossier-upload-node {
+        background: #f8fafc !important;
+        border: 1.5px solid #e2e8f0 !important;
+        border-radius: 2rem !important;
+        padding: 2.5rem !important;
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    .dossier-upload-node:hover {
+        background: white !important;
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08) !important;
+        border-color: #10b981 !important;
+    }
+
+    .dossier-upload-node label {
+        font-size: 11px !important;
+        font-weight: 800 !important;
+        color: #334155 !important;
+        margin-bottom: 20px !important;
+        letter-spacing: 0.1em !important;
+    }
+
+    /* Grid Layouts */
+    .grid-12 {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 40px;
+    }
+
+    /* Map Tool */
+    #master-map {
+        height: 450px;
+        border-radius: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 20px;
+    }
+
+    /* Room Category Elite Cards */
+    .room-card {
+        background: rgba(2, 6, 23, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 32px;
+        padding: 40px;
+        margin-bottom: 30px;
+        position: relative;
+        transition: all 0.4s ease;
+    }
+
+    .room-card:hover {
+        background: rgba(2, 6, 23, 0.5);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .room-badge {
+        position: absolute;
+        top: -12px;
+        left: 40px;
+        background: #3b82f6;
+        color: white;
+        padding: 6px 20px;
+        border-radius: 100px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    }
+
+    /* Sticky Sync Bar */
+    .sync-bar {
+        position: fixed;
+        bottom: 30px;
+        left: calc(50% + 140px);
+        transform: translateX(-50%);
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 16px 50px;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+    }
+
+    /* Gallery */
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .media-item {
+        aspect-ratio: 4/3;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid #e2e8f0;
+    }
+
+    .media-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .media-del {
+        position: absolute;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .media-item:hover .media-del {
+        opacity: 1;
+    }
+
+    .pill-box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .pill-item {
+        padding: 10px 20px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 100px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .pill-item.active {
+        background: #020617;
+        color: white;
+        border-color: #020617;
+    }
+
+    /* Utilities */
+    .col-12 {
+        grid-column: span 12;
+    }
+
+    .col-8 {
+        grid-column: span 8;
+    }
+
+    .col-6 {
+        grid-column: span 6;
+    }
+
+    .col-4 {
+        grid-column: span 4;
+    }
+
+    .col-3 {
+        grid-column: span 3;
+    }
+
+    .col-2 {
+        grid-column: span 2;
+    }
+
+    .col-10 {
+        grid-column: span 10;
+    }
+
+    /* Shimmer Effect */
+    .shimmer-sweep {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .shimmer-sweep::after {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 300%;
+        height: 300%;
+        background: linear-gradient(45deg,
+                transparent 45%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 55%);
+        animation: shimmer 6s infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            transform: translate(-30%, -30%);
+        }
+
+        100% {
+            transform: translate(30%, 30%);
+        }
+    }
+
+    .col-3 {
+        grid-column: span 3;
+    }
+
+    .col-2 {
+        grid-column: span 2;
+    }
+
+    .col-10 {
+        grid-column: span 10;
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}Master Property Editor{% endblock %}
+{% block page_subtitle %}Managing Synchronized Intelligence for {{ hotel.name }}.{% endblock %}
+
+{% block dashboard_content %}
+<div class="master-editor-container">
+    <!-- Quick Navigation Sidebar -->
+    <aside class="editor-sidebar">
+        <div class="space-y-4">
+            <div class="sidebar-nav-item active" onclick="scrollToSection('identity')">
+                <i class="fas fa-id-card"></i> Identity
+            </div>
+            <div class="sidebar-nav-item" onclick="scrollToSection('operations')">
+                <i class="fas fa-clock"></i> Operations
+            </div>
+            <div class="sidebar-nav-item" onclick="scrollToSection('inventory')">
+                <i class="fas fa-bed"></i> Inventory
+            </div>
+            <div class="sidebar-nav-item" onclick="scrollToSection('compliance')">
+                <i class="fas fa-file-shield"></i> Compliance
+            </div>
+            <div class="sidebar-nav-item" onclick="scrollToSection('media')">
+                <i class="fas fa-images"></i> Media
+            </div>
+        </div>
+    </aside>
+
+    <!-- Unified Form Matrix -->
+    <form id="masterForm" method="POST" enctype="multipart/form-data" class="flex-1">
+        {% csrf_token %}
+
+        <!-- Section 1: Identity (Step 1) -->
+        <section id="identity" class="editor-section royale-card identity-chroma reveal-editor-section shadow-lg">
+            <div class="royale-card-grain"></div>
+            <div class="corner-glow cg-tl"></div>
+            <div class="corner-glow cg-tr"></div>
+            <div class="light-sweep-overlay"></div>
+            <div class="section-header parallax-layer-2">
+                <span class="text-[10px] font-black text-cyan-500 uppercase tracking-[0.3em] mb-2 block">Registry Phase:
+                    01</span>
+                <h2 class="section-title">Property Identity</h2>
+                <p class="section-desc">Manage the public narrative and geographical registry.</p>
+            </div>
+
+            <div class="grid-12">
+                <div class="col-8 input-group">
+                    <label><i class="fas fa-hotel"></i> Hotel Official Name</label>
+                    <input type="text" name="hotel_name" value="{{ hotel.name }}" class="input-field" required>
+                </div>
+                <div class="col-4 input-group">
+                    <label><i class="fas fa-tags"></i> Category</label>
+                    <select name="hotel_type" class="input-field">
+                        <option value="HOTEL" {% if hotel.category == 'HOTEL' %}selected{% endif %}>Standard Hotel
+                        </option>
+                        <option value="RESORT" {% if hotel.category == 'RESORT' %}selected{% endif %}>Resort & Spa
+                        </option>
+                        <option value="HOMESTAY" {% if hotel.category == 'HOMESTAY' %}selected{% endif %}>Homestay
+                        </option>
+                        <option value="VILLA" {% if hotel.category == 'VILLA' %}selected{% endif %}>Private Villa</option>
+                    </select>
+                </div>
+                <div class="col-12 input-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Physical Address</label>
+                    <input type="text" name="address" value="{{ hotel.address }}" class="input-field" required>
+                </div>
+                <div class="col-12 input-group">
+                    <label><i class="fas fa-feather"></i> Property Narrative</label>
+                    <textarea name="hotel_narrative" class="input-field textarea-field">{{ hotel.narrative }}</textarea>
+                </div>
+                <div class="col-4 input-group">
+                    <label><i class="fas fa-phone"></i> Desk Number</label>
+                    <input type="text" name="contact_number" value="{{ hotel.contact_number }}" class="input-field">
+                </div>
+                <div class="col-4 input-group">
+                    <label><i class="fas fa-globe"></i> Website</label>
+                    <input type="url" name="website" value="{{ hotel.website }}" class="input-field">
+                </div>
+                <div class="col-4 input-group">
+                    <label><i class="fas fa-star"></i> Star Tier</label>
+                    <input type="number" name="star_rating" value="{{ hotel.star_rating }}" step="1" min="1" max="5"
+                        class="input-field">
+                </div>
+            </div>
+
+            <div class="mt-10 mb-8 pt-8 border-t border-slate-100">
+                <label class="text-[11px] font-black uppercase text-slate-400 mb-6 block">Location Hierarchy</label>
+                <div class="grid-12">
+                    <div class="col-3 input-group">
+                        <label><i class="fas fa-city"></i> City Protocol</label>
+                        <input type="text" name="city" id="id_city" value="{{ hotel.city }}"
+                            class="input-field font-bold" placeholder="e.g. Mumbai">
+                    </div>
+                    <div class="col-3 input-group">
+                        <label><i class="fas fa-map"></i> State Region</label>
+                        <input type="text" name="state" id="id_state" value="{{ hotel.state }}"
+                            class="input-field font-bold" placeholder="e.g. Maharashtra">
+                    </div>
+                    <div class="col-3 input-group">
+                        <label><i class="fas fa-barcode"></i> Postal Node</label>
+                        <input type="text" name="pincode" id="id_pincode" value="{{ hotel.pincode }}"
+                            class="input-field font-mono font-bold" placeholder="400001">
+                    </div>
+                    <div class="col-3 input-group">
+                        <label><i class="fas fa-earth-asia"></i> Country Registry</label>
+                        <input type="text" name="country" value="{{ hotel.country|default:'India' }}"
+                            class="input-field font-bold">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10">
+                <label class="text-[11px] font-black uppercase text-slate-400 mb-4 block">Geographical Spotting (GPS
+                    Registry)</label>
+                <div id="edit-map" class="h-80 rounded-3xl border border-slate-100 shadow-inner mb-6"></div>
+                <div class="grid-12 gap-6">
+                    <div class="col-6">
+                        <label class="text-[9px] font-bold text-slate-400 uppercase mb-2 block">Lattitude Node</label>
+                        <input type="text" name="lat" id="lat" value="{{ hotel.latitude|default:'20.5937' }}"
+                            class="input-field bg-slate-50 font-mono text-xs" readonly>
+                    </div>
+                    <div class="col-6">
+                        <label class="text-[9px] font-bold text-slate-400 uppercase mb-2 block">Longitude Node</label>
+                        <input type="text" name="lng" id="lng" value="{{ hotel.longitude|default:'78.9629' }}"
+                            class="input-field bg-slate-50 font-mono text-xs" readonly>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Operations -->
+        <section id="operations" class="editor-section royale-card operations-chroma reveal-editor-section shadow-lg"
+            style="animation-delay: 0.1s;">
+            <div class="royale-card-grain"></div>
+            <div class="corner-glow cg-tl"></div>
+            <div class="corner-glow cg-tr"></div>
+            <div class="light-sweep-overlay"></div>
+            <div class="section-header parallax-layer-2">
+                <span class="text-[10px] font-black text-cyan-500 uppercase tracking-[0.3em] mb-2 block">Registry Phase:
+                    02 (Operations)</span>
+                <h2 class="section-title">Operational Standards</h2>
+                <p class="section-desc">Define property timings, service portfolio, and cancellation policies.</p>
+            </div>
+
+            <div class="grid-12">
+                <div class="col-6 input-group">
+                    <label><i class="fas fa-clock text-cyan-500"></i> Check-in Timeline</label>
+                    <input type="time" name="check_in" value="{{ hotel.check_in_time|time:'H:i' }}" class="input-field">
+                </div>
+                <div class="col-6 input-group">
+                    <label><i class="fas fa-clock-rotate-left text-rose-500"></i> Check-out Timeline</label>
+                    <input type="time" name="check_out" value="{{ hotel.check_out_time|time:'H:i' }}"
+                        class="input-field">
+                </div>
+                <div class="col-12 input-group mt-6">
+                    <label><i class="fas fa-paragraph text-slate-400"></i> Cancellation & Refund Policy Protocol</label>
+                    <textarea name="cancellation_policy" rows="4" class="input-field textarea-field"
+                        placeholder="Define the rules for reservation termination...">{{ hotel.cancellation_policy }}</textarea>
+                </div>
+            </div>
+
+            <div class="mt-10">
+                <label class="text-[11px] font-black uppercase text-slate-400 mb-6 block tracking-widest">Property-Wide
+                    Services Array</label>
+                <div class="pill-box grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3" id="servicesGrid"
+                    data-target="services">
+                    {% with current_services=hotel.services %}
+                    <div class="pill-item {% if 'Wifi' in current_services %}active{% endif %}" data-val="Wifi"><i
+                            class="fas fa-wifi"></i> Free WiFi</div>
+                    <div class="pill-item {% if 'Parking' in current_services %}active{% endif %}" data-val="Parking"><i
+                            class="fas fa-car"></i> Parking</div>
+                    <div class="pill-item {% if 'Pool' in current_services %}active{% endif %}" data-val="Pool"><i
+                            class="fas fa-water-ladder"></i> Pool</div>
+                    <div class="pill-item {% if 'Gym' in current_services %}active{% endif %}" data-val="Gym"><i
+                            class="fas fa-dumbbell"></i> Gym</div>
+                    <div class="pill-item {% if 'Restaurant' in current_services %}active{% endif %}"
+                        data-val="Restaurant"><i class="fas fa-utensils"></i> Dining</div>
+                    <div class="pill-item {% if 'Spa' in current_services %}active{% endif %}" data-val="Spa"><i
+                            class="fas fa-spa"></i> Wellness</div>
+                    <div class="pill-item {% if 'Bar' in current_services %}active{% endif %}" data-val="Bar"><i
+                            class="fas fa-martini-glass"></i> Bar</div>
+                    {% endwith %}
+                </div>
+                <input type="hidden" name="services" id="id_services"
+                    value='{% if hotel.services %}{{ hotel.services|safe }}{% else %}[]{% endif %}'>
+            </div>
+        </section>
+
+        <!-- Section 3: Inventory -->
+        <section id="inventory" class="editor-section royale-card inventory-chroma reveal-editor-section shadow-2xl"
+            style="animation-delay: 0.2s;">
+            <div class="royale-card-grain"></div>
+            <div class="corner-glow cg-tl"></div>
+            <div class="corner-glow cg-tr"></div>
+            <div class="light-sweep-overlay"></div>
+            <div class="section-header !border-white/20 parallax-layer-2">
+                <span class="text-[10px] font-black text-cyan-400 uppercase tracking-[0.3em] mb-2 block">Registry Phase:
+                    02 (Inventory)</span>
+                <h2 class="section-title text-white">Inventory Architecture</h2>
+                <p class="section-desc text-white/60">Manage room categories, pricing, and specific tier amenities.</p>
+            </div>
+
+            <div id="roomContainer" class="space-y-8">
+                {% if rooms %}
+                {% for room in rooms %}
+                <div class="room-card group/card animate-in fade-in slide-in-from-bottom-4"
+                    data-idx="{{ forloop.counter }}">
+                    <div class="room-badge bg-slate-900 border border-slate-700">Category Node: {{ forloop.counter }}
+                    </div>
+                    <button type="button"
+                        class="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-100/50 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all flex items-center justify-center remove-room-trigger"
+                        onclick="if(confirm('Permanently decommission this inventory node?')) { this.closest('.room-card').remove(); window.reorderRooms(); }">
+                        <i class="fas fa-trash-can"></i>
+                    </button>
+                    <!-- Critical ID preservation for existing sync -->
+                    <input type="hidden" name="room_id_{{ forloop.counter }}" value="{{ room.id }}">
+
+                    <div class="grid-12">
+                        <!-- Primary Identity -->
+                        <div class="col-8 input-group">
+                            <label><i class="fas fa-layer-group text-cyan-500"></i> Category Protocol Name</label>
+                            <input type="text" name="room_name_{{ forloop.counter }}" value="{{ room.name }}"
+                                class="input-field font-bold text-lg" placeholder="e.g., Executive Elite Suite"
+                                required>
+                        </div>
+                        <div class="col-4 input-group">
+                            <label><i class="fas fa-crown text-amber-500"></i> Class Tier Registry</label>
+                            <select name="room_class_{{ forloop.counter }}" class="input-field font-semibold">
+                                <option value="STANDARD" {% if room.room_class  == 'STANDARD' %}selected{% endif %}>
+                                    Standard Level</option>
+                                <option value="DELUXE" {% if room.room_class == 'DELUXE' %}selected{% endif %}>Deluxe
+                                    Premier</option>
+                                <option value="SUITE" {% if room.room_class == 'SUITE' %}selected{% endif %}>Luxury Suite
+                                </option>
+                                <option value="LUXURY" {% if room.room_class == 'LUXURY' %}selected{% endif %}>Ultra
+                                    Luxury</option>
+                                <option value="VILLA" {% if room.room_class == 'VILLA' %}selected{% endif %}>Private Villa
+                                </option>
+                                <option value="ECONOMY" {% if room.room_class == 'ECONOMY' %}selected{% endif %}>Economy
+                                    Basic</option>
+                            </select>
+                        </div>
+
+                        <!-- Capacity & Economics -->
+                        <div class="col-4 input-group">
+                            <label><i class="fas fa-users text-slate-400"></i> Max Occupancy</label>
+                            <input type="number" name="room_guests_{{ forloop.counter }}" value="{{ room.max_guests }}"
+                                class="input-field" min="1">
+                        </div>
+                        <div class="col-4 input-group">
+                            <label><i class="fas fa-coins text-emerald-500"></i> Base Price Node (INR)</label>
+                            <input type="number" name="room_price_{{ forloop.counter }}" value="{{ room.base_price }}"
+                                class="input-field font-mono" step="0.01">
+                        </div>
+                        <div class="col-4 input-group">
+                            <label><i class="fas fa-cubes text-blue-500"></i> Inventory Delta (Units)</label>
+                            <input type="number" name="room_count_{{ forloop.counter }}"
+                                value="{{ room.inventory_count }}" class="input-field" min="0">
+                        </div>
+
+                        <!-- Utility Matrix (Amenities) -->
+                        <div class="col-12 mt-4 pt-4 border-t border-slate-50">
+                            <label
+                                class="text-[10px] font-black uppercase text-slate-400 mb-4 block tracking-[0.2em]">Utility
+                                Configuration</label>
+                            <div class="pill-box room-amenities-box flex flex-wrap gap-3"
+                                data-target="room_amenities_{{ forloop.counter }}">
+                                {% with amenities=room.amenities %}
+                                <div class="pill-item {% if 'High-speed WiFi' in amenities %}active{% endif %}"
+                                    data-val="High-speed WiFi"><i class="fas fa-wifi"></i> High-speed WiFi</div>
+                                <div class="pill-item {% if 'Air Conditioning' in amenities %}active{% endif %}"
+                                    data-val="Air Conditioning"><i class="fas fa-snowflake"></i> Air Conditioning</div>
+                                <div class="pill-item {% if 'Smart TV' in amenities %}active{% endif %}"
+                                    data-val="Smart TV"><i class="fas fa-tv"></i> Smart TV</div>
+                                <div class="pill-item {% if 'Mini Bar' in amenities %}active{% endif %}"
+                                    data-val="Mini Bar"><i class="fas fa-glass-martini"></i> Mini Bar</div>
+                                <div class="pill-item {% if 'Private Balcony' in amenities %}active{% endif %}"
+                                    data-val="Private Balcony"><i class="fas fa-mountain-sun"></i> Private Balcony</div>
+                                <div class="pill-item {% if 'Electronic Safe' in amenities %}active{% endif %}"
+                                    data-val="Electronic Safe"><i class="fas fa-vault"></i> Electronic Safe</div>
+                                {% endwith %}
+                            </div>
+                            <!-- State Persistent Input -->
+                            <input type="hidden" name="room_amenities_{{ forloop.counter }}"
+                                id="id_room_amenities_{{ forloop.counter }}"
+                                value='{% if room.amenities %}{{ room.amenities|safe }}{% else %}[]{% endif %}'>
+                            <input type="hidden" name="deleted_room_photos_{{ forloop.counter }}"
+                                id="id_deleted_room_photos_{{ forloop.counter }}" value="[]">
+                        </div>
+
+                        <!-- Asset Library (Media) -->
+                        <div class="col-12 mt-6">
+                            <label
+                                class="text-[10px] font-black uppercase text-slate-400 mb-4 block tracking-[0.2em]">Asset
+                                Library: {{ room.name|default:"Room" }} Visuals</label>
+                            <div class="gallery-grid grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
+                                {% for photo in room.photos.all %}
+                                <div
+                                    class="media-item aspect-square group/photo relative overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
+                                    <img src="{{ photo.media_file.url }}" class="w-full h-full object-cover"
+                                        alt="Property Asset">
+                                    <div class="media-del photo-del-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-900/40 text-white flex items-center justify-center opacity-0 group-hover/photo:opacity-100 transition-all cursor-pointer backdrop-blur-md"
+                                        data-type="room" data-id="{{ photo.id }}"
+                                        data-room-idx="{{ forloop.parentloop.counter }}">
+                                        <i class="fas fa-times text-xs"></i>
+                                    </div>
+                                    <!-- Deletion State Overlay -->
+                                    <div
+                                        class="absolute inset-0 bg-rose-600/60 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 photo-deleted-overlay">
+                                        <div class="text-white text-center">
+                                            <i class="fas fa-trash-can text-2xl mb-1"></i>
+                                            <span
+                                                class="text-[8px] font-bold uppercase block tracking-tighter">Marked</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                <!-- Add New Media Trigger -->
+                                <label
+                                    class="media-item aspect-square border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-slate-900 hover:bg-slate-50 transition-all group/upload">
+                                    <i
+                                        class="fas fa-plus text-slate-300 group-hover/upload:text-slate-900 transition-colors"></i>
+                                    <span class="text-[8px] font-bold text-slate-400 mt-2 uppercase">Add Media</span>
+                                    <input type="file" name="room_photos_{{ forloop.counter }}" multiple class="hidden">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <!-- Empty State Protocol -->
+                <div class="py-24 text-center border-2 border-dashed border-slate-100 rounded-[3rem] bg-slate-50/20">
+                    <div
+                        class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-slate-200/50">
+                        <i class="fas fa-boxes-stacked text-slate-200 text-2xl"></i>
+                    </div>
+                    <h4 class="text-slate-900 font-bold text-xl mb-2">No Active Inventory Node</h4>
+                    <p class="text-slate-400 text-sm max-w-xs mx-auto mb-8 font-medium">This property hasn't been
+                        synchronized with any room categories in the current dossier.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <button type="button" onclick="window.addRoomCategory()"
+                class="w-full mt-8 py-10 border-2 border-dashed border-slate-200 rounded-[3rem] text-slate-400 font-black uppercase text-[11px] tracking-[0.4em] hover:border-slate-900 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center justify-center gap-6 group">
+                <i class="fas fa-circle-plus text-2xl group-hover:scale-125 transition-transform"></i>
+                Synchronize New Inventory Category Protocol
+            </button>
+        </section>
+
+        <!-- Section 4: Compliance -->
+        <section id="compliance" class="editor-section royale-card compliance-chroma reveal-editor-section shadow-lg"
+            style="animation-delay: 0.3s;">
+            <div class="section-header !border-emerald-500">
+                <span class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] mb-2 block">Registry
+                    Phase:
+                    03</span>
+                <h2 class="section-title">Legal Compliance Vault</h2>
+                <p class="section-desc">Regulatory documents and secure identification records.</p>
+            </div>
+
+            <div class="grid-12">
+                <div class="col-6 input-group">
+                    <label>ID Protocol Type</label>
+                    <select name="id_type" class="input-field">
+                        <option value="AADHAAR" {% if hotel.id_type == 'AADHAAR' %}selected{% endif %}>Aadhaar Registry
+                        </option>
+                        <option value="PAN" {% if hotel.id_type == 'PAN' %}selected{% endif %}>PAN Intelligence</option>
+                    </select>
+                </div>
+                <div class="col-6 input-group">
+                    <label>ID Number</label>
+                    <input type="text" name="id_number" value="{{ hotel.id_number }}" class="input-field">
+                </div>
+                <div class="col-6 input-group">
+                    <label>Govt Registry No.</label>
+                    <input type="text" name="govt_reg_number" value="{{ hotel.govt_reg_number }}" class="input-field">
+                </div>
+                <div class="col-6 input-group">
+                    <label>GST Identification</label>
+                    <input type="text" name="gst_number" value="{{ hotel.gst_number }}" class="input-field">
+                </div>
+
+                <!-- Document Intelligence Overhaul -->
+                <div class="col-12 mt-12 pt-12 border-t border-slate-100">
+                    <div class="flex items-center justify-between mb-10">
+                        <label class="text-[12px] font-black uppercase text-slate-800 tracking-[0.3em]">Document
+                            Intelligence Protocol</label>
+                        <div
+                            class="px-4 py-1.5 bg-slate-900 text-white rounded-full text-[9px] font-black uppercase tracking-widest">
+                            Secure Ledger</div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="dossier-upload-node group/dossier">
+                            <label><i class="fas fa-file-invoice text-cyan-500"></i> ID Proof Registry</label>
+                            <input type="file" name="doc_mandatory"
+                                class="w-full text-xs font-bold text-slate-400 file:bg-slate-100 file:border-0 file:rounded-full file:px-4 file:py-2 file:mr-4 file:text-[9px] file:font-black file:uppercase file:cursor-pointer">
+                            {% if hotel.doc_id_proof %}
+                            <div
+                                class="mt-6 px-4 py-3 bg-emerald-500/10 text-emerald-600 rounded-2xl text-[10px] font-bold flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-emerald-500 status-pulse"></div>
+                                Dossier Validated
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="dossier-upload-node group/dossier">
+                            <label><i class="fas fa-stamp text-amber-500"></i> Govt Certification</label>
+                            <input type="file" name="doc_certificate"
+                                class="w-full text-xs font-bold text-slate-400 file:bg-slate-100 file:border-0 file:rounded-full file:px-4 file:py-2 file:mr-4 file:text-[9px] file:font-black file:uppercase file:cursor-pointer">
+                            {% if hotel.doc_govt_registration %}
+                            <div
+                                class="mt-6 px-4 py-3 bg-emerald-500/10 text-emerald-600 rounded-2xl text-[10px] font-bold flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-emerald-500 status-pulse"></div>
+                                Certification Synced
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="dossier-upload-node group/dossier">
+                            <label><i class="fas fa-file-contract text-indigo-500"></i> GST Tax Dossier</label>
+                            <input type="file" name="doc_gst"
+                                class="w-full text-xs font-bold text-slate-400 file:bg-slate-100 file:border-0 file:rounded-full file:px-4 file:py-2 file:mr-4 file:text-[9px] file:font-black file:uppercase file:cursor-pointer">
+                            {% if hotel.doc_gst_certificate %}
+                            <div
+                                class="mt-6 px-4 py-3 bg-emerald-500/10 text-emerald-600 rounded-2xl text-[10px] font-bold flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-emerald-500 status-pulse"></div>
+                                Tax Ledger Verified
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Media -->
+        <section id="media" class="editor-section royale-card media-chroma reveal-editor-section shadow-lg"
+            style="animation-delay: 0.4s;">
+            <div class="section-header">
+                <h2 class="section-title">Visual Dossier</h2>
+                <p class="section-desc">Public-facing property gallery and visual assets.</p>
+            </div>
+
+            <div class="gallery-grid">
+                {% for img in gallery %}
+                <div class="media-item group/gallery relative overflow-hidden">
+                    <img src="{{ img.media_file.url }}" alt="Property Gallery">
+                    <div class="media-del photo-del-btn" data-type="gallery" data-id="{{ img.id }}">
+                        <i class="fas fa-trash-can text-white text-xl"></i>
+                    </div>
+                    <div
+                        class="absolute inset-0 bg-rose-500/80 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity photo-deleted-overlay">
+                        <i class="fas fa-trash-can text-white text-2xl mb-2"></i>
+                        <span class="text-[9px] font-black text-white uppercase tracking-widest">Marked for
+                            Deletion</span>
+                    </div>
+                </div>
+                {% endfor %}
+                <label
+                    class="media-item border-2 border-dashed border-slate-200 flex flex-col items-center justify-center cursor-pointer hover:border-slate-400 transition-all">
+                    <i class="fas fa-camera-retro text-2xl text-slate-300 mb-2"></i>
+                    <span class="text-[9px] font-black uppercase text-slate-400">Add Asset</span>
+                    <input type="file" name="property_images" multiple class="hidden">
+                </label>
+            </div>
+        </section>
+
+        <!-- Action Sync Node -->
+        <div class="sync-bar">
+            <div class="flex flex-col">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Global
+                    Intelligence</span>
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 status-pulse"></div>
+                    <span class="text-[11px] font-bold text-white uppercase">Dossier Synced</span>
+                </div>
+            </div>
+            <div class="h-10 w-px bg-white/10"></div>
+            <button type="submit"
+                class="bg-[#00cef5] text-[#020617] px-12 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-cyan-500/20">
+                Commit Protocol Sync
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{% static 'js/hoteladmin/edit_hotel_intelligence.js' %}"></script>
+{% endblock %}

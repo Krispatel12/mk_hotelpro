@@ -1,0 +1,211 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}AI Agent Tasks | HotelPro{% endblock %}
+
+{% block back_link %}
+<a href="{% url 'ai_dashboard' %}" class="zenith-back-btn">
+    <i class="fas fa-chevron-left"></i>
+</a>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/hoteladmin/sentinel_dashboard.css' %}">
+{% endblock %}
+
+
+{% block page_title %}AI Autonomous Task Center{% endblock %}
+
+{% block page_subtitle %}
+{% if is_global %}
+Global Empire Core — Portfolio-Wide Strategic Command
+{% else %}
+Automated Workflows &amp; Operational Execution — {{ hotel.name }}
+{% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+<div data-theme="{{ request.user.ai_theme_mode }}" id="sentinelRoot">
+    <div class="sentinel-wrap">
+
+        {# Sidebar — Task Queue #}
+        <aside id="sessionsSidebar" class="glass-deep">
+            <div class="sidebar-section-header">
+                <span class="sidebar-section-label">Operational Queue</span>
+            </div>
+            <div class="sessions-list-wrap">
+                {% for task in tasks %}
+                <div class="task-node priority-{{ task.priority }}">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px">
+                        <span class="status-badge status-{{ task.status }}">{{ task.status }}</span>
+                        <span style="font-size:9px; color:#475569">{{ task.created_at|timesince }} ago</span>
+                    </div>
+                    <p style="font-size:12px; font-weight:700; color:white; margin:0">{{ task.title|truncatechars:40 }}
+                    </p>
+                    {% if task.hotel %}
+                    <p style="font-size:10px; color:#64748b; margin-top:4px">📍 {{ task.hotel.name }}</p>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-robot"></i>
+                    <p>No tasks generated yet.<br>Try asking the AI for a recommendation!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </aside>
+
+        {# Main Content Area #}
+        <main id="chatArea">
+            <div class="task-container">
+                <header class="task-header">
+                    <div>
+                        <h2>Automation Control Center</h2>
+                        <p>AI-generated operational tasks and recommendations.</p>
+                    </div>
+                    <span class="task-count-badge">
+                        {{ task_stats.total }} Total Tasks
+                    </span>
+                </header>
+
+                {# Task Grid #}
+                {% if tasks %}
+                <div class="task-card-grid">
+                    {% for task in tasks %}
+                    <article class="task-node priority-{{ task.priority }} fade-up" style="--delay: {{ forloop.counter0 }}">
+                        <div class="task-card-main-content">
+                            {# Icon Circle #}
+                            <div class="task-icon-wrap">
+                                {% if task.category == 'REVENUE' %}<i class="fas fa-chart-line cat-icon"></i>
+                                {% elif task.category == 'OPERATIONS' %}<i class="fas fa-cogs cat-icon"></i>
+                                {% elif task.category == 'EXPERIENCE' %}<i class="fas fa-smile cat-icon"></i>
+                                {% elif task.category == 'MARKETING' %}<i class="fas fa-bullhorn cat-icon"></i>
+                                {% elif task.category == 'RISK' %}<i class="fas fa-shield-alt cat-icon-risk"></i>
+                                {% else %}<i class="fas fa-robot cat-icon"></i>{% endif %}
+                            </div>
+
+                            <div style="flex:1; min-width:0">
+                                <div class="task-card-title-row">
+                                    <h3 class="task-card-title">{{ task.title }}</h3>
+                                    <span class="status-badge status-{{ task.status }}">
+                                        {% if task.status == 'SUGGESTED' %}<i class="fas fa-hourglass-half"></i>{% elif task.status == 'EXECUTED' %}<i class="fas fa-check"></i>{% endif %}
+                                        {{ task.status }}
+                                    </span>
+                                    {% if task.auto_executable %}
+                                    <span class="status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2)">
+                                        <i class="fas fa-bolt"></i> Auto-Pilot
+                                    </span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="task-card-internal-flex">
+                                    <div class="value-box">
+                                        <span class="category-label">Condition Detected</span>
+                                        <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin:0">{{ task.description|default:task.reasoning }}</p>
+                                    </div>
+                                    <div class="value-box value-box-accent">
+                                        <span class="category-label" style="color:rgb(var(--accent-primary))">Strategic Action</span>
+                                        <p style="font-size:13px; color:white; font-weight:600; line-height:1.6; margin:0">
+                                            {{ task.solution|default:"Reviewing operational data for optimal next steps." }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="task-card-footer">
+                                    <span><i class="fas fa-clock mr-2"></i>{{ task.created_at|timesince }} ago</span>
+                                    {% if task.hotel %}<span><i class="fas fa-hotel mr-2"></i>{{ hotel.name }}</span>{% endif %}
+                                    {% if task.impact_estimate %}
+                                    <span style="color:#10b981; font-weight:800">
+                                        <i class="fas fa-rocket mr-2"></i> Est. Impact: {{ task.impact_estimate }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="task-card-actions">
+                                {% if task.status == 'SUGGESTED' %}
+                                <button class="btn-action">Execute Now</button>
+                                {% elif task.status == 'EXECUTED' %}
+                                <div style="color:#10b981; font-weight:800; font-size:11px">
+                                    <i class="fas fa-calendar-check mr-2"></i> COMPLETED
+                                </div>
+                                {% elif task.status == 'FAILED' %}
+                                <div style="color:#f87171; font-weight:800; font-size:11px">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i> FAILED
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-robot"></i>
+                    <h3 class="insight-section-title">No Tasks Yet</h3>
+                    <p class="insight-narrative">Your AI agents haven't generated any tasks yet. Start a chat to get recommendations.</p>
+                    <a href="{% if is_global %}/ai-chat/0/{% else %}/ai-chat/{{ hotel.id }}/{% endif %}" class="btn-action-pill">
+                        <i class="fas fa-comment-dots mr-2"></i>Open AI Chat
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+
+        {# Right Panel #}
+        <aside id="rightPanel">
+            <span class="rp-label">Task Intelligence</span>
+
+            <div class="stat-grid">
+                <div class="stat-tile">
+                    <div style="font-size:22px; font-weight:800; color:white">{{ task_stats.total }}</div>
+                    <div class="sidebar-section-label" style="font-size:8px; margin-top:4px">Total</div>
+                </div>
+                <div class="stat-tile">
+                    <div style="font-size:22px; font-weight:800; color:#10b981">{{ task_stats.executed }}</div>
+                    <div class="sidebar-section-label" style="font-size:8px; margin-top:4px">Executed</div>
+                </div>
+                <div class="stat-tile">
+                    <div style="font-size:22px; font-weight:800; color:#60a5fa">{{ task_stats.suggested }}</div>
+                    <div class="sidebar-section-label" style="font-size:8px; margin-top:4px">Pending</div>
+                </div>
+                <div class="stat-tile">
+                    <div style="font-size:22px; font-weight:800; color:#f87171">{{ task_stats.failed }}</div>
+                    <div class="sidebar-section-label" style="font-size:8px; margin-top:4px">Failed</div>
+                </div>
+            </div>
+
+            {% if task_stats.total > 0 %}
+            <div class="insight-card mt-0">
+                <h6 class="quick-nav-label">Success Rate</h6>
+                {% widthratio task_stats.executed task_stats.total 100 as success_pct %}
+                <div class="success-rate-val">{{ success_pct }}%</div>
+                <div class="progress-track">
+                    <div class="progress-bar" style="--width: {{ success_pct }}%"></div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="insight-card mt-16">
+                <span class="rp-label">Quick Navigate</span>
+                <div class="quick-nav-list">
+                    <a href="{% if is_global %}/ai-dashboard/0/{% else %}/ai-dashboard/{{ hotel.id }}/{% endif %}" class="quick-nav-btn">
+                        <i class="fas fa-tachometer-alt"></i> Command Center
+                    </a>
+                    <a href="{% if is_global %}/ai-chat/0/{% else %}/ai-chat/{{ hotel.id }}/{% endif %}" class="quick-nav-btn">
+                        <i class="fas fa-comment-dots"></i> AI Chat
+                    </a>
+                    <a href="{% if is_global %}/ai-analyst/0/{% else %}/ai-analyst/{{ hotel.id }}/{% endif %}" class="quick-nav-btn">
+                        <i class="fas fa-chart-bar"></i> AI Analyst
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="sentinelConfig" data-hotel-id="{% if is_global %}0{% else %}{{ hotel.id }}{% endif %}" data-csrf="{{ csrf_token }}"
+    src="{% static 'js/hoteladmin/sentinel_dashboard.js' %}?v=2"></script>
+{% endblock %}

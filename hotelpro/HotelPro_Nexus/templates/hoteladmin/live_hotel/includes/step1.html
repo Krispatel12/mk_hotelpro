@@ -1,0 +1,270 @@
+{% load static %}
+<!-- STEP 1: Basic Hotel Details -->
+<div class="onboarding-step active" id="step-1">
+
+    <div class="premium-card">
+        <h1 class="step-title"><i class="fas fa-hotel"></i> <b>Hotel Identity</b></h1>
+        <div class="dense-grid">
+            <!-- Row 1: Name & Category -->
+            <div class="col-8">
+                <div class="input-group">
+                    <label for="hotel_name"><i class="fas fa-id-card"></i> Hotel Name</label>
+                    <input type="text" name="hotel_name" id="hotel_name" placeholder="e.g. Grand Azure Resort & Spa"
+                        required>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="input-group">
+                    <label for="id_hotel_type"><i class="fas fa-tags"></i> Hotel Category</label>
+                    <div class="custom-select-container" id="customTypeSelect" data-target="id_hotel_type">
+                        <div class="select-selected" tabindex="0">
+                            <span class="selected-text">
+                                <div class="item-icon-box">
+                                    <i class="fas fa-hotel"></i>
+                                </div>
+                                <span class="item-text">Select Category</span>
+                            </span>
+                            <i class="fas fa-chevron-down arrow-icon"></i>
+                        </div>
+                        <div class="select-items" id="property-type-items"></div>
+                    </div>
+                    <input type="hidden" name="hotel_type" id="id_hotel_type" value="select-category" required>
+                </div>
+            </div>
+
+            <!-- Row 2: Location & Contact -->
+            <div class="col-8">
+                <div class="input-group">
+                    <label for="location-search"><i class="fas fa-location-dot"></i> Hotel Address</label>
+                    <div class="input-with-action">
+                        <input type="text" name="address" id="location-search" class="input-address"
+                            placeholder="Enter street, city, or building name..." required>
+                        <button type="button" id="open-map-btn" class="registry-map-btn" title="Open Map">
+                            <i class="fas fa-map-location-dot"></i>
+                            <span>View Map</span>
+                        </button>
+                    </div>
+
+                    <input type="hidden" name="city" id="id_city">
+                    <input type="hidden" name="state" id="id_state">
+                    <input type="hidden" name="country" id="id_country" value="India">
+                    <input type="hidden" name="pincode" id="id_pincode">
+                    <input type="hidden" name="lat" id="id_lat">
+                    <input type="hidden" name="lng" id="id_lng">
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="input-group">
+                    <label for="id_star_rating"><i class="fas fa-star"></i> Star Rating</label>
+                    <div class="custom-select-container" id="customStarSelect" data-target="id_star_rating">
+                        <div class="select-selected" tabindex="0">
+                            <span class="selected-text">
+                                <div class="item-icon-box">
+                                    <i class="fas fa-star" style="color:#fbbf24;"></i>
+                                </div>
+                                <span class="item-text">Select Rating</span>
+                            </span>
+                            <i class="fas fa-chevron-down arrow-icon"></i>
+                        </div>
+                        <div class="select-items" id="star-rating-items"></div>
+                    </div>
+                    <input type="hidden" name="star_rating" id="id_star_rating" value="5.0" required>
+                </div>
+            </div>
+
+            <!-- Row 3: Contact & Digital Presence -->
+            <div class="col-6">
+                <div class="input-group mt-10">
+                    <label for="contact_number"><i class="fas fa-phone-volume"></i> Contact Number</label>
+                    <input type="text" name="contact_number" id="contact_number" placeholder="+91 98765 43210" required>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group mt-10">
+                    <label for="website"><i class="fas fa-globe"></i> Hotel Website</label>
+                    <input type="url" name="website" id="website" placeholder="https://yourhotel.com">
+                </div>
+            </div>
+
+            <!-- Row 3: Narrative -->
+            <div class="col-12">
+                <div class="input-group mt-10">
+                    <label for="hotel_narrative"><i class="fas fa-paragraph"></i> About your Hotel</label>
+                    <textarea name="hotel_narrative" id="hotel_narrative"
+                        placeholder="Describe your hotel for your guests..." required></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group mt-48 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary next-step btn-large-elite" data-target="2">
+                Rooms & Services <i class="fas fa-arrow-right ml-10"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Address Map Popup (Split Screen Professional View) -->
+<div id="locationPopup" class="location-popup split-view-popup">
+    <div class="popup-box location-split-box glass-panel glassmorphism-bg">
+        <button type="button" id="close-map-btn" class="close-btn popup-absolute-close" title="Close Verification">
+            &times;
+        </button>
+        <div class="location-split-body">
+            <!-- Left Panel: Info & Actions -->
+            <div class="location-info-panel shadow-xl">
+                <div class="panel-inner-scroll">
+                    <div class="verification-header">
+                        <h3>Location Check</h3>
+                        <p class="text-muted">Make sure your hotel's location is accurate on the map.</p>
+                    </div>
+
+                    <div class="detected-address-section mt-4">
+                        <span class="label">Detected Address</span>
+                        <div class="address-card mt-2">
+                            <div id="address-skeleton" class="skeleton-loader">
+                                <div class="skeleton-line full"></div>
+                                <div class="skeleton-line half"></div>
+                            </div>
+                            <div class="dynamic-address d-none" id="live-address-display">
+                                <!-- Address injected here -->
+                            </div>
+                            <div class="verification-status mt-2">
+                                <i class="fas fa-circle-check text-success"></i>
+                                <span id="confidence-text" class="text-sm color-slate-600 ml-6">
+                                    Location is confirmed.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Nearby Real-World Landmarks for Admin Verification -->
+                    <div class="nearby-landmarks-section mt-4">
+                        <span class="label">Nearby Authentic Landmarks</span>
+                        <div id="landmarks-list" class="landmarks-scroll-x mt-2">
+                            <div class="landmark-chip"><i class="fas fa-map-pin"></i> Detecting...</div>
+                        </div>
+                    </div>
+
+                    <div class="metrics-grid mt-4">
+                        <div class="metric-box">
+                            <span class="m-label">LATITUDE</span>
+                            <span class="m-value" id="lat-display">--.------</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-label">LONGITUDE</span>
+                            <span class="m-value" id="lng-display">--.------</span>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Audit & Precision Dossier -->
+                    <div class="audit-dossier-section mt-4">
+                        <div class="precision-badge" id="precision-badge">
+                            <i class="fas fa-satellite"></i> <span>Waiting...</span>
+                        </div>
+                        <div class="full-metrics mt-3">
+                            <div class="metric-row">
+                                <span class="label">Accuracy Radius</span>
+                                <span class="value" id="accuracy-display">--m</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="label">Verification Slot</span>
+                                <span class="value" id="audit-timestamp">--:--:--</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="label">Hash Token</span>
+                                <span class="value font-mono text-xs" id="audit-token">GENERATING...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-actions mt-auto">
+                        <button type="button" id="auto-detect-btn" class="btn btn-outline w-100 mb-3">
+                            <i class="fas fa-crosshairs"></i> DETECT MY LOCATION
+                        </button>
+                        <button type="button" id="confirm-location-btn" class="btn btn-primary gradient-primary w-100"
+                            disabled>
+                            CONFIRM LOCATION
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Interactive Map -->
+            <div class="location-map-panel">
+                <div id="map-loading-overlay" class="map-shimmer-overlay glassmorphism-bg">
+                    <div class="spinner-grow text-gold"></div>
+                    <span>Initializing Secure Map...</span>
+                </div>
+
+                <div id="map-container" class="full-height-map"></div>
+
+                <!-- Floating Map Controls -->
+                <button type="button" id="floating-locate-me" class="floating-btn glass-btn" title="Locate Me">
+                    <i class="fas fa-location-crosshairs"></i>
+                </button>
+                <div class="map-floating-hint glass-hint">
+                    <i class="fas fa-hand-pointer"></i> Drag pin to fine-tune
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Property Type Manager Modal -->
+<div id="typeManagerPopup" class="location-popup manager-popup">
+    <div class="popup-box max-w-650">
+        <div class="popup-header">
+            <div class="header-info">
+                <h3><i class="fas fa-sliders-h"></i> Hotel Categories</h3>
+            </div>
+            <button type="button" id="close-type-manager-btn" class="close-btn">&times;</button>
+        </div>
+
+        <div class="popup-body">
+            <!-- Active Classifications Area -->
+            <div class="active-classifications-area">
+                <span class="section-title-elite">Current Categories</span>
+                <div id="type-list">
+                    <!-- Dynamically populated card grid -->
+                </div>
+            </div>
+
+            <!-- Professional Registry Section -->
+            <div class="registry-section">
+                <div class="registry-card">
+                    <div class="registry-header">
+                        <h4>Add New Category</h4>
+                        <p class="input-hint">Enter a name and icon for the new category.</p>
+                    </div>
+
+                    <div class="dossier-form-grid">
+                        <div class="input-group">
+                            <label>Category Label</label>
+                            <div class="input-with-icon">
+                                <input type="text" id="new-type-label" placeholder="e.g. Heritage Haveli">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Icon Class</label>
+                            <div class="input-with-icon">
+                                <input type="text" id="new-type-icon" placeholder="e.g. fas fa-landmark">
+                                <i class="fas fa-icons"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="registry-actions">
+                        <button type="button" id="add-type-btn" class="btn btn-primary save-classification-btn">
+                            Save Category
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

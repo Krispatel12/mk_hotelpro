@@ -1,0 +1,739 @@
+:root {
+    /* Enterprise Obsidian Foundations */
+    --obsidian-deep: #020617;
+    --obsidian-surface: #0f172a;
+    --zenith-primary: #2563eb;
+    --zenith-accent: #3b82f6;
+    --glass-bg: rgba(15, 23, 42, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.08);
+
+    /* Neural Redesign Tokens */
+    --neural-cyan: 34, 211, 238;
+    --neural-purple: 168, 85, 247;
+}
+
+.glass-vibrant {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes neural-pulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(var(--neural-cyan), 0.4)); }
+    50% { transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(var(--neural-cyan), 0.7)); }
+}
+
+.animate-neural-pulse {
+    animation: neural-pulse 3s ease-in-out infinite;
+}
+
+/* 🌌 Global Ambient Texture Protocol */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.03) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* 🏔️ Global Baseline Core (Theme Logic) */
+body {
+    background-color: #020617;
+    color: white;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+nav, main, .scroll-viewport-node {
+    background-color: #020617;
+    transition: background-color 0.5s ease;
+}
+
+.theme-toggle-thumb {
+    transform: translateX(38px); /* Default Dark Mode position (Right) */
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease;
+}
+
+/* Icon Visibility Calibration (Baseline: Dark Mode) */
+.track-icon-sun { opacity: 1; }
+.track-icon-moon { opacity: 0; }
+.thumb-icon-dark { opacity: 1; }
+.thumb-icon-light { opacity: 0; }
+.thumb-icon-dark, .thumb-icon-light { transition: opacity 0.3s ease; }
+
+.premium-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--premium-shadow);
+}
+
+.premium-card {
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.premium-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-item-active-ai {
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.15) 0%, transparent 100%) !important;
+    border-left: 4px solid #8b5cf6 !important;
+    color: #d8b4fe !important;
+    box-shadow: inset 10px 0 20px -10px rgba(139, 92, 246, 0.3);
+}
+
+.sidebar-item-active-ai .ai-node-icon {
+    background: rgba(139, 92, 246, 0.2) !important;
+    color: #e9d5ff !important;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    animation: ai-icon-pulse 2s infinite ease-in-out;
+}
+
+@keyframes ai-icon-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(139, 92, 246, 0.6); }
+}
+
+.sidebar-ai-node:hover .ai-node-icon {
+    transform: scale(1.1) rotate(5deg);
+    color: #d8b4fe !important;
+}
+
+.sidebar-item-active i {
+    color: #3b82f6 !important;
+    transform: scale(1.1);
+}
+
+.status-pulse {
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+/* 🔙 Zenith Navigation: Premium Back Button */
+.zenith-back-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+}
+
+.zenith-back-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: translateX(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.zenith-back-btn i {
+    font-size: 14px;
+    transition: transform 0.4s ease;
+}
+
+.zenith-back-btn:hover i {
+    transform: scale(1.1);
+}
+
+/* AI Command Node - Zenith High-Fidelity Override */
+.ai-command-node-card {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.ai-command-node-card:hover {
+    background: rgba(15, 23, 42, 0.6);
+    border-color: rgba(139, 92, 246, 0.3);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(124, 58, 237, 0.25);
+}
+
+.ai-card-active {
+    background: linear-gradient(135deg, rgba(76, 29, 149, 0.3) 0%, rgba(15, 23, 42, 0.5) 100%) !important;
+    border-color: rgba(139, 92, 246, 0.4) !important;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5), 
+                inset 0 0 30px rgba(139, 92, 246, 0.1) !important;
+    animation: ai-card-breathe 8s ease-in-out infinite;
+}
+
+@keyframes ai-card-breathe {
+    0%, 100% { box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5); }
+    50% { box-shadow: 0 40px 120px -10px rgba(124, 58, 237, 0.3); }
+}
+
+.ai-card-active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%;
+    height: 60%;
+    width: 4px;
+    background: linear-gradient(to bottom, #8b5cf6, #c084fc);
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.8);
+}
+
+/* AI Specific Animations */
+@keyframes ai-ping {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+.ai-ping-glow {
+    position: relative;
+}
+
+.ai-ping-glow::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 9999px;
+    background: inherit;
+    opacity: 0.6;
+    animation: ai-ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-ai-bar-1 { animation: bar-grow 1.2s ease-in-out infinite; }
+.animate-ai-bar-2 { animation: bar-grow 1.2s ease-in-out infinite 0.3s; }
+.animate-ai-bar-3 { animation: bar-grow 1.2s ease-in-out infinite 0.6s; }
+
+@keyframes bar-grow {
+    0%, 100% { height: 4px; opacity: 0.3; transform: scaleY(1); }
+    50% { height: 14px; opacity: 1; transform: scaleY(1.2); }
+}
+
+.dark-mesh-surface {
+    background: radial-gradient(circle at top right, #1e293b, #020617);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* AI Icon Shimmer & Haptics */
+.ai-icon-shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+.ai-icon-shimmer::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.1), transparent 30%);
+    animation: rotate-shimmer 4s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotate-shimmer {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.ai-button-haptic:active {
+    transform: scale(0.92);
+}
+
+.btn-premium {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    color: white;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-premium:hover {
+    box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.4);
+    transform: translateY(-2px);
+}
+
+.text-glow {
+    text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+}
+
+/* =========================================================================
+   LIGHT MODE (CLEAN SAAS) OVERRIDES
+   ========================================================================= */
+
+html.light-mode body {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+}
+
+html.light-mode main {
+    background: #f1f5f9 !important;
+}
+
+/* Header */
+html.light-mode .zenith-header-premium {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02) !important;
+    color: #1e293b !important;
+}
+
+html.light-mode .zenith-header-premium h1, 
+html.light-mode .zenith-header-premium span.text-white {
+    color: #0f172a !important;
+}
+
+html.light-mode .zenith-header-premium .text-slate-500 {
+    color: #64748b !important;
+}
+
+html.light-mode .status-badge-elite {
+    background: #ecfdf5 !important;
+    border-color: #d1fae5 !important;
+    color: #059669 !important;
+    box-shadow: none !important;
+}
+
+html.light-mode .header-control-node {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    color: #64748b !important;
+}
+
+html.light-mode .header-control-node:hover {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+}
+
+html.light-mode .profile-contrast-node {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+    color: #0f172a !important;
+    box-shadow: none !important;
+}
+
+/* Sidebar */
+html.light-mode nav {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode nav .text-white {
+    color: #0f172a !important;
+}
+
+html.light-mode nav .text-slate-500 {
+    color: #64748b !important;
+}
+
+html.light-mode .sidebar-item-active {
+    background: rgba(37, 99, 235, 0.08) !important;
+    border-left: 4px solid #2563eb !important;
+    color: #2563eb !important;
+}
+
+html.light-mode .sidebar-item-active i {
+    color: #2563eb !important;
+}
+
+html.light-mode nav .bg-white\/5 {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+}
+
+html.light-mode nav .bg-white\/10 {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+html.light-mode nav a:hover .bg-white\/5 {
+    background: #e2e8f0 !important;
+}
+
+/* Dashboard ambient glows */
+html.light-mode .bg-primary-600\/10, 
+html.light-mode .bg-cyan-500\/10,
+html.light-mode .ambient-glow {
+    display: none !important;
+}
+
+/* Theme Toggle */
+html.light-mode .theme-toggle-wrapper .toggle-bg {
+    background: #e2e8f0 !important;
+}
+html.light-mode .theme-toggle-wrapper {
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+html.light-mode .theme-toggle-thumb {
+    transform: translateX(0) !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+    border-color: rgba(0,0,0,0.1) !important;
+}
+html.light-mode .track-icon-sun { opacity: 0 !important; }
+html.light-mode .track-icon-moon { opacity: 1 !important; color: #64748b !important; }
+html.light-mode .thumb-icon-dark { opacity: 0 !important; }
+html.light-mode .thumb-icon-light { opacity: 1 !important; color: #f59e0b !important; }
+
+/* Scrollbar & Viewport Overrides */
+html.light-mode ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1) !important;
+}
+html.light-mode ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.15) !important;
+}
+
+html.light-mode main > div.overflow-y-auto,
+html.light-mode main > div.bg-\[\#020617\] {
+    background: #f8fafc !important;
+}
+
+/* Heading refinement for Light Mode */
+html.light-mode h1, 
+html.light-mode h2, 
+html.light-mode h3, 
+html.light-mode h4, 
+html.light-mode h5 {
+    color: #0f172a !important;
+}
+
+html.light-mode .text-slate-400,
+html.light-mode .text-slate-500 {
+    color: #64748b !important;
+}
+
+/* Global Premium Glass for Light Mode */
+html.light-mode .premium-glass {
+    background: rgba(255, 255, 255, 0.7) !important;
+    border-color: rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+}
+
+
+/* =========================================================================
+   GLOBAL DASHBOARD/ENTERPRISE HUB LIGHT MODE COMPATIBILITY
+   ========================================================================= */
+
+/* Statistic Cards Container Overrides (Ported for Global Dashboard use) */
+html.light-mode .metric-mesh-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode .metric-mesh-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-4px) !important;
+    border-color: #cbd5e1 !important;
+}
+
+html.light-mode .metric-mesh-card::before,
+html.light-mode .metric-mesh-card::after {
+    display: none !important;
+}
+
+/* Icons inside Stat Cards */
+html.light-mode .metric-mesh-card .w-10.h-10 {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #3b82f6 !important;
+    box-shadow: none !important;
+}
+
+/* Card Titles and Text inside Stat Cards */
+html.light-mode .metric-mesh-card .text-4xl,
+html.light-mode .metric-mesh-card h3 {
+    color: #0f172a !important;
+    text-shadow: none !important;
+    -webkit-text-fill-color: initial !important; 
+    background: none !important;
+}
+
+html.light-mode .metric-mesh-card .text-slate-400 {
+    color: #64748b !important;
+}
+
+html.light-mode .metric-mesh-card .bg-white\/5 {
+    background: #e2e8f0 !important;
+}
+
+/* Metric Colors Override */
+html.light-mode .metric-mesh-card.mesh-revenue .w-10.h-10 { color: #10b981 !important; background: #ecfdf5 !important; border-color: #a7f3d0 !important;}
+html.light-mode .metric-mesh-card.mesh-active .w-10.h-10 { color: #3b82f6 !important; background: #eff6ff !important; border-color: #bfdbfe !important; }
+html.light-mode .metric-mesh-card.mesh-audit .w-10.h-10 { color: #f59e0b !important; background: #fffbeb !important; border-color: #fde68a !important;}
+
+/* Insight Console Overrides */
+html.light-mode #metricInsightConsole .premium-glass,
+html.light-mode #propertyInsightConsole .premium-glass,
+html.light-mode .premium-glass.spectrum-silk-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode #metricInsightConsole h4,
+html.light-mode #propertyInsightConsole h4,
+html.light-mode .spectrum-silk-card h3,
+html.light-mode .spectrum-silk-card h4 {
+    color: #0f172a !important;
+}
+
+html.light-mode #metricInsightConsole p,
+html.light-mode #propertyInsightConsole p,
+html.light-mode .spectrum-silk-card p,
+html.light-mode .spectrum-silk-card span.text-slate-400 {
+    color: #64748b !important;
+}
+
+html.light-mode #metricInsightConsole .bg-white\/5,
+html.light-mode #propertyInsightConsole .bg-white\/5 {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border-color: #e2e8f0 !important;
+}
+html.light-mode #metricInsightConsole .bg-white\/5:hover,
+html.light-mode #propertyInsightConsole .bg-white\/5:hover {
+    background: #e2e8f0 !important;
+}
+
+/* Global Portfolio Nodes */
+html.light-mode .hotel-card-wrapper .executive-card {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04) !important;
+}
+html.light-mode .hotel-card-wrapper .executive-card:hover { 
+    border-color: rgba(37, 99, 235, 0.1) !important; 
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06) !important;
+}
+
+html.light-mode .hotel-card-wrapper h4,
+html.light-mode .hotel-card-wrapper h3 {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+}
+html.light-mode .hotel-card-wrapper .text-slate-400 { color: #475569 !important; }
+html.light-mode .hotel-card-wrapper .bg-white\/5 { background: #f8fafc !important; color: #475569 !important; border-color: #e2e8f0 !important; }
+html.light-mode .hotel-card-wrapper .bg-white\/5:hover { background: #f1f5f9 !important; }
+html.light-mode .hotel-card-wrapper .status-tag { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; color: #475569 !important; font-weight: 800 !important; }
+html.light-mode .hotel-card-wrapper.node-live .status-tag { background: #ecfdf5 !important; border-color: #d1fae5 !important; color: #059669 !important;}
+html.light-mode .hotel-card-wrapper.node-pending .status-tag { background: #fffbeb !important; border-color: #fde68a !important; color: #d97706 !important;}
+
+
+/* Spectrum Section Override */
+html.light-mode .spectrum-bar.bg-white\/5 { background: #e2e8f0 !important; }
+html.light-mode .spectrum-bar.bg-white\/5:hover { background: #3b82f6 !important; }
+html.light-mode .spectrum-silk-card .bg-white\/10 { background: #f8fafc !important; border-color: #e2e8f0 !important; }
+
+/* Silk Node Cards & Global Reviews */
+html.light-mode .silk-node-card {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03) !important;
+    transition: all 0.4s ease !important;
+}
+html.light-mode .silk-node-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06) !important;
+}
+html.light-mode .silk-node-card h4 { color: #0f172a !important; font-weight: 800 !important; }
+html.light-mode .silk-node-card p, html.light-mode .silk-node-card span { color: #475569 !important; }
+html.light-mode .silk-node-card .bg-white\/5 {
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+html.light-mode .silk-node-card .bg-white\/5:hover { background: #f1f5f9 !important; }
+
+html.light-mode .silk-node-card .bg-slate-900 {
+    background: #0f172a !important;
+    color: #ffffff !important;
+}
+
+html.light-mode .border-white\/5 { border-color: #e2e8f0 !important; }
+html.light-mode .bg-white\/20 { background: #e2e8f0 !important; }
+
+html.light-mode .silk-node-card .text-white,
+html.light-mode .spectrum-silk-card .text-white,
+html.light-mode .hotel-card-wrapper .text-white,
+html.light-mode h3.text-white,
+html.light-mode h4.text-white {
+    color: #0f172a !important;
+}
+
+/* Ensure buttons keep white text in light mode */
+html.light-mode .btn-ultra,
+html.light-mode .metric-mesh-card.mesh-vortex .text-white,
+html.light-mode .bg-primary-600,
+html.light-mode .btn-premium {
+    color: #ffffff !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   UNIVERSAL READABILITY MATRIX (v2.0)
+   Strategic Safety-Net for Light Mode Content Visibility
+   ───────────────────────────────────────────────────────────────────────── */
+
+html.light-mode .text-white,
+html.light-mode .text-slate-100,
+html.light-mode .text-slate-200,
+html.light-mode .text-slate-300 {
+    color: #0f172a !important; /* Force high-contrast dark text */
+}
+
+/* Specific button/action text protection */
+html.light-mode .btn-premium span.text-white,
+html.light-mode .btn-premium i.text-white,
+html.light-mode .btn-ultra span.text-white,
+html.light-mode .btn-ultra i.text-white,
+html.light-mode button.bg-primary-600 .text-white {
+    color: #ffffff !important;
+}
+
+html.light-mode .text-slate-400,
+html.light-mode .text-slate-500 {
+    color: #475569 !important; /* Balanced mid-tone for readability */
+}
+
+html.light-mode .bg-white\/5,
+html.light-mode .bg-white\/10,
+html.light-mode .bg-indigo-950\/40 {
+    background: #f1f5f9 !important; /* Surface contrast */
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode .bg-indigo-950\/40 i {
+    color: #6366f1 !important;
+}
+
+html.light-mode .border-white\/5,
+html.light-mode .border-white\/10 {
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode .bg-slate-900,
+html.light-mode .bg-slate-800 {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* Force dark icons globally in light mode unless inside protected areas */
+html.light-mode i:not(.protected-icon):not(.text-white):not(.text-emerald-400):not(.text-primary-400) {
+    color: #475569 !important;
+}
+
+html.light-mode .mesh-vortex {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+}
+
+/* Modal/Insight Panel Visibility */
+html.light-mode div.bg-white\/5.insight-reveal,
+html.light-mode div.bg-white\/5.premium-glass {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Sub-headings and secondary tags */
+html.light-mode .tracking-widest {
+    color: #64748b !important;
+    letter-spacing: 0.15em !important;
+}
+
+/* Persistence protection */
+html.light-mode .bg-emerald-500\/10 {
+    background: #ecfdf5 !important;
+    color: #059669 !important;
+}
+
+html.light-mode .bg-primary-500\/10 {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+}
+
+/* Light Mode AI Sidebar Specialization */
+html.light-mode .sidebar-item-active-ai {
+    background: rgba(139, 92, 246, 0.08) !important;
+    border-left: 4px solid #8b5cf6 !important;
+    color: #7c3aed !important;
+}
+
+html.light-mode .sidebar-item-active-ai .ai-node-icon {
+    background: #f5f3ff !important;
+    border-color: #ddd6fe !important;
+    color: #7c3aed !important;
+}
+
+/* Light Mode Back Button Protection */
+html.light-mode .zenith-back-btn {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    color: #64748b !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light-mode .zenith-back-btn:hover {
+    background: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    transform: translateX(-4px) !important;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.sidebar-ai-node {
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar-ai-node::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.05), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: -1;
+}
+
+.sidebar-ai-node:hover::before {
+    opacity: 1;
+}
+

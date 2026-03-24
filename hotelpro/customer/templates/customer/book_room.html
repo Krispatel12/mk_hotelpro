@@ -1,0 +1,152 @@
+{% extends "customer/base.html" %}
+{% load static %}
+
+{% block title %}Checkout - {{ room.name }} | HotelPro{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'customer/css/checkout.css' %}">
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'customer/js/checkout.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'customer:hotel_detail' hotel.id %}" class="btn btn-outline"
+    style="margin-bottom:40px; display:inline-flex;">
+    <i class="fas fa-arrow-left"></i> Back to Hotel
+</a>
+
+<div class="checkout-grid">
+
+    <!-- Booking Form -->
+    <div>
+        <h1 class="section-title">Complete your Booking</h1>
+        <div class="form-card">
+            <form method="POST">
+                {% csrf_token %}
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:8px;">
+                    <div class="form-group">
+                        <label>Check-in Date *</label>
+                        <input type="date" name="check_in" id="check_in" class="form-control" value="{{ check_in }}"
+                            required onchange="calcTotal()">
+                    </div>
+                    <div class="form-group">
+                        <label>Check-out Date *</label>
+                        <input type="date" name="check_out" id="check_out" class="form-control" value="{{ check_out }}"
+                            required onchange="calcTotal()">
+                    </div>
+                </div>
+
+                <div class="form-section-label">Guest Details</div>
+
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" name="guest_name" class="form-control" placeholder="Primary guest name"
+                        value="{{ user.username|default:'' }}" required>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" name="guest_email" class="form-control"
+                            placeholder="Booking confirmation sent here" value="{{ user.email|default:'' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" name="guest_phone" class="form-control" placeholder="+91 99999 99999"
+                            required>
+                    </div>
+                </div>
+
+                {% if active_offers %}
+                <div class="form-section-label">Apply Luxury Offer</div>
+                <div class="offers-selection-grid">
+                    {% for offer in active_offers %}
+                    <label class="offer-selection-card">
+                        <input type="radio" name="offer_id" value="{{ offer.id }}"
+                            data-discount="{{ offer.discount_percent }}" onchange="calcTotal()">
+                        <div class="offer-selection-content">
+                            <div class="offer-selection-info">
+                                <div class="offer-selection-name">{{ offer.name }}</div>
+                                <div class="offer-selection-discount">{{ offer.discount_percent }}% OFF</div>
+                            </div>
+                            <i class="fas fa-check-circle selection-check"></i>
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="form-section-label">Have a Coupon Code?</div>
+                <div class="coupon-input-group">
+                    <input type="text" name="coupon_code" id="coupon_code" class="form-control"
+                        placeholder="Enter Code (e.g. WELCOME10)" style="text-transform: uppercase;">
+                    <button type="button" class="btn-apply-coupon" onclick="validateCoupon()">Apply</button>
+                </div>
+                <div id="coupon_status" style="font-size: 13px; margin-top: 8px;"></div>
+                <input type="hidden" id="hotel_id" value="{{ hotel.id }}">
+                <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-lock"></i> Confirm Booking (Pay at Hotel)
+                </button>
+                <div class="secure-badge">
+                    <i class="fas fa-shield-check" style="color:#10b981;"></i>
+                    Your booking is secure. No credit card required.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div>
+        <div class="summary-card">
+            {% with primary=room.photos.first %}
+            {% if primary %}
+            <img src="{{ primary.media_file.url }}" class="summary-img">
+            {% endif %}
+            {% endwith %}
+
+            <div class="summary-body">
+                <div class="summary-hotel">{{ hotel.name }}</div>
+                <div class="summary-room">{{ room.name }}</div>
+
+                <div class="summary-row">
+                    <span>Base Price (Per Night)</span>
+                    <span id="base_price">₹{{ room.base_price|floatformat:0 }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Duration</span>
+                    <span id="display_nights">—</span>
+                </div>
+                <div class="summary-row" id="discount_row" style="display:none; color:#10b981;">
+                    <span>Special Offer Discount</span>
+                    <span id="display_discount">—</span>
+                </div>
+                <div class="summary-row">
+                    <span>Calculation</span>
+                    <span id="display_calc">—</span>
+                </div>
+
+                <div class="summary-total">
+                    <span>Total Amount</span>
+                    <span class="total-amount" id="total_price">₹0</span>
+                </div>
+
+                <div style="margin-top:24px; font-size:12px; color:rgba(255,255,255,0.3); line-height:1.6;">
+                    By confirming this booking, you agree to the property's house rules and cancellation policy. Taxes
+                    may
+                    apply at the property.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Calc on page load if dates are pre-filled
+    window.addEventListener('load', calcTotal);
+</script>
+{% endblock %}

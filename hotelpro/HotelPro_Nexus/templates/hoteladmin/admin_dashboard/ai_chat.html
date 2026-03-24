@@ -1,0 +1,349 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Sentinel Vision Engine | HotelPro{% endblock %}
+
+{% block back_link %}
+<a href="{% url 'ai_dashboard' %}" class="zenith-back-btn">
+    <i class="fas fa-chevron-left"></i>
+</a>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/hoteladmin/sentinel_dashboard.css' %}?v=3">
+{% endblock %}
+
+{% block page_title %}Sentinel Vision Engine{% endblock %}
+{% block page_subtitle %}
+    {% if is_global %}
+        Global Empire Core — Portfolio-Wide Strategic Command
+    {% else %}
+        Enterprise Market Intelligence & Vision Engine — {{ hotel.name }}
+    {% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+<style>
+    /* Full-Bleed Intelligence Interface Overrides */
+    .scroll-viewport-node {
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+    .scroll-viewport-node > div {
+        max-width: none !important;
+    }
+    #sentinelRoot {
+        border-radius: 0 !important;
+    }
+</style>
+<div data-theme="{{ request.user.ai_theme_mode }}" id="sentinelRoot">
+
+    <div id="searchOverlay" class="search-overlay">
+        <div class="flex items-center gap-3 mb-6">
+            <button onclick="closeSearch()" class="inp-btn"><i class="fas fa-arrow-left"></i></button>
+            <input id="searchInput" type="text" placeholder="Search conversations..."
+                class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none text-white placeholder:text-slate-500">
+            <button onclick="doSearch()" class="px-5 py-3 rounded-xl text-sm font-bold btn-action">Search</button>
+        </div>
+        <div id="searchResults" class="space-y-3 overflow-y-auto flex-1"></div>
+    </div>
+
+    {# ── Recycle Bin Overlay ─────────────────────────────────────────────── #}
+    <div id="recycleBinOverlay" class="search-overlay">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <button onclick="closeRecycleBin()" class="inp-btn"><i class="fas fa-arrow-left"></i></button>
+                <div>
+                    <h3 class="text-white font-bold text-lg">Recycle Bin Intelligence</h3>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Restore or Purge Deleted Stream</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="recycleBinTabs" class="flex gap-2 mb-4 border-b border-white/5 pb-2">
+            <button onclick="switchBinTab('sessions')" id="tabSessions" class="text-[10px] uppercase tracking-wider font-bold px-4 py-2 rounded-lg text-white/40 hover:text-white bg-white/5 transition-all">Sessions</button>
+            <button onclick="switchBinTab('documents')" id="tabDocuments" class="text-[10px] uppercase tracking-wider font-bold px-4 py-2 rounded-lg text-white/40 hover:text-white bg-white/5 transition-all">Documents</button>
+            <select id="docTypeFilter" onchange="if(window.recycleBinData) renderBinItems(window.recycleBinData)"
+                class="hidden ml-auto text-[10px] uppercase tracking-wider font-bold px-3 py-2 rounded-lg text-white bg-white/10 border border-white/10 focus:outline-none" style="cursor:pointer">
+                <option value="all">All Types</option>
+                <option value="image">Images</option>
+                <option value="pdf">PDFs</option>
+                <option value="text">Text/Docs</option>
+            </select>
+        </div>
+
+        <div id="recycleBinContent" class="space-y-3 overflow-y-auto flex-1 pr-2">
+            <!-- Items loaded via JS -->
+        </div>
+    </div>
+
+    {# ── Edit Modal ───────────────────────────────────────────────────────── #}
+    <div id="editModal" class="edit-modal">
+        <div class="modal-box">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-white font-bold text-lg">Edit &amp; Re-Analyze</h3>
+                <button onclick="closeEditModal()" class="inp-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <textarea id="editInput" rows="4"
+                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white resize-none focus:outline-none mb-4"
+                placeholder="Edit your query..."></textarea>
+            <div class="flex gap-3 justify-end">
+                <button onclick="closeEditModal()"
+                    class="px-4 py-2 rounded-xl bg-white/5 text-sm text-slate-400 border border-white/10 hover:bg-white/10">Cancel</button>
+                <button onclick="submitEdit()" class="px-5 py-2 rounded-xl text-sm font-bold btn-action">Regenerate</button>
+            </div>
+        </div>
+    </div>
+
+    {# ── Analysis Details Modal ───────────────────────────────────────── #}
+    <div id="analysisModal" class="edit-modal hidden" style="display:none; align-items: center; justify-content: center; z-index: 1000;">
+        <div class="modal-box glass-vibrant" style="max-width: 700px; width: 90%;">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-white font-bold text-xl shimmer-text">Intelligence Insights</h3>
+                    <p class="text-xs text-slate-400 mt-1">Granular Data Extraction & Confidence Scores</p>
+                </div>
+                <button onclick="closeAnalysisModal()" class="inp-btn"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div id="analysisModalContent" class="space-y-6 overflow-y-auto pr-2" style="max-height: 60vh;">
+                <!-- Dynamic Content Load -->
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-white/10 flex justify-end">
+                <button onclick="closeAnalysisModal()" class="px-6 py-2 rounded-xl text-sm font-bold btn-action">Close Analysis</button>
+            </div>
+        </div>
+    </div>
+
+    {# ── Toast System ────────────────────────────────────────────────── #}
+    <div id="toastContainer" style="position:fixed; top:24px; right:24px; z-index:10000; pointer-events:none; display:flex; flex-direction:column; gap:12px;"></div>
+
+    {# ── Main 3-Column Layout ─────────────────────────────────────────────── #}
+    <div class="sentinel-wrap">
+
+        {# ── LEFT: Sessions Sidebar ──────────────────────────────────────── #}
+        <aside id="sessionsSidebar">
+            <div
+                style="padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between">
+                <span
+                    style="font-family:'Outfit', sans-serif;font-size:10px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#64748b">Intelligence
+                    Stream</span>
+                <button onclick="newChat()" class="inp-btn" style="width:32px;height:32px;background:rgba(var(--accent-primary),0.1);border:1px solid rgba(var(--accent-primary),0.2);color:rgb(var(--accent-primary))">
+                    <i class="fas fa-plus" style="font-size:10px"></i>
+                </button>
+            </div>
+
+            <div style="padding:12px 16px">
+                <button onclick="openSearch()"
+                    style="width:100%;height:40px;display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#64748b;font-size:12px;cursor:pointer;transition:all 0.2s">
+                    <i class="fas fa-search" style="font-size:10px"></i>
+                    <span>Search archives...</span>
+                </button>
+            </div>
+
+            <div class="sessions-list-wrap" id="sessionsList">
+                {# Loaded via JS #}
+            </div>
+
+            <div style="padding:12px 16px;border-top:1px solid rgba(255,255,255,0.05);display:flex;flex-direction:column;gap:8px">
+                <button onclick="openRecycleBin()"
+                    style="width:100%;padding:10px;border-radius:12px;background:rgba(var(--accent-primary),0.05);border:1px solid rgba(var(--accent-primary),0.1);color:rgb(var(--accent-primary));font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px">
+                    <i class="fas fa-trash-restore" style="font-size:11px"></i> Recycle Bin
+                </button>
+                <button onclick="deleteHistory()"
+                    style="width:100%;padding:10px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;cursor:pointer;transition:all 0.2s">
+                    Clear Active Chat
+                </button>
+                <button onclick="clearAllHistory()"
+                    style="width:100%;padding:10px;border-radius:12px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.12);color:#f87171;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;cursor:pointer;transition:all 0.2s">
+                    Clear All History
+                </button>
+            </div>
+        </aside>
+
+        {# ── CENTER: Chat Interface ──────────────────────────────────────── #}
+        <main id="chatArea">
+            <header class="chat-header">
+                <div style="display:flex;align-items:center;gap:16px">
+                    <button id="sidebarToggleBtn" onclick="toggleSidebar()" title="Toggle Sidebar"
+                        style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);border:1px solid rgba(var(--accent-primary),0.2);color:rgb(var(--accent-primary));cursor:pointer;border-radius:10px;transition:all 0.2s">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div style="position:relative;width:40px;height:40px;flex-shrink:0">
+                        <div
+                            style="position:absolute;inset:0;background:linear-gradient(to bottom right, #7c3aed, #a855f7);border-radius:12px;filter:blur(12px);opacity:0.4">
+                        </div>
+                        <img src="{% static 'images/zenith_ai_icon.png' %}"
+                            style="position:relative;width:100%;height:100%;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.1)">
+                    </div>
+                    <div>
+                        <h3 style="font-family:'Outfit', sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.02em;color:#fff">Sentinel Vision Engine</h3>
+                        <p
+                            style="font-size:9px;color:rgb(var(--accent-primary));font-weight:800;text-transform:uppercase;letter-spacing:0.18em;margin-top:2px;display:flex;align-items:center;gap:6px">
+                            <span id="scanStatusDot" style="width:5px;height:5px;border-radius:50%;background:rgb(var(--accent-primary));box-shadow:0 0 8px rgb(var(--accent-primary))"></span>
+                            <span id="scanStatusText">Vision Active • v5.0 Aether</span>
+                        </p>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:16px">
+                    <div id="sessionTitle"
+                        style="font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:0.12em">
+                        Image Analysis Flow</div>
+                    <div style="width:1px;height:16px;background:rgba(255,255,255,0.08)"></div>
+                    <div style="position:relative;">
+                        <button onclick="toggleThemePicker()" id="themePickerBtn"
+                            style="display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:100px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;cursor:pointer;transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1)">
+                            <i class="fas fa-palette" id="themePickerIcon"
+                                style="font-size:12px;color:rgb(var(--accent-primary))"></i>
+                            <span
+                                style="font-family:'Outfit', sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;font-size:9px">Theme</span>
+                            <i class="fas fa-chevron-down" id="themeChevron"
+                                style="font-size:10px;margin-left:4px;transition:transform 0.3s"></i>
+                        </button>
+
+                        {# Theme Dropdown Popover #}
+                        <div id="themePickerDropdown" class="hidden"
+                            style="position:absolute;top:calc(100% + 8px);right:0;width:220px;background:rgba(15,23,42,0.95);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:12px;box-shadow:0 10px 40px -10px rgba(0,0,0,0.5);z-index:50">
+                            <div
+                                style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.15em;color:#64748b;margin-bottom:12px;padding:0 4px">
+                                System Theme</div>
+                            <div style="display:flex;flex-direction:column;gap:4px">
+                                <button
+                                    class="theme-opt-btn {% if request.user.ai_theme_mode == 1 or not request.user.ai_theme_mode %}active-theme{% endif %}"
+                                    onclick="setTheme(1)" data-theme-opt="1"
+                                    style="display:flex;align-items:center;gap:12px;width:100%;padding:8px 12px;border-radius:10px;background:transparent;border:none;cursor:pointer;text-align:left;transition:all 0.2s">
+                                    <div style="width:16px;height:16px;border-radius:50%;background:#8b5cf6"></div>
+                                    <span style="font-size:12px;font-weight:600;color:#cbd5e1">Obsidian</span>
+                                </button>
+                                <button
+                                    class="theme-opt-btn {% if request.user.ai_theme_mode == 2 %}active-theme{% endif %}"
+                                    onclick="setTheme(2)" data-theme-opt="2"
+                                    style="display:flex;align-items:center;gap:12px;width:100%;padding:8px 12px;border-radius:10px;background:transparent;border:none;cursor:pointer;text-align:left;transition:all 0.2s">
+                                    <div style="width:16px;height:16px;border-radius:50%;background:#3b82f6"></div>
+                                    <span style="font-size:12px;font-weight:600;color:#cbd5e1">Cobalt</span>
+                                </button>
+                                <button
+                                    class="theme-opt-btn {% if request.user.ai_theme_mode == 3 %}active-theme{% endif %}"
+                                    onclick="setTheme(3)" data-theme-opt="3"
+                                    style="display:flex;align-items:center;gap:12px;width:100%;padding:8px 12px;border-radius:10px;background:transparent;border:none;cursor:pointer;text-align:left;transition:all 0.2s">
+                                    <div style="width:16px;height:16px;border-radius:50%;background:#10b981"></div>
+                                    <span style="font-size:12px;font-weight:600;color:#cbd5e1">Emerald</span>
+                                </button>
+                                <button
+                                    class="theme-opt-btn {% if request.user.ai_theme_mode == 4 %}active-theme{% endif %}"
+                                    onclick="setTheme(4)" data-theme-opt="4"
+                                    style="display:flex;align-items:center;gap:12px;width:100%;padding:8px 12px;border-radius:10px;background:transparent;border:none;cursor:pointer;text-align:left;transition:all 0.2s">
+                                    <div style="width:16px;height:16px;border-radius:50%;background:#ef4444"></div>
+                                    <span style="font-size:12px;font-weight:600;color:#cbd5e1">Crimson</span>
+                                </button>
+                                <button
+                                    class="theme-opt-btn {% if request.user.ai_theme_mode == 5 %}active-theme{% endif %}"
+                                    onclick="setTheme(5)" data-theme-opt="5"
+                                    style="display:flex;align-items:center;gap:12px;width:100%;padding:8px 12px;border-radius:10px;background:transparent;border:none;cursor:pointer;text-align:left;transition:all 0.2s">
+                                    <div style="width:16px;height:16px;border-radius:50%;background:#f59e0b"></div>
+                                    <span style="font-size:12px;font-weight:600;color:#cbd5e1">Gold</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="chatMessages">
+                {% if not chat_history %}
+                {# ── Document Upload Launcher ── #}
+                <div class="chat-upload-launcher fade-up">
+                    <br><br><br>
+                    <div class="upload-icon-box">
+                        <i class="fas fa-folder-open" style="font-size:32px;color:rgb(var(--accent-primary))"></i>
+                    </div>
+                    <h4 class="ai-launcher-title"
+                        style="font-family:'Outfit', sans-serif;font-size:32px;font-weight:800;color:white;margin-bottom:12px;letter-spacing:-0.03em">
+                        Document Intelligence Engine</h4>
+                    <p style="color:#94a3b8;font-size:15px;max-width:480px;margin:0 auto 40px;line-height:1.6;font-family:'Inter', sans-serif">Upload 
+                        images, PDF reports, or structural data for instant strategic insights 
+                        from the Sentinel Engine.</p>
+
+                    <label class="px-6 py-4 rounded-xl font-bold btn-action-pill"
+                        onmouseover="this.style.background='rgba(var(--accent-primary),0.25)'"
+                        onmouseout="this.style.background='rgba(var(--accent-primary),0.15)'">
+                        <input type="file" id="launcherUpload" class="hidden" accept="image/*,.pdf,.csv,.docx,.doc,.txt"
+                             onchange="document.getElementById('fileUpload').files = this.files; handleFileUpload(document.getElementById('fileUpload'))">
+                        <i class="fas fa-cloud-upload-alt" style="font-size:16px"></i> Upload Data to Analyze
+                    </label>
+                </div>
+                {% else %}
+                {% for msg in chat_history %}
+                <div class="msg-user fade-up" data-msg-id="{{ msg.id }}">
+                    <div style="width:100%">
+                        <div style="display:flex;justify-content:flex-end">
+                            <div class="bubble-user">{{ msg.query }}</div>
+                        </div>
+                        <div class="edit-actions">
+                            {% if msg.is_edited %}<span class="edited-badge">edited</span>{% endif %}
+                            <button class="edit-btn" data-msg-id="{{ msg.id }}"
+                                data-msg-query="{{ msg.query|escapejs }}"
+                                onclick="openEditModal(this.dataset.msgId, this.dataset.msgQuery)">
+                                <i class="fas fa-pen" style="margin-right:4px"></i>Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="msg-ai fade-up">
+                    <div class="bubble-ai">{{ msg.response|linebreaks }}</div>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                {# Typing indicator #}
+                <div id="aiTyping" class="hidden msg-ai">
+                    <div class="flex items-center gap-2 p-4 rounded-xl s-bg border border-white/8">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            {# Input Zone #}
+            <footer id="inputZone">
+                <div id="docPreviewBar" class="doc-preview-bar">
+                    <i class="fas fa-file-shield" style="color:rgb(var(--accent-primary))"></i>
+                    <span id="docFileName" class="text-slate-300 flex-1 truncate"></span>
+                    <span id="docStatus" class="text-slate-500 ml-auto"></span>
+                    <button onclick="clearDocument()" class="bg-none border-none text-slate-500 cursor-pointer p-1">
+                        <i class="fas fa-times" style="font-size:11px"></i>
+                    </button>
+                </div>
+
+                <div id="chatInputWrap" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(10px)">
+                    <label title="Upload Image or Document" class="inp-btn" style="cursor:pointer;flex-shrink:0;background:rgba(var(--accent-primary),0.05);border:1px solid rgba(var(--accent-primary),0.15)">
+                        <input type="file" id="fileUpload" class="hidden" accept="image/*,.pdf,.txt,.docx,.doc,.csv"
+                            onchange="handleFileUpload(this)">
+                        <i class="fas fa-folder-open" style="font-size:13px;color:rgb(var(--accent-primary))"></i>
+                    </label>
+
+                    <textarea id="chatInput" placeholder="Ask the Vision Engine to analyze your uploaded data..."
+                        onkeydown="handleKey(event)" rows="1" style="font-family:'Inter', sans-serif"></textarea>
+
+                    <button type="button" onclick="toggleVoice()" id="voiceBtn" class="inp-btn" style="flex-shrink:0">
+                        <i class="fas fa-microphone" id="micIcon" style="font-size:11px"></i>
+                    </button>
+
+                    <button id="sendBtn" onclick="sendMessage()" style="display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(var(--accent-primary),0.3)">
+                        <i class="fas fa-paper-plane" style="font-size:13px"></i>
+                    </button>
+                </div>
+            </footer>
+        </main>
+    </div>{# end sentinel-wrap #}
+
+</div>{# end sentinelRoot #}
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="sentinelConfig" data-hotel-id="{% if is_global %}0{% else %}{{ hotel.id }}{% endif %}" data-csrf="{{ csrf_token }}"
+    src="{% static 'js/hoteladmin/sentinel_dashboard.js' %}?v=6">
+    </script>
+{% endblock %}

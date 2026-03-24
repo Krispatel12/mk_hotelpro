@@ -1,0 +1,84 @@
+<div class="room-row">
+    <div class="room-header">
+        <h4><i class="fas fa-bed"></i> Room Type <span class="room-count-display"></span></h4>
+        <div class="remove-room" title="Remove Room">
+            <i class="fas fa-trash-alt"></i>
+        </div>
+    </div>
+    <div class="room-body">
+        <div class="input-group">
+            <label>Category Name</label>
+            <input type="text" class="room-type-input" placeholder="e.g. Deluxe Ocean View" required>
+        </div>
+        <div class="input-group">
+            <label>Base Price (₹)</label>
+            <input type="number" class="room-price-input" placeholder="2500" required>
+        </div>
+        <div class="input-group">
+            <label>Max Occupancy</label>
+            <input type="number" class="room-guests-input" value="2" min="1" required>
+        </div>
+        <div class="input-group">
+            <label>Total Inventory</label>
+            <input type="number" class="room-count-input" value="1" min="1" required>
+        </div>
+
+        <div class="room-image-group">
+            <div class="room-upload-btn">
+                <input type="file" class="room-image-input d-none" accept="image/*,video/*" multiple>
+                <i class="fas fa-camera room-upload-icon"></i>
+                <div class="room-upload-title">Upload Room Photo</div>
+                <div class="text-sm color-muted">Click to browse</div>
+            </div>
+            <div class="room-preview-box"></div>
+        </div>
+
+        <!-- Room Specific Amenities -->
+        <div class="room-amenities room-amenities-divider">
+            <label class="section-subtitle"><i class="fas fa-sparkles"></i> Room Amenities & Privileges</label>
+
+            <!-- Standard Amenities - Premium Pills -->
+            <div class="selection-pill-group">
+                <label class="pill-label">
+                    <input type="checkbox" class="room-amenity" value="ac">
+                    <i class="fas fa-snowflake"></i> AC
+                </label>
+                <label class="pill-label">
+                    <input type="checkbox" class="room-amenity" value="tv">
+                    <i class="fas fa-tv"></i> TV
+                </label>
+                <label class="pill-label">
+                    <input type="checkbox" class="room-amenity" value="wifi">
+                    <i class="fas fa-wifi"></i> WiFi
+                </label>
+                <label class="pill-label">
+                    <input type="checkbox" class="room-amenity" value="minibar">
+                    <i class="fas fa-wine-glass"></i> Mini-bar
+                </label>
+                <label class="pill-label">
+                    <input type="checkbox" class="room-amenity" value="geyser">
+                    <i class="fas fa-hot-tub"></i> Geyser
+                </label>
+                <label class="pill-label">
+                    <input type="checkbox" class="room-amenity" value="balcony">
+                    <i class="fas fa-door-open"></i> Balcony
+                </label>
+                <label class="pill-label">
+                    <input type="checkbox" class="room-amenity" value="tub">
+                    <i class="fas fa-bath"></i> Bathtub
+                </label>
+            </div>
+
+            <!-- Custom Amenities Input Refined -->
+            <div class="pill-input-wrapper mt-16">
+                <input type="text" class="new-amenity-text" placeholder="Add unique feature (e.g. Garden View)">
+                <button type="button" class="pill-add-btn btn-add-amenity">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <!-- Dynamic Amenities Container -->
+            <div class="dynamic-amenities-container dynamic-pills-container mt-16"></div>
+        </div>
+    </div>
+</div>

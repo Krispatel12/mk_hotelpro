@@ -1,0 +1,146 @@
+/* ── PROFESSIONAL UI SYSTEM FOUNDATION ── */
+:root {
+    /* Refined HSL Palette (Mobile-First Optimized) */
+    --p-h: 217; --p-s: 91%; --p-l: 60%; /* Primary Blue */
+    --primary: hsl(var(--p-h), var(--p-s), var(--p-l));
+    --primary-alt: hsl(var(--p-h), var(--p-s), 50%);
+    
+    --bg-surface: hsla(220, 20%, 97%, 0.8);
+    --bg-card: hsla(220, 20%, 100%, 0.7);
+    --border-glass: rgba(0, 0, 0, 0.05);
+    
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    
+    --radius-xl: 1.5rem;
+    --radius-2xl: 2rem;
+}
+
+/* ── LAYOUT UTILITIES ── */
+.container-responsive {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 1.25rem;
+    padding-left: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .container-responsive {
+        padding-right: 2.5rem;
+        padding-left: 2.5rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .container-responsive {
+        max-width: 1280px;
+    }
+}
+
+.dark {
+    --bg-surface: hsla(222, 47%, 11%, 0.8);
+    --bg-card: hsla(222, 47%, 13%, 0.7);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --text-main: #f8fafc;
+}
+
+/* ── MODERN GLASSMORPHISM ── */
+.glass-surface {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--border-glass);
+}
+
+.glass-surface-heavy {
+    background: var(--bg-surface);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid var(--border-glass);
+}
+
+/* ── RESPONSIVE NAVIGATION DRAWER (MOBILE-FIRST) ── */
+#mobile-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+#mobile-drawer.active {
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.drawer-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#mobile-drawer.active .drawer-overlay {
+    opacity: 1;
+}
+
+.drawer-content {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: min(90%, 400px);
+    background: var(--bg-surface);
+    border-left: 1px solid var(--border-glass);
+    transform: translateX(100%);
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+#mobile-drawer.active .drawer-content {
+    transform: translateX(0);
+}
+
+/* ── TYPOGRAPHY ── */
+.text-balance {
+    text-wrap: balance;
+}
+
+/* ── BUTTON SYSTEM ── */
+.btn-premium {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-premium:active {
+    transform: scale(0.95);
+}
+
+.mobile-nav-link {
+    font-size: 1.125rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748b;
+}
+
+.dark .mobile-nav-link {
+    color: #94a3b8;
+}
+
+.mobile-nav-link:hover {
+    color: var(--primary);
+    transform: translateX(4px);
+}
+
+.btn-premium:hover {
+    box-shadow: 0 15px 30px -5px hsla(var(--p-h), var(--p-s), var(--p-l), 0.5);
+    transform: translateY(-2px);
+}

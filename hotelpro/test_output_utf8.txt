@@ -1,0 +1,10 @@
+﻿
+--- Persona Verification Test ---
+
+User: just tell me my hotel name
+Agent: Your current anchor hotel, Krish, is **Purva21**.
+
+User: How many hotels do I manage?
+Agent: You manage **4** hotels in your portfolio.
+
+--- Persona Verification Complete ---

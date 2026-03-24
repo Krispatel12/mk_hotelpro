@@ -1,0 +1,740 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<!-- High-performance layout utilities -->
+<link rel="stylesheet" href="{% static 'css/hoteladmin/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/hoteladmin/portfolio_strip.css' %}">
+<script src="{% static 'js/hoteladmin/portfolio_search.js' %}" defer></script>
+{% endblock %}
+
+{% block title %}Operational Intelligence Hub | {{ hotel.name }} | HotelPro Elite{% endblock %}
+
+{% block page_title %}
+    {{ hotel.name }} — Command Center
+    <a href="{% url 'hotel_public_view' hotel.id %}" target="_blank" class="ml-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all shadow-lg active:scale-95">
+        <i class="fas fa-external-link-alt text-[8px]"></i> Public Page
+    </a>
+{% endblock %}
+
+{% block back_link %}
+<a href="{% url 'dashboard' %}" class="zenith-back-btn">
+    <i class="fas fa-chevron-left"></i>
+</a>
+{% endblock %}
+{% block page_subtitle %}Daily performance stats and offer management for your hotel.{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-12 animate-in fade-in slide-in-from-bottom-10 duration-1000 pb-24">
+
+    <!-- ══ Global Portfolio Strip (v26.0) ══ -->
+    <div class="space-y-6">
+        <div class="flex items-center justify-between px-2">
+            <div class="flex items-center gap-3">
+                <div class="w-1.5 h-6 bg-white/20 rounded-full"></div>
+                <h4 class="text-sm font-black text-white uppercase tracking-[0.2em]">Enterprise Portfolio</h4>
+            </div>
+            <div class="stage-orchestrator-bar animate-reveal">
+                <!-- 🔍 Real-time Hub Search -->
+                <div class="portfolio-search-wrapper">
+                    <i class="fas fa-search search-icon-node"></i>
+                    <input type="text" id="portfolioSearchNode" placeholder="Search Node..."
+                        class="portfolio-search-node" autocomplete="off">
+                </div>
+
+                <div class="orchestrator-view-controller">
+                    <a href="{% url 'dashboard' %}"
+                        class="orchestrator-view-btn !w-auto h-auto px-6 py-3 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary-600 hover:border-primary-500/50 hover:shadow-[0_0_30px_rgba(37,99,235,0.3)] transition-all active:scale-95 flex items-center gap-3">
+                        Unified Hub 
+                        <i class="fas fa-arrow-right text-[8px] animate-pulse"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="portfolioNodeContainer" class="flex gap-6 overflow-x-auto pb-6 scrollbar-hide -mx-4 px-4 snap-x">
+            {% for h in all_hotels %}
+            <div class="portfolio-node-item min-w-[340px] max-w-[340px] snap-start" data-node-name="{{ h.name|lower }}">
+                <a href="{% url 'dashboard_specific' h.id %}"
+                    class="block p-1 rounded-[2.1rem] {% if h.id == hotel.id %}active-node-border-wrapper{% endif %} group transition-all duration-500 hover:-translate-y-1">
+
+                    <div
+                        class="p-6 rounded-[2rem] silk-node-card border {% if h.id == hotel.id %}border-transparent{% else %}border-white/5 shadow-2xl shadow-black/20{% endif %} relative overflow-hidden h-full">
+                        {% if h.id == hotel.id %}
+                        <div class="absolute top-0 right-0 p-3 z-20">
+                            <div
+                                class="bg-primary-600 text-white text-[7px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-primary-600/30 animate-pulse">
+                                ACTIVE NODE</div>
+                        </div>
+                        {% endif %}
+
+                        <div class="flex items-center gap-5 relative z-10">
+                            <div
+                                class="w-12 h-12 rounded-2xl {% if h.id == hotel.id %}bg-primary-600 text-white shadow-xl shadow-primary-600/20{% else %}bg-white/5 text-white/20 group-hover:bg-primary-500/10 group-hover:text-primary-400{% endif %} flex items-center justify-center transition-all duration-500">
+                                <i class="fas fa-hotel text-lg"></i>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <h5 class="text-sm font-bold text-white truncate leading-tight">{{ h.name }}</h5>
+                                <div class="flex items-center gap-2 mt-1">
+                                    {% if h.is_live %}
+                                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 status-pulse"></div>
+                                    <span
+                                        class="text-[8px] font-black text-emerald-400 uppercase tracking-widest">Live</span>
+                                    {% else %}
+                                    <div class="w-1.5 h-1.5 rounded-full bg-white/10"></div>
+                                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">{{h.status }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Info Reveal on Selected -->
+                        {% if h.id == hotel.id %}
+                        <div
+                            class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between animate-in slide-in-from-top-2 duration-500">
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-[7px] font-black text-slate-500 uppercase tracking-[0.2em]">Operational
+                                    state</span>
+                                <span class="text-[9px] font-bold text-white uppercase">Registry Verified</span>
+                            </div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-[10px]">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+            <!-- Add New Node Shortcut -->
+            <div class="min-w-[340px] max-w-[340px] snap-start">
+                <a href="{% url 'hotel_onboarding' %}?reset=true"
+                    class="block p-6 rounded-[2rem] bg-white/5 border border-dashed border-white/10 group transition-all duration-500 hover:bg-white/10 hover:border-primary-500/30 hover:-translate-y-1">
+                    <div class="flex items-center gap-5">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-white/5 text-white/20 flex items-center justify-center transition-all duration-500 group-hover:text-primary-400">
+                            <i class="fas fa-plus text-lg"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <h5
+                                class="text-sm font-bold text-white group-hover:text-primary-400 transition-colors uppercase tracking-widest">
+                                Register Node</h5>
+                            <span class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-1">Add new
+                                property</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Performance Registry -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+
+        <!-- Logic: Revenue Index -->
+        <div class="group relative animate-premium-fade animate-delay-1 kinetic-shimmer cursor-pointer transition-all duration-500 active:scale-[0.98]"
+            data-metric-id="revenue_today">
+            <div
+                class="absolute inset-0 bg-blue-600/5 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+            </div>
+            <div
+                class="premium-glass rounded-[2.5rem] p-10 border border-white/60 shadow-2xl shadow-slate-200/40 relative z-10 overflow-hidden transition-all duration-700 hover:-translate-y-2">
+                <div class="flex items-center justify-between mb-10">
+                    <div
+                        class="w-16 h-16 rounded-[1.5rem] bg-blue-600/10 text-blue-600 flex items-center justify-center text-2xl shadow-inner group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 icon-pulse-aura">
+                        <i class="fas fa-indian-rupee-sign group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="flex flex-col items-end gap-1">
+                        <span
+                            class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl uppercase tracking-widest border border-emerald-100/50">+14.2%</span>
+                        <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Yield
+                            Lift</span>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="text-4xl font-display font-bold text-white tracking-tighter leading-none">
+                        ₹{{stats.revenue_today|default:"0" }}</h4>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pt-3">Today's Revenue
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logic: Occupancy Index -->
+        <div class="group relative animate-premium-fade animate-delay-2 kinetic-shimmer cursor-pointer transition-all duration-500 active:scale-[0.98]"
+            data-metric-id="total_bookings">
+            <div
+                class="absolute inset-0 bg-indigo-600/5 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+            </div>
+            <div
+                class="premium-glass rounded-[2.5rem] p-10 border border-white/60 shadow-2xl shadow-slate-200/40 relative z-10 overflow-hidden transition-all duration-700 hover:-translate-y-2">
+                <div class="flex items-center justify-between mb-10">
+                    <div
+                        class="w-16 h-16 rounded-[1.5rem] bg-indigo-600/10 text-indigo-600 flex items-center justify-center text-2xl shadow-inner group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 icon-pulse-aura">
+                        <i class="fas fa-user-group group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="flex flex-col items-end gap-1">
+                        <span
+                            class="text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl uppercase tracking-widest border border-blue-100/50">Live</span>
+                        <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Flow
+                            Rate</span>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="text-4xl font-display font-bold text-white tracking-tighter leading-none">
+                        {{stats.total_bookings|default:"0" }}</h4>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pt-3">Total Bookings
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logic: Reputation Index -->
+        <div class="group relative animate-premium-fade animate-delay-3 kinetic-shimmer cursor-pointer transition-all duration-500 active:scale-[0.98]"
+            data-metric-id="avg_rating">
+            <div
+                class="absolute inset-0 bg-amber-600/5 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+            </div>
+            <div
+                class="premium-glass rounded-[2.5rem] p-10 border border-white/60 shadow-2xl shadow-slate-200/40 relative z-10 overflow-hidden transition-all duration-700 hover:-translate-y-2">
+                <div class="flex items-center justify-between mb-10">
+                    <div
+                        class="w-16 h-16 rounded-[1.5rem] bg-amber-600/10 text-amber-600 flex items-center justify-center text-2xl shadow-inner group-hover:bg-amber-600 group-hover:text-white transition-all duration-500 icon-pulse-aura">
+                        <i class="fas fa-certificate group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="flex flex-col items-end gap-1">
+                        <span
+                            class="text-[10px] font-bold text-amber-600 bg-amber-50 px-3 py-1.5 rounded-xl uppercase tracking-widest border border-amber-100/50">Elite</span>
+                        <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Partner
+                            Rank</span>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <div class="flex items-baseline gap-2">
+                        <h4 class="text-4xl font-display font-bold text-white tracking-tighter leading-none">
+                            {{stats.avg_rating|floatformat:1 }}</h4>
+                        <span class="text-sm font-bold text-slate-500">/ 5.0</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pt-3">Guest Rating
+                        Score</p>
+                </div>
+            </div>
+        </div>
+
+        {% if hotel %}
+            {% url 'ai_dashboard_specific' hotel.id as ai_url %}
+        {% else %}
+            {% url 'ai_dashboard' as ai_url %}
+        {% endif %}
+        <!-- Logic: Strategy Index -->
+        <div class="group relative animate-premium-fade animate-delay-4 kinetic-shimmer cursor-pointer transition-all duration-500 active:scale-[0.98]"
+            onclick="window.location.href='{{ ai_url }}';">
+            <div
+                class="absolute inset-0 bg-emerald-600/5 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+            </div>
+            <div
+                class="premium-glass rounded-[2.5rem] p-10 border border-white/60 shadow-2xl shadow-slate-200/40 relative z-10 overflow-hidden transition-all duration-700 hover:-translate-y-2 bg-gradient-to-br from-indigo-900/10 to-transparent">
+                <div class="flex items-center justify-between mb-10">
+                    <div
+                        class="w-16 h-16 rounded-[1.5rem] bg-indigo-600/10 text-indigo-400 flex items-center justify-center text-2xl shadow-inner group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 icon-pulse-aura">
+                        <i class="fas fa-brain group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="flex flex-col items-end gap-1">
+                        <span
+                            class="text-[10px] font-bold text-indigo-400 bg-indigo-500/10 px-3 py-1.5 rounded-xl uppercase tracking-widest border border-indigo-500/20">Sentinel</span>
+                        <span
+                            class="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">AI Agent</span>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="text-2xl font-display font-bold text-white tracking-tight leading-none">
+                        Active Insights
+                    </h4>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pt-3">
+                        Operational Intelligence Hub →
+                    </p>
+                    <a href="{% url 'hotel_public_view' hotel.id %}" target="_blank" class="block mt-4 text-[9px] font-black text-primary-400 hover:text-primary-300 uppercase tracking-[0.2em] transition-colors">
+                        View Direct Booking Page
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ Interactive Insight Console (v29.0) ══ -->
+    <div id="metricInsightConsole" class="hidden">
+        <div
+            class="premium-glass rounded-[3rem] p-12 border border-white/5 shadow-2xl shadow-black/40 insight-reveal relative overflow-hidden bg-white/5">
+            <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+            <div class="relative z-10">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-4">
+                        <div id="insightIcon"
+                            class="w-14 h-14 rounded-2xl bg-primary-600 text-white flex items-center justify-center text-xl shadow-lg shadow-primary-600/20">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div>
+                            <h4 id="insightTitle" class="text-2xl font-display font-bold text-white tracking-tight">
+                                Node Analytics</h4>
+                            <p id="insightSubtitle"
+                                class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Operational
+                                Intelligence breakdown</p>
+                        </div>
+                    </div>
+                    <button
+                        onclick="document.getElementById('metricInsightConsole').classList.add('hidden'); document.querySelectorAll('[data-metric-id]').forEach(c => c.classList.remove('selected-card-prism'))"
+                        class="w-10 h-10 rounded-full bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div id="insightContent" class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <!-- Dynamic Content Swapped via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ Property Performance Spectrum (v33.0) ══ -->
+    <div class="space-y-8 mt-[6rem]">
+        <div class="flex items-center justify-between px-2">
+            <div class="flex items-center gap-4">
+                <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
+                <div>
+                    <h3 class="text-2xl font-display font-bold text-white tracking-tight">Property Performance
+                        Spectrum</h3>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Real-time Revenue
+                        Velocity · {{ hotel.name }} Node</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 p-1 bg-white/5 rounded-xl border border-white/5">
+                <button
+                    class="px-4 py-2 rounded-lg bg-white/10 shadow-sm text-[9px] font-black text-white uppercase border border-white/5">Yield
+                    Mode</button>
+                <button
+                    class="px-4 py-2 rounded-lg text-[9px] font-black text-slate-500 uppercase hover:text-white transition-colors">Flow
+                    Mode</button>
+            </div>
+        </div>
+
+        <div
+            class="premium-glass rounded-[3rem] p-12 border border-white/5 shadow-2xl shadow-black/40 relative overflow-hidden bg-white/5 backdrop-blur-3xl group">
+            <div
+                class="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 via-transparent to-primary-500/5 pointer-events-none">
+            </div>
+
+            <div class="relative z-10">
+                <div class="flex items-end justify-between h-[280px] gap-4 px-4 border-b border-white/5 pb-2"
+                    id="propertySpectrumChart">
+                    <!-- High-Fidelity kinetic bars generated via JS logic for this node -->
+                    <div class="flex-1 bg-white/5 rounded-t-2xl hover:bg-emerald-500/50 transition-all duration-700 cursor-help relative group/spectrum shadow-inner property-spectrum-bar"
+                        data-node-height="45" style="opacity: 0.8;"></div>
+                    <div class="flex-1 bg-white/5 rounded-t-2xl hover:bg-emerald-500/50 transition-all duration-700 cursor-help relative group/spectrum shadow-inner property-spectrum-bar"
+                        data-node-height="65" style="opacity: 0.8;"></div>
+                    <div class="flex-1 bg-emerald-600 rounded-t-2xl hover:bg-emerald-500 transition-all duration-700 cursor-help relative group/spectrum shadow-inner property-spectrum-bar"
+                        data-node-height="95" style="opacity: 0.8;"></div>
+                    <div class="flex-1 bg-white/5 rounded-t-2xl hover:bg-emerald-500/50 transition-all duration-700 cursor-help relative group/spectrum shadow-inner property-spectrum-bar"
+                        data-node-height="55" style="opacity: 0.8;"></div>
+                    <div class="flex-1 bg-white/5 rounded-t-2xl hover:bg-emerald-500/50 transition-all duration-700 cursor-help relative group/spectrum shadow-inner property-spectrum-bar"
+                        data-node-height="75" style="opacity: 0.8;"></div>
+                    <div class="flex-1 bg-white/5 rounded-t-2xl hover:bg-emerald-500/50 transition-all duration-700 cursor-help relative group/spectrum shadow-inner property-spectrum-bar"
+                        data-node-height="40" style="opacity: 0.8;"></div>
+                    <div class="flex-1 bg-white/5 rounded-t-2xl hover:bg-emerald-500/50 transition-all duration-700 cursor-help relative group/spectrum shadow-inner property-spectrum-bar"
+                        data-node-height="85" style="opacity: 0.8;"></div>
+                </div>
+
+                <!-- Node Health Matrix (Property Specific) -->
+                <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 px-4">
+                    <div class="space-y-2">
+                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Node Uptime</span>
+                        <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 w-[99.9%] shadow-[0_0_15px_rgba(16,185,129,0.4)]"></div>
+                        </div>
+                        <p class="text-[10px] font-bold text-slate-500">Premium SLA</p>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Service
+                            velocity</span>
+                        <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-primary-500 w-[88%] shadow-[0_0_15px_rgba(59,130,246,0.3)]"></div>
+                        </div>
+                        <p class="text-[10px] font-bold text-slate-500">88% Efficiency</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Operational Command Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+        <!-- Reservation Registry Console -->
+        <div
+            class="lg:col-span-8 premium-glass rounded-[3rem] p-12 shadow-2xl shadow-black/40 border border-white/5 relative overflow-hidden group animate-premium-fade animate-delay-5">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-12">
+                <div class="space-y-3">
+                    <h3 class="text-3xl font-display font-bold text-white tracking-tight">Recent Bookings</h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic leading-relaxed">
+                        Latest guest bookings and their status.</p>
+                </div>
+                <a href="{% url 'bookings' %}"
+                    class="px-8 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] hover:text-white hover:border-primary-500/30 transition-all shadow-sm active:scale-95">
+                    View All Bookings
+                </a>
+            </div>
+
+            <div class="overflow-x-auto -mx-4 px-4">
+                <table class="w-full text-left border-separate border-spacing-y-6">
+                    <thead>
+                        <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em] italic">
+                            <th class="pb-2 px-6">Booking ID</th>
+                            <th class="pb-2 px-6">Guest Details</th>
+                            <th class="pb-2 px-6 text-center">Status</th>
+                            <th class="pb-2 px-6 text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="space-y-4">
+                        {% for booking in stats.recent_bookings %}
+                        <tr class="group/tr transition-all duration-300">
+                            <td
+                                class="py-8 px-8 bg-white/[0.02] border-y border-l border-white/5 rounded-l-[2rem] group-hover/tr:bg-white/5 transition-all">
+                                <span
+                                    class="bg-primary-500/10 text-primary-400 px-4 py-2 rounded-xl text-[10px] font-bold tracking-tight border border-white/5">#{{booking.reference|default:booking.id|stringformat:"08d"}}</span>
+                            </td>
+                            <td
+                                class="py-8 px-8 bg-white/[0.02] border-y border-white/5 group-hover/tr:bg-white/5 transition-all">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-base font-bold text-white leading-none mb-2">{{booking.guest_name}}</span>
+                                    <span
+                                        class="text-[10px] text-slate-500 font-bold uppercase tracking-wider italic leading-none">{{booking.guest_email}}</span>
+                                </div>
+                            </td>
+                            <td
+                                class="py-8 px-8 bg-white/[0.02] border-y border-white/5 text-center group-hover/tr:bg-white/5 transition-all">
+                                <div class="flex items-center justify-center gap-3">
+                                    {% if booking.status == 'CONFIRMED' %}
+                                    <div class="w-2 h-2 rounded-full bg-emerald-500 status-pulse"></div>
+                                    <span
+                                        class="text-[11px] font-bold text-emerald-600 uppercase tracking-widest italic">Confirmed</span>
+                                    {% elif booking.status == 'PENDING' %}
+                                    <div class="w-2 h-2 rounded-full bg-amber-500 status-pulse"></div>
+                                    <span
+                                        class="text-[11px] font-bold text-amber-600 uppercase tracking-widest italic">Pending</span>
+                                    {% else %}
+                                    <div class="w-2 h-2 rounded-full bg-slate-300"></div>
+                                    <span
+                                        class="text-[11px] font-bold text-slate-400 uppercase tracking-widest italic">Cancelled</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td
+                                class="py-8 px-8 bg-white/[0.02] border-y border-r border-white/5 text-right rounded-r-[2rem] group-hover/tr:bg-white/5 transition-all">
+                                <span
+                                    class="text-lg font-display font-bold text-white tracking-tighter leading-none">₹{{booking.total_revenue}}</span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4"
+                                class="py-32 text-center bg-white/[0.02] rounded-[3rem] border-2 border-dashed border-white/5">
+                                <div class="flex flex-col items-center opacity-40">
+                                    <div
+                                        class="w-20 h-20 rounded-full bg-white/5 shadow-xl flex items-center justify-center text-white/20 mb-8">
+                                        <i class="fas fa-satellite-dish text-4xl"></i>
+                                    </div>
+                                    <p class="text-[11px] font-bold uppercase tracking-widest text-slate-500 italic">No
+                                        bookings found yet.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Strategy & Intelligence Panel -->
+        <div class="lg:col-span-4 space-y-10">
+            <!-- Strategic Yield Terminal -->
+            <div
+                class="premium-glass rounded-[3rem] p-10 shadow-2xl shadow-black/40 border border-white/5 relative overflow-hidden group animate-premium-fade animate-delay-6 bg-white/5">
+                <div
+                    class="absolute -right-24 -top-24 w-64 h-64 bg-primary-600/5 rounded-full blur-[80px] group-hover:bg-primary-600/10 transition-colors pointer-events-none">
+                </div>
+
+                <h3 class="text-2xl font-display font-bold text-white tracking-tight mb-10">Performance Index
+                </h3>
+                <div class="space-y-6">
+                    <div
+                        class="p-10 bg-slate-950 rounded-[2.5rem] border border-white/5 relative overflow-hidden group/logic shadow-2xl">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/40 to-transparent opacity-50">
+                        </div>
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div
+                                    class="w-2.5 h-2.5 rounded-full bg-blue-500 status-pulse shadow-[0_0_15px_rgba(59,130,246,0.6)]">
+                                </div>
+                                <h5 class="text-[11px] font-bold text-blue-400 uppercase tracking-[0.3em] text-glow">
+                                    Performance Meter</h5>
+                            </div>
+                            <p class="text-[13px] text-slate-400 font-bold mb-12 leading-relaxed italic opacity-80">
+                                Analyze your metrics to maximize revenue and booking potential.
+                            </p>
+                            <a href="{% url 'offers' %}"
+                                class="btn-premium w-full py-5 rounded-[1.25rem] flex items-center justify-center gap-4 text-[10px] tracking-[0.3em] font-bold group-hover/logic:scale-[1.02] transition-transform">
+                                EXPLORE INSIGHTS <i class="fas fa-chevron-right text-[8px] animate-pulse"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div
+                        class="p-8 bg-white/5 border border-white/5 rounded-[2.5rem] shadow-sm hover:border-primary-500/30 transition-all duration-500 group">
+                        <div class="flex items-center justify-between mb-8">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">Market Share
+                                Index</span>
+                            <span
+                                class="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-600 text-[8px] font-bold uppercase tracking-widest">+2.4
+                                pts</span>
+                        </div>
+                        <div class="flex items-baseline gap-2 mb-8">
+                            <span
+                                class="text-6xl font-display font-bold text-white tracking-tighter leading-none">4.9</span>
+                            <div class="flex items-center gap-0.5 text-amber-400">
+                                <i class="fas fa-star text-[10px]"></i>
+                                <i class="fas fa-star text-[10px]"></i>
+                                <i class="fas fa-star text-[10px]"></i>
+                                <i class="fas fa-star text-[10px]"></i>
+                                <i class="fas fa-star text-[10px]"></i>
+                            </div>
+                        </div>
+                        <div class="h-2.5 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/5">
+                            <div
+                                class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full w-[94%] shadow-[0_0_12px_rgba(37,99,235,0.4)]">
+                            </div>
+                        </div>
+                        <p
+                            class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-6 italic text-center">
+                            Benchmark: Global Luxury Tier 1</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operational Readiness -->
+            <div
+                class="premium-glass rounded-[3rem] p-10 shadow-2xl shadow-black/40 border border-white/5 group overflow-hidden relative bg-white/5">
+                <div
+                    class="absolute -left-20 -bottom-20 w-48 h-48 bg-cyan-500/5 rounded-full blur-[60px] pointer-events-none">
+                </div>
+                <h3 class="text-2xl font-display font-bold text-white tracking-tight mb-10">Setup Status</h3>
+                <div class="space-y-4">
+                    <div
+                        class="flex items-center gap-6 p-6 bg-white/5 border border-white/5 rounded-[2rem] hover:shadow-xl transition-all duration-500 cursor-pointer group/item">
+                        <div
+                            class="w-16 h-16 rounded-[1.25rem] bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl shadow-inner group-hover/item:bg-indigo-600 group-hover/item:text-white transition-all">
+                            <i class="fas fa-cloud-arrow-up"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h6 class="text-[11px] font-bold text-white uppercase tracking-widest leading-none">
+                                Photos</h6>
+                            <p class="text-[10px] text-slate-400 font-bold italic leading-none">Complete your gallery
+                            </p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-center gap-6 p-6 bg-white/5 border border-white/5 rounded-[2rem] hover:shadow-xl transition-all duration-500 cursor-pointer group/item focus:bg-white/10">
+                        <div
+                            class="w-16 h-16 rounded-[1.25rem] bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl shadow-inner group-hover/item:bg-emerald-600 group-hover/item:text-white transition-all">
+                            <i class="fas fa-fingerprint"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h6 class="text-[11px] font-bold text-white uppercase tracking-widest leading-none">
+                                Verification</h6>
+                            <p class="text-[10px] text-slate-400 font-bold italic leading-none">Your profile is verified
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Room Inventory Infrastructure -->
+    <div
+        class="premium-glass rounded-[3rem] p-12 shadow-2xl shadow-black/40 border border-white/5 relative overflow-hidden group bg-white/5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-12">
+            <div class="space-y-3">
+                <h3 class="text-3xl font-display font-bold text-white tracking-tight">Active Room Inventory</h3>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic leading-relaxed">
+                    Overview of your property's room categories and live pricing.</p>
+            </div>
+            <a href="{% url 'manage_rooms_hotel' hotel.id %}"
+                class="px-8 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] hover:text-white hover:border-primary-500/30 transition-all shadow-sm active:scale-95">
+                Manage Inventory
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {% for room in rooms %}
+            <div
+                class="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:border-primary-500/30 hover:bg-white/10 transition-all duration-500 shadow-sm hover:shadow-xl group/room">
+                <div class="flex items-start justify-between mb-6">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl shadow-inner group-hover/room:bg-primary-600 group-hover/room:text-white transition-all">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">Starting
+                            From</span>
+                        <span class="text-xl font-display font-bold text-white">₹{{ room.base_price }}</span>
+                    </div>
+                </div>
+                <h4 class="text-lg font-bold text-white mb-2">{{ room.name }}</h4>
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <span
+                        class="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-users text-primary-400"></i> Max {{ room.max_guests }}
+                    </span>
+                    <span
+                        class="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-cubes text-primary-400"></i> {{ room.inventory_count }} Units
+                    </span>
+                </div>
+                <div class="pt-6 border-t border-white/5 flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-primary-400 uppercase tracking-widest">{{ room.room_class }}
+                        CLASS</span>
+                    <a href="{% url 'edit_hotel' hotel.id %}#inventory"
+                        class="text-[10px] font-bold text-slate-400 hover:text-primary-600 uppercase tracking-widest transition-colors">Edit
+                        Node →</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full py-20 text-center border-2 border-dashed border-slate-100 rounded-[2rem]">
+                <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-box-open text-slate-300 text-xl"></i>
+                </div>
+                <h4 class="text-white font-bold mb-1">No Room Categories Defined</h4>
+                <p class="text-slate-400 text-xs italic">Operational failure: Room architecture missing from property
+                    registry.</p>
+                <a href="{% url 'edit_hotel' hotel.id %}#inventory"
+                    class="inline-block mt-6 px-8 py-3 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl hover:bg-slate-800 transition-all">Setup
+                    Inventory Now</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ══ Strategic Intelligence Pool (v33.0) ══ -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-12 pb-12">
+        <!-- Local Campaign Portfolio -->
+        <div class="space-y-8">
+            <div class="flex items-center justify-between px-2">
+                <div class="flex items-center gap-4">
+                    <div class="w-2 h-8 bg-primary-600 rounded-full"></div>
+                    <div>
+                        <h3 class="text-2xl font-display font-bold text-white tracking-tight">Active Node Campaigns
+                        </h3>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Direct Marketing
+                            deployment for this Registry</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                {% for offer in offers|slice:":2" %}
+                <div
+                    class="premium-glass p-8 rounded-[2.5rem] border border-white/5 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 group relative overflow-hidden bg-white/5">
+                    <div class="flex items-center justify-between mb-6">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-primary-600 text-white flex items-center justify-center text-xl shadow-lg shadow-primary-600/20">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="text-right">
+                            <span
+                                class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[8px] font-black uppercase tracking-widest rounded-lg border border-white/5">{{
+                                offer.status|upper }}</span>
+                            <p class="text-[9px] font-bold text-slate-500 mt-2">Exp: {{ offer.end_date|date:"M d" }}</p>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-display font-bold text-white mb-2 tracking-tight">{{ offer.title }}</h4>
+                    <p class="text-[11px] text-slate-500 mb-6 leading-relaxed">{{ offer.description|truncatewords:15 }}
+                    </p>
+                    <div class="flex items-center justify-between border-t border-white/5 pt-6">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[12px] font-black text-primary-400">₹{{ offer.discount_value }}{% if offer.discount_type == 'PERCENTAGE' %}%{% endif %} Strategic Lift</span>
+                        </div>
+                        <i
+                            class="fas fa-arrow-right text-[10px] text-slate-300 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="p-12 text-center bg-white/5 rounded-[2.5rem] border-2 border-dashed border-white/5">
+                    <i class="fas fa-rocket text-3xl text-white/10 mb-4"></i>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">No Active Node Campaigns
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Node Sentiment Registry -->
+        <div class="space-y-8">
+            <div class="flex items-center justify-between px-2">
+                <div class="flex items-center gap-4">
+                    <div class="w-2 h-8 bg-amber-500 rounded-full"></div>
+                    <div>
+                        <h3 class="text-2xl font-display font-bold text-white tracking-tight">Guest Sentiment
+                            Registry</h3>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Localized
+                            Reputation feedback stream</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/5 rounded-[3rem] p-8 border border-white/5 space-y-6">
+                {% for review in reviews %}
+                <div
+                    class="bg-white/5 p-6 rounded-3xl shadow-sm border border-white/5 hover:shadow-xl transition-all duration-500 group/review relative overflow-hidden">
+                    <div
+                        class="absolute left-0 top-0 bottom-0 w-1 {% cycle 'bg-emerald-500' 'bg-indigo-500' %} group-hover:w-2 transition-all">
+                    </div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-[10px] font-black shadow-lg">
+                                {{ review.guest_name|slice:":2"|upper }}</div>
+                            <div>
+                                <h5 class="text-[12px] font-bold text-white">{{ review.guest_name }} · <span
+                                        class="text-slate-500 text-[10px]">Registry Peak Guest</span></h5>
+                                <div class="flex items-center gap-1 text-amber-500 text-[8px] mt-0.5">
+                                    {% for idx in "12345" %}
+                                    <i
+                                        class="fas fa-star {% if forloop.counter > review.rating %}text-white/10{% endif %}"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <span
+                            class="text-[9px] font-black {% if review.rating >= 4 %}text-emerald-400 bg-emerald-500/10{% else %}text-amber-400 bg-amber-500/10{% endif %} uppercase tracking-widest px-2 py-1 rounded">{%if review.rating >= 4 %}Excellent{% else %}Average{% endif %}</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed italic pr-4">"{{ review.comment }}"</p>
+                </div>
+                {% empty %}
+                <div class="p-12 text-center border-2 border-dashed border-white/5 rounded-[2.5rem]">
+                    <i class="fas fa-comment-slash text-3xl text-white/10 mb-4"></i>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">No Node Sentiment found.
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script src="{% static 'js/hoteladmin/admin_dashboard_pro.js' %}" defer></script>
+
+{% endblock %}

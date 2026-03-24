@@ -1,0 +1,87 @@
+{% extends "superadmin/base.html" %}
+{% block title %}Transaction Ledger{% endblock %}
+{% block page_title %}Financial Sovereignty{% endblock %}
+{% block page_subtitle %}Audit and monitor global transaction sequences within the platform ecosystem{% endblock %}
+{% block active_bookings %}active{% endblock %}
+
+{% block content %}
+<div class="stats-grid" style="grid-template-columns:repeat(5,1fr); margin-bottom:24px;">
+  <div class="stat-card accent">
+    <div class="stat-icon accent"><i class="fas fa-file-invoice-dollar"></i></div>
+    <div class="stat-value">{{ stats.total }}</div>
+    <div class="stat-label">Total Engagements</div>
+  </div>
+  <div class="stat-card success">
+    <div class="stat-icon success"><i class="fas fa-shield-check"></i></div>
+    <div class="stat-value">{{ stats.confirmed }}</div>
+    <div class="stat-label">Validated Transmissions</div>
+  </div>
+  <div class="stat-card warn">
+    <div class="stat-icon warn"><i class="fas fa-clock"></i></div>
+    <div class="stat-value">{{ stats.pending }}</div>
+    <div class="stat-label">Pending</div>
+  </div>
+  <div class="stat-card danger">
+    <div class="stat-icon danger"><i class="fas fa-ban"></i></div>
+    <div class="stat-value">{{ stats.cancelled }}</div>
+    <div class="stat-label">Cancelled</div>
+  </div>
+  <div class="stat-card teal">
+    <div class="stat-icon teal"><i class="fas fa-indian-rupee-sign"></i></div>
+    <div class="stat-value">{{ stats.total_revenue|floatformat:0 }}</div>
+    <div class="stat-label">Revenue (₹)</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3>Operational Ledger</h3>
+    <div style="display:flex; gap:8px;">
+      <a href="?status=" class="btn btn-ghost btn-sm {% if not status_filter %}active{% endif %}">All</a>
+      <a href="?status=CONFIRMED" class="btn btn-ghost btn-sm">Confirmed</a>
+      <a href="?status=PENDING" class="btn btn-ghost btn-sm">Pending</a>
+      <a href="?status=CANCELLED" class="btn btn-ghost btn-sm">Cancelled</a>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Hotel</th>
+          <th>Guest</th>
+          <th>Check-in</th>
+          <th>Check-out</th>
+          <th>Revenue</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr>
+          <td style="font-family:monospace; font-size:12px; color:var(--accent);">{{ b.reference }}</td>
+          <td style="font-weight:600;">{{ b.hotel.name }}</td>
+          <td>
+            <div>{{ b.guest_name }}</div>
+            <div style="font-size:11px;color:var(--text-2);">{{ b.guest_email }}</div>
+          </td>
+          <td style="color:var(--text-2);">{{ b.check_in }}</td>
+          <td style="color:var(--text-2);">{{ b.check_out }}</td>
+          <td style="color:var(--success); font-weight:600;">₹{{ b.total_revenue|floatformat:0 }}</td>
+          <td>
+            {% if b.status == 'CONFIRMED' %}<span class="badge badge-live">Confirmed</span>
+            {% elif b.status == 'PENDING' %}<span class="badge badge-pending">Pending</span>
+            {% elif b.status == 'CANCELLED' %}<span class="badge badge-rejected">Cancelled</span>
+            {% else %}<span class="badge badge-accent">{{ b.status }}</span>{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" style="text-align:center;padding:48px;color:var(--text-2);">No bookings found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

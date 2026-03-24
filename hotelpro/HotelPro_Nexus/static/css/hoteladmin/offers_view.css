@@ -1,0 +1,377 @@
+/* ============================================================
+   OFFERS DUAL VIEW — Grid Card ↔ List Row
+   ============================================================ */
+
+/* ── View Switcher Pill (shared style with rooms) ──────────── */
+.offers-view-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.3rem;
+    background: rgba(15, 23, 42, 0.4);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.offers-view-label {
+    font-size: 0.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #94a3b8;
+    padding: 0 0.5rem;
+    white-space: nowrap;
+}
+
+.offers-view-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.65rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    position: relative;
+    transition: color 0.25s ease;
+}
+
+.offers-view-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0.65rem;
+    background: white;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 3px 10px rgba(0, 31, 63, 0.12);
+}
+
+.offers-view-btn:hover { color: #334155; }
+.offers-view-btn:hover::after { opacity: 1; transform: scale(1); }
+
+.offers-view-btn i { position: relative; z-index: 1; }
+
+.offers-view-btn.active { color: white; }
+.offers-view-btn.active::after {
+    background: var(--navy-pro, #001F3F);
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 6px 18px rgba(0, 31, 63, 0.3);
+}
+
+
+/* ── Portfolio grid container transition ───────────────────── */
+#offerPortfolioList {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* == GRID VIEW (Default — 3-col) ============================= */
+
+/* Card entrance animation */
+.offer-card-master {
+    animation: offerCardIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.offer-card-master:nth-child(1) { animation-delay: 0.04s; }
+.offer-card-master:nth-child(2) { animation-delay: 0.09s; }
+.offer-card-master:nth-child(3) { animation-delay: 0.14s; }
+.offer-card-master:nth-child(4) { animation-delay: 0.19s; }
+.offer-card-master:nth-child(5) { animation-delay: 0.24s; }
+.offer-card-master:nth-child(6) { animation-delay: 0.29s; }
+
+@keyframes offerCardIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+
+/* == LIST VIEW =============================================== */
+
+#offerPortfolioList.offers-list-mode {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+/* Row shell — override 3-col glass card paddings */
+#offerPortfolioList.offers-list-mode .offer-card-master {
+    border-radius: 1.5rem !important;
+    padding: 0 !important;
+    overflow: hidden;
+
+    /* Build a flex row — NO !important so strategic-hidden can override with display:none !important */
+    display: flex;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+
+    /* Override hover lift from enterprise CSS for list mode */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease !important;
+    border-left: 3px solid transparent;
+}
+
+#offerPortfolioList.offers-list-mode .offer-card-master:hover {
+    transform: translateX(4px) !important;
+    border-left-color: var(--gold-pro, #C5A059);
+    box-shadow: 0 4px 24px rgba(197, 160, 89, 0.12) !important;
+}
+
+/* ── Status indicator strip (left colour band) ─────────────── */
+#offerPortfolioList.offers-list-mode .offer-card-master .list-status-band {
+    width: 0.35rem;
+    flex-shrink: 0;
+    background: #e2e8f0;
+    transition: background 0.3s ease;
+}
+#offerPortfolioList.offers-list-mode .offer-card-master[data-status="live"] .list-status-band {
+    background: linear-gradient(180deg, #10b981, #059669);
+}
+#offerPortfolioList.offers-list-mode .offer-card-master[data-status="draft"] .list-status-band {
+    background: linear-gradient(180deg, #f59e0b, #d97706);
+}
+
+/* ── Row content wrapper ───────────────────────────────────── */
+#offerPortfolioList.offers-list-mode .offer-card-master .list-row-inner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 1;
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
+/* ── Name + status dot section ─────────────────────────────── */
+#offerPortfolioList.offers-list-mode .offer-card-master .list-col-name {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+#offerPortfolioList.offers-list-mode .offer-card-master .list-col-name .list-title {
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: white !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    font-family: 'Outfit', sans-serif;
+}
+
+#offerPortfolioList.offers-list-mode .offer-card-master .list-col-name .list-status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.2rem;
+    font-size: 0.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #94a3b8;
+}
+
+/* ── Metric chips ──────────────────────────────────────────── */
+#offerPortfolioList.offers-list-mode .offer-card-master .list-col-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    min-width: 4.5rem;
+}
+
+#offerPortfolioList.offers-list-mode .offer-card-master .list-col-metric .metric-val {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: white !important;
+    font-family: 'Outfit', sans-serif;
+    line-height: 1;
+}
+
+#offerPortfolioList.offers-list-mode .offer-card-master .list-col-metric .metric-lbl {
+    font-size: 0.55rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #cbd5e1;
+    margin-top: 0.15rem;
+}
+
+/* Dividers between metric columns */
+#offerPortfolioList.offers-list-mode .offer-card-master .list-divider {
+    width: 1px;
+    height: 2.5rem;
+    background: #f1f5f9;
+    flex-shrink: 0;
+}
+
+/* ── Dates chip ────────────────────────────────────────────── */
+#offerPortfolioList.offers-list-mode .offer-card-master .list-col-dates {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    flex-shrink: 0;
+}
+
+/* ── Toggle switch (keep compact) ─────────────────────────── */
+#offerPortfolioList.offers-list-mode .offer-card-master .switch-ui {
+    flex-shrink: 0;
+}
+
+/* ── Action buttons ────────────────────────────────────────── */
+#offerPortfolioList.offers-list-mode .offer-card-master .list-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+#offerPortfolioList.offers-list-mode .offer-card-master .list-action-btn {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 0.6rem;
+    border: 1px solid #f1f5f9;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+#offerPortfolioList.offers-list-mode .offer-card-master .list-action-btn:hover {
+    color: var(--navy-pro, #001F3F);
+    border-color: #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
+}
+
+#offerPortfolioList.offers-list-mode .offer-card-master .list-action-btn.danger:hover {
+    color: #f43f5e;
+    border-color: #fee2e2;
+    background: #fff1f2;
+}
+
+/* ── List entrance animation ───────────────────────────────── */
+@keyframes offerRowIn {
+    from { opacity: 0; transform: translateX(-14px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+#offerPortfolioList.offers-list-mode .offer-card-master {
+    animation: offerRowIn 0.4s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+#offerPortfolioList.offers-list-mode .offer-card-master:nth-child(1) { animation-delay: 0.03s; }
+#offerPortfolioList.offers-list-mode .offer-card-master:nth-child(2) { animation-delay: 0.07s; }
+#offerPortfolioList.offers-list-mode .offer-card-master:nth-child(3) { animation-delay: 0.11s; }
+#offerPortfolioList.offers-list-mode .offer-card-master:nth-child(4) { animation-delay: 0.15s; }
+#offerPortfolioList.offers-list-mode .offer-card-master:nth-child(5) { animation-delay: 0.19s; }
+#offerPortfolioList.offers-list-mode .offer-card-master:nth-child(6) { animation-delay: 0.23s; }
+
+/* ── Hide/show grid-only elements in list mode ─────────────── */
+#offerPortfolioList.offers-list-mode .offer-grid-only { display: none !important; }
+.offer-list-only { display: none; }
+#offerPortfolioList.offers-list-mode .offer-list-only { display: flex; }
+
+/* ── Professional Utility: Class-based filtering ────────────── */
+.strategic-hidden {
+    display: none !important;
+}
+
+/* ── CRITICAL: Ensure filtered-out cards stay hidden in list mode ── */
+/* The list-mode rule sets display:flex!important on .offer-card-master,
+   which needs to be defeated by an equally-specific rule for hidden cards */
+#offerPortfolioList.offers-list-mode .offer-card-master.strategic-hidden {
+    display: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LIGHT MODE (CLEAN SAAS) OVERRIDES - v10.0 Offers View
+   ───────────────────────────────────────────────────────────────────────── */
+
+html.light-mode .offers-view-switcher {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode .offers-view-btn:hover {
+    color: #2563eb !important;
+}
+
+html.light-mode .offers-view-btn.active::after {
+    background: #0f172a !important;
+}
+
+/* List Mode Light Refinement */
+html.light-mode #offerPortfolioList.offers-list-mode .offer-card-master {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode #offerPortfolioList.offers-list-mode .offer-card-master:hover {
+    border-left-color: #2563eb !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light-mode #offerPortfolioList.offers-list-mode .list-title,
+html.light-mode #offerPortfolioList.offers-list-mode .metric-val {
+    color: #0f172a !important;
+}
+
+html.light-mode #offerPortfolioList.offers-list-mode .list-status-tag,
+html.light-mode #offerPortfolioList.offers-list-mode .metric-lbl,
+html.light-mode #offerPortfolioList.offers-list-mode .list-col-dates {
+    color: #64748b !important;
+}
+
+html.light-mode #offerPortfolioList.offers-list-mode .list-divider {
+    background: #f1f5f9 !important;
+}
+
+html.light-mode #offerPortfolioList.offers-list-mode .list-action-btn {
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode #offerPortfolioList.offers-list-mode .list-action-btn:hover {
+    background: #ffffff !important;
+    color: #2563eb !important;
+    border-color: #2563eb !important;
+}
+
+/* Grid Mode Light Refinement (Legacy Enterprise Cards compatibility) */
+html.light-mode .offer-card-master {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode .offer-card-master h4,
+html.light-mode .offer-card-master .list-title {
+    color: #0f172a !important;
+}
+
+html.light-mode .offer-card-master p,
+html.light-mode .offer-card-master span:not(.metric-val) {
+    color: #475569 !important;
+}
+
+html.light-mode .offer-card-master .bg-white\/5 {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+}
+
+

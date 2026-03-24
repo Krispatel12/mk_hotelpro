@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Hotels | HotelPro</title>
+    <link rel="stylesheet" href="{% static 'customer/search.css' %}">
+</head>
+
+<body>
+    
+    <!-- HERO SECTION -->
+    <div class="hero">
+
+        <!-- NAVBAR -->
+        <div class="navbar">
+            <h2 class="logo">HotelPro</h2>
+
+            <div>
+                <a href="{% url 'accounts:auth' %}" class="signin-btn">Sign In</a>
+            </div>
+        </div>
+
+        <!-- HERO TEXT -->
+        <div class="hero-content">
+            <h1>WELCOME TO  HOTEL PRO</h1>
+            <br>
+            <h2>Find the best hotels at unbeatable prices. Book your stay with us today!</h2>
+        </div>
+
+        <!-- SEARCH FORM -->
+        <form method="POST" action="{% url 'customer:search_results' %}" class="search-form">
+            {% csrf_token %}
+
+            <div class="search-group">
+                <label>Location</label>
+                <input type="text" name="location" placeholder="Enter city" required>
+            </div>
+
+            <div class="search-group">
+                <label>Check-in</label>
+                <input type="date" name="checkin">
+            </div>
+
+            <div class="search-group">
+                <label>Check-out</label>
+                <input type="date" name="checkout">
+            </div>
+
+            <div class="search-group">
+                <label>Persons</label>
+                <input type="number" name="persons" value="1">
+            </div>
+
+            <div class="search-group">
+                <label>Rooms</label>
+                <input type="number" name="rooms" value="1">
+            </div>
+
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+
+    </div>
+
+    <!-- RESULTS SECTION -->
+    <section class="results-section">
+        <h2 class="section-title">Available Hotels</h2>
+
+        <div class="hotel-container">
+            {% if hotels %}
+                {% for hotel in hotels %}
+                <div class="hotel-card">
+                    <h3>{{ hotel.hotel_name }}</h3>
+                    <p><strong>Location:</strong> {{ hotel.city }}</p>
+                    <p><strong>Price:</strong> ₹ {{ hotel.rooms.price_per_night }} / night</p>
+                    <a href="{% url 'customer:hotel_detail' hotel.id %}" class="btn-book">Book Now</a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No hotels found.</p>
+            {% endif %}
+        </div>
+    </section>
+
+</body>
+</html>

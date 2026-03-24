@@ -1,0 +1,164 @@
+{% extends "superadmin/base.html" %}
+
+{% block title %}Asset Directory{% endblock %}
+{% block page_title %}Operational Inventory{% endblock %}
+{% block page_subtitle %}Strategic oversight and lifecycle management of registered property assets within the Nexus
+network{% endblock %}
+{% block active_hotels %}active{% endblock %}
+
+{% block topbar_actions %}
+<div style="display:flex; gap:8px; align-items:center;">
+    <span style="font-size:12px; color:var(--text-2);">Filter:</span>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Status Counts -->
+<div class="stats-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:24px;">
+    <a href="?status=PENDING" style="text-decoration:none;">
+        <div class="stat-card warn" {% if status_filter == 'PENDING'%}style="cursor:pointer; outline:2px solid var(--warn);" {% else %}style="cursor:pointer;" {% endif %}>
+            <div class="stat-icon warn"><i class="fas fa-microchip-ai"></i></div>
+            <div class="stat-value">{{ counts.pending }}</div>
+            <div class="stat-label">Registry Audit</div>
+        </div>
+    </a>
+    <a href="?status=LIVE" style="text-decoration:none;">
+        <div class="stat-card success" {% if status_filter == 'LIVE' %}style="cursor:pointer; outline:2px solid var(--success);" {% else %}style="cursor:pointer;" {% endif %}>
+            <div class="stat-icon success"><i class="fas fa-server"></i></div>
+            <div class="stat-value">{{ counts.live }}</div>
+            <div class="stat-label">Operational Assets</div>
+        </div>
+    </a>
+    <a href="?status=REJECTED" style="text-decoration:none;">
+        <div class="stat-card danger" {% if status_filter == 'REJECTED' %}style="cursor:pointer; outline:2px solid var(--danger);" {% else %}style="cursor:pointer;" {% endif %}>
+            <div class="stat-icon danger"><i class="fas fa-ban-bug"></i></div>
+            <div class="stat-value">{{ counts.rejected }}</div>
+            <div class="stat-label">Compliance Revoked</div>
+        </div>
+    </a>
+    <a href="?status=INCOMPLETE" style="text-decoration:none;">
+        <div class="stat-card accent" {% if status_filter == 'INCOMPLETE' %}style="cursor:pointer; outline:2px solid var(--accent);" {% else %}style="cursor:pointer;" {% endif %}>
+            <div class="stat-icon accent"><i class="fas fa-file-signature"></i></div>
+            <div class="stat-value">{{ counts.incomplete }}</div>
+            <div class="stat-label">Draft Protocols</div>
+        </div>
+    </a>
+</div>
+
+<!-- Hotels Table -->
+<div class="card">
+    <div class="card-header">
+        <h3>
+            {% if status_filter == 'PENDING' %}<i class="fas fa-microchip-ai"
+                style="color:var(--warn);margin-right:8px;"></i>Audit Queue: Pending Verification{% endif %}
+            {% if status_filter == 'LIVE' %}<i class="fas fa-server"
+                style="color:var(--success);margin-right:8px;"></i>Operational Portfolio: Active Protocols{% endif %}
+            {% if status_filter == 'REJECTED' %}<i class="fas fa-ban-bug"
+                style="color:var(--danger);margin-right:8px;"></i>Compliance Revocation: Restricted Access{% endif %}
+            {% if status_filter == 'INCOMPLETE' %}<i class="fas fa-file-signature"
+                style="color:var(--accent);margin-right:8px;"></i>Initialization Drafts: Pending Completion{% endif %}
+        </h3>
+        <span
+            class="badge {% if status_filter == 'PENDING' %}badge-pending{% elif status_filter == 'LIVE' %}badge-live{% elif status_filter == 'REJECTED' %}badge-rejected{% else %}badge-accent{% endif %}">
+            {{ hotels|length }} Hotels
+        </span>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Property Identifier</th>
+                    <th>Lead Administrator</th>
+                    <th>Geographic Domain</th>
+                    <th>Asset Classification</th>
+                    <th>Operational Status</th>
+                    <th>Registry Timestamp</th>
+                    <th>Control Protocols</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hotel in hotels %}
+                <tr>
+                    <td>
+                        <div style="font-weight:600;">{{ hotel.name }}</div>
+                        {% if hotel.star_rating %}
+                        <div style="color:var(--warn); font-size:11px;">
+                            {% for i in "1234567" %}{% if forloop.counter <= hotel.star_rating|floatformat:0|add:0 %}★{%else %}☆{% endif %}{% endfor %} </div>
+                                {% endif %}
+                    </td>
+                    <td>
+                        <div style="font-size:13px;">{{ hotel.owner.username }}</div>
+                        <div style="font-size:11px; color:var(--text-2);">{{ hotel.owner.email }}</div>
+                    </td>
+                    <td>
+                        <div>{{ hotel.city|default:"—" }}</div>
+                        <div style="font-size:11px; color:var(--text-2);">{{ hotel.state|default:"" }}</div>
+                    </td>
+                    <td style="color:var(--text-2);">{{ hotel.category|default:"—" }}</td>
+                    <td>
+                        {% if hotel.status == 'PENDING' %}
+                        <span class="badge badge-pending"><i class="fas fa-clock"></i> Pending</span>
+                        {% elif hotel.status == 'LIVE' %}
+                        <span class="badge badge-live"><i class="fas fa-circle" style="font-size:6px;"></i> Live</span>
+                        {% elif hotel.status == 'REJECTED' %}
+                        <span class="badge badge-rejected"><i class="fas fa-times"></i> Rejected</span>
+                        {% else %}
+                        <span class="badge badge-accent">Incomplete</span>
+                        {% endif %}
+                    </td>
+                    <td style="color:var(--text-2); font-size:12px;">{{ hotel.created_at|date:"d M Y" }}</td>
+                    <td>
+                        <div style="display:flex; gap:6px; align-items:center;">
+                            <a href="{% url 'super_hotel_detail' hotel.id %}" class="btn btn-ghost btn-sm"
+                                title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            {% if hotel.status == 'PENDING' %}
+                            <a href="{% url 'super_approve_hotel' hotel.id %}" class="btn btn-success btn-sm"
+                                title="Approve"
+                                onclick="return confirm('Approve {{ hotel.name }}? It will go LIVE immediately.')">
+                                <i class="fas fa-check"></i> Approve
+                            </a>
+                            <a href="{% url 'super_reject_hotel' hotel.id %}" class="btn btn-danger btn-sm"
+                                title="Reject">
+                                <i class="fas fa-times"></i> Reject
+                            </a>
+                            {% endif %}
+                            {% if hotel.status == 'LIVE' %}
+                            {% if hotel.is_live %}
+                            <a href="{% url 'super_toggle_hotel_live' hotel.id %}" class="btn btn-outline btn-sm"
+                                title="Deactivate"
+                                onclick="return confirm('Deactivate this hotel? It will no longer be visible to customers.')">
+                                <i class="fas fa-toggle-on" style="color:var(--success);"></i> Live
+                            </a>
+                            {% else %}
+                            <a href="{% url 'super_toggle_hotel_live' hotel.id %}" class="btn btn-outline btn-sm"
+                                title="Activate"
+                                onclick="return confirm('Activate this hotel? It will be visible to customers again.')">
+                                <i class="fas fa-toggle-off" style="color:var(--text-3);"></i> Inactive
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                            {% if hotel.status == 'REJECTED' %}
+                            <a href="{% url 'super_approve_hotel' hotel.id %}" class="btn btn-success btn-sm"
+                                title="Re-approve">
+                                <i class="fas fa-rotate-right"></i> Re-approve
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align:center; padding:48px; color:var(--text-2);">
+                        <i class="fas fa-building"
+                            style="font-size:32px; display:block; margin-bottom:12px; opacity:0.3;"></i>
+                        No hotels found with status "{{ status_filter }}".
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

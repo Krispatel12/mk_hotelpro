@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" class="scroll-smooth">
+<script src="{% static 'js/hoteladmin/theme_init.js' %}"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HotelPro AI | Next-Gen Hospitality Intelligence{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{% static 'js/hoteladmin/tailwind_config.js' %}"></script>
+    
+    <!-- Premium Styles -->
+    <link rel="stylesheet" href="{% static 'css/hoteladmin/landing_premium.css' %}">
+    <link rel="stylesheet" href="{% static 'css/hoteladmin/professional_ui.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-[var(--bg-main)] text-[var(--text-color)] selection:bg-primary-500/30 overflow-x-hidden transition-colors duration-500">
+    <!-- Organic Mesh Background -->
+    <div class="mesh-bg">
+        <div class="mesh-sphere sphere-1"></div>
+        <div class="mesh-sphere sphere-2"></div>
+        <div class="mesh-sphere sphere-3"></div>
+    </div>
+
+    <!-- Header Section -->
+    {% include 'hoteladmin/landingpage/includes/header.html' %}
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-drawer">
+        <div class="drawer-overlay" id="drawer-overlay"></div>
+        <div class="drawer-content flex flex-col p-8 glass-surface-heavy">
+            <div class="flex items-center justify-between mb-12">
+                <span class="text-xl font-display font-bold text-slate-900 dark:text-white">Menu</span>
+                <button id="close-drawer" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-600 dark:text-white border border-slate-200 dark:border-white/10">
+                    <i class="fas fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <nav class="flex flex-col gap-6">
+                <!-- Nav links will be injected or mirrored here -->
+                <a href="#features" class="mobile-nav-link">Features</a>
+                <a href="#ai-assistant" class="mobile-nav-link">AI Agent</a>
+                <a href="#how-it-works" class="mobile-nav-link">Dashboard</a>
+                <a href="#pricing" class="mobile-nav-link">Pricing</a>
+                <a href="#contact" class="mobile-nav-link">Contact</a>
+            </nav>
+
+            <div class="mt-auto pt-8 border-t border-slate-200 dark:border-white/10">
+                <a href="{% url 'signup' %}" class="w-full py-4 rounded-2xl bg-primary-600 text-white font-black text-center uppercase tracking-widest shadow-xl block">
+                    Claim Early Access
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 min-h-screen">
+        {% include 'hoteladmin/landingpage/includes/toasts.html' %}
+        <div class="container-responsive">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    {% include 'hoteladmin/landingpage/includes/footer.html' %}
+
+    <!-- Video Modal (AI Agent Demo) -->
+    {% include 'hoteladmin/landingpage/includes/video_modal.html' %}
+
+    <!-- AI SALES AGENT WIDGET — Public Pre-Login Engagement -->
+    {% include 'hoteladmin/landingpage/includes/sales_agent_widget.html' %}
+
+    <!-- Back to Top (Premium Styled) -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 w-12 h-12 rounded-2xl glass-panel-heavy flex items-center justify-center text-primary-500 dark:text-primary-400 hover:bg-primary-500 hover:text-white transition-all duration-500 z-50 hidden shadow-2xl border border-slate-200 dark:border-white/10">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="{% static 'js/hoteladmin/landing_interactions.js' %}"></script>
+    <script>
+        // MOBILE DRAWER LOGIC
+        document.addEventListener('DOMContentLoaded', () => {
+            const drawer = document.getElementById('mobile-drawer');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const close = document.getElementById('close-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            const links = document.querySelectorAll('.mobile-nav-link');
+
+            const openDrawer = () => {
+                drawer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+
+            const closeDrawer = () => {
+                drawer.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+
+            if(toggle) toggle.addEventListener('click', openDrawer);
+            if(close) close.addEventListener('click', closeDrawer);
+            if(overlay) overlay.addEventListener('click', closeDrawer);
+            links.forEach(link => link.addEventListener('click', closeDrawer));
+        });
+
+        // AI AGENT VIDEO MODAL LOGIC (ENTERPRISE EDITION)
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoModal = document.getElementById('video-modal');
+            const videoElement = document.getElementById('demo-video');
+            const closeBtn = document.getElementById('close-video-modal');
+            const backdrop = document.getElementById('video-modal-backdrop');
+
+            window.openVideoDemo = () => {
+                videoModal.classList.add('active');
+                videoModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                videoElement.play();
+            };
+
+            const closeVideoModal = () => {
+                videoModal.classList.remove('active');
+                setTimeout(() => {
+                    videoModal.style.display = 'none';
+                    videoElement.pause();
+                    videoElement.currentTime = 0;
+                    document.body.style.overflow = '';
+                }, 500);
+            };
+
+            closeBtn.addEventListener('click', closeVideoModal);
+            backdrop.addEventListener('click', closeVideoModal);
+            
+            // Handle Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && videoModal.classList.contains('active')) {
+                    closeVideoModal();
+                }
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>
+
+</html>

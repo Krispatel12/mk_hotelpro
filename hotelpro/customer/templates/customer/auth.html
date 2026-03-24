@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if mode == 'signup' %}Create Account{% else %}Sign In{% endif %} — HotelPro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'customer/css/auth.css' %}">
+    <style>
+        /* ── STEP SYSTEM ── */
+        .step-wrapper {
+            position: relative;
+            overflow: hidden;
+            min-height: 280px;
+        }
+
+        .step {
+            display: none;
+            animation: stepIn .35s cubic-bezier(0.16, 1, .3, 1) forwards;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .step.exit {
+            animation: stepOut .3s cubic-bezier(0.16, 1, .3, 1) forwards;
+        }
+
+        @keyframes stepIn {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes stepOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+        }
+
+        /* ── PROGRESS TRACK ── */
+        .progress-track {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 28px;
+            justify-content: center;
+        }
+
+        .prog-step {
+            height: 4px;
+            flex: 1;
+            border-radius: 4px;
+            background: #e2e8f0;
+            transition: all .4s cubic-bezier(0.16, 1, .3, 1);
+        }
+
+        .prog-step.active {
+            background: #d8c9b5;
+        }
+
+        .prog-step.done {
+            background: #10b981;
+        }
+
+        /* ── STEP ICON ── */
+        .step-icon-wrap {
+            width: 52px;
+            height: 52px;
+            background: rgba(216, 201, 181, .1);
+            border: 1px solid rgba(216, 201, 181, .2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 22px;
+            color: #d8c9b5;
+        }
+
+        /* ── FLOATING LABEL INPUT GROUP ── */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 60px;
+            padding: 26px 20px 10px;
+            background: rgba(248, 250, 252, .8);
+            border: 1.5px solid rgba(226, 232, 240, .9);
+            border-radius: 14px;
+            font-size: 15px;
+            color: #0f172a;
+            font-weight: 500;
+            transition: .3s cubic-bezier(0.16, 1, .3, 1);
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 20px;
+            top: 19px;
+            font-size: 15px;
+            color: #64748b;
+            pointer-events: none;
+            transition: .25s cubic-bezier(0.16, 1, .3, 1);
+            font-weight: 400;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .input-group input:focus {
+            background: #fff;
+            border-color: #b5a48d;
+            box-shadow: 0 0 0 4px rgba(216, 201, 181, .15);
+        }
+
+        .input-group input:focus+label,
+        .input-group input:not(:placeholder-shown)+label {
+            top: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #b5a48d;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+        }
+
+        .input-group::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #b5a48d, #d8c9b5);
+            border-radius: 0 0 14px 14px;
+            transition: .4s cubic-bezier(0.16, 1, .3, 1);
+        }
+
+        .input-group:focus-within::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Password toggle */
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 15px;
+            transition: .2s;
+        }
+
+        .password-toggle:hover {
+            color: #b5a48d;
+        }
+
+        /* ── OTP CONTAINER ── */
+        .otp-instruction {
+            font-size: 14px;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .otp-box {
+            width: 52px;
+            height: 64px;
+            border: 1.5px solid rgba(226, 232, 240, .9);
+            border-radius: 14px;
+            font-size: 26px;
+            font-weight: 800;
+            text-align: center;
+            color: #0f172a;
+            background: rgba(248, 250, 252, .8);
+            outline: none;
+            transition: .3s cubic-bezier(0.16, 1, .3, 1);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .otp-box:focus,
+        .otp-box.filled {
+            border-color: #b5a48d;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(216, 201, 181, .15);
+        }
+
+        .otp-box.otp-error {
+            border-color: #ef4444;
+            background: #fff1f2;
+            animation: shake .4s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-5px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* ── OTP TIMER ── */
+        .otp-timer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .otp-timer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(216, 201, 181, .1);
+            border: 1px solid rgba(216, 201, 181, .2);
+            font-size: 12px;
+            font-weight: 700;
+            color: #b5a48d;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .otp-timer-badge.expired {
+            background: rgba(239, 68, 68, .08);
+            border-color: rgba(239, 68, 68, .2);
+            color: #ef4444;
+        }
+
+        .timer-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: timerPulse 1s ease-in-out infinite;
+        }
+
+        .otp-timer-badge.expired .timer-dot {
+            background: #ef4444;
+        }
+
+        @keyframes timerPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .3;
+            }
+        }
+
+        /* ── OTP ACTIONS ── */
+        .otp-action-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-hidden {
+            display: none !important;
+        }
+
+        .btn-resend {
+            width: 100%;
+            padding: 14px;
+            border: 1.5px solid rgba(216, 201, 181, .3);
+            border-radius: 14px;
+            background: transparent;
+            color: #b5a48d;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .btn-resend:hover {
+            background: rgba(216, 201, 181, .08);
+            border-color: #d8c9b5;
+        }
+
+        /* ── STRENGTH METER ── */
+        .strength-meter {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: -12px 0 16px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 4px;
+            transition: all .4s;
+        }
+
+        .strength-bar.strength-weak {
+            width: 30%;
+            background: #ef4444;
+        }
+
+        .strength-bar.strength-medium {
+            width: 65%;
+            background: #f59e0b;
+        }
+
+        .strength-bar.strength-strong {
+            width: 100%;
+            background: #10b981;
+        }
+
+        /* ── SECURITY CHECKLIST ── */
+        .security-checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 24px;
+        }
+
+        .check-item {
+            font-size: 12px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color .2s;
+        }
+
+        .check-item i {
+            font-size: 10px;
+        }
+
+        .check-item.valid {
+            color: #10b981;
+        }
+
+        .check-item.valid i {
+            color: #10b981;
+        }
+
+        /* ── BACK BTN ── */
+        .link-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 12px auto 0;
+            transition: color .2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .link-btn:hover {
+            color: #0f172a;
+        }
+
+        /* ── PRIMARY BTN ── */
+        .btn-primary {
+            width: 100%;
+            height: 58px;
+            background: #0f172a;
+            border: none;
+            border-radius: 14px;
+            color: #d8c9b5;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 12px 28px -6px rgba(15, 23, 42, .3);
+            transition: all .4s cubic-bezier(0.16, 1, .3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(216, 201, 181, .1) 0%, transparent 60%);
+            opacity: 0;
+            transition: .3s;
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -8px rgba(15, 23, 42, .45);
+            color: #fff;
+        }
+
+        .btn-primary:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <div class="page-wrapper">
+
+        <!-- ── LEFT PANEL ── -->
+        <div class="side-panel">
+            <div class="mesh-layer"></div>
+            <div class="orbit-ring ring-1"></div>
+            <div class="orbit-ring ring-2"></div>
+            <div class="orbit-ring ring-3"></div>
+            <div class="brand-icon-wrap"><i class="fas fa-hotel"></i></div>
+            <div class="brand-content">
+                <h1 class="brand-name">Hotel<strong>Pro</strong></h1>
+                <p class="brand-tagline">Discover hand-verified hotels with transparent pricing and instant booking
+                    confirmation.</p>
+                <div class="trust-row">
+                    <div class="trust-badge"><i class="fas fa-shield-halved"></i> Verified Hotels</div>
+                    <div class="trust-badge"><i class="fas fa-lock"></i> Secure Booking</div>
+                    <div class="trust-badge"><i class="fas fa-star"></i> 5-Star Service</div>
+                </div>
+                <div class="feat-cards">
+                    <div class="feat-card">
+                        <div class="feat-icon"><i class="fas fa-crown"></i></div>
+                        <div class="feat-label">Elite Collection</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="feat-label">Instant Booking</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon"><i class="fas fa-concierge-bell"></i></div>
+                        <div class="feat-label">24/7 Support</div>
+                    </div>
+                </div>
+                <div class="indicators">
+                    <div class="indicator i-beige"></div>
+                    <div class="indicator i-gold"></div>
+                    <div class="indicator i-white"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── RIGHT PANEL ── -->
+        <div class="form-panel">
+            <div class="aurora-glow"></div>
+            <div class="arc-container">
+                <svg viewBox="0 0 620 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="arcG1" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#0f172a" />
+                            <stop offset="100%" stop-color="#1e293b" />
+                        </linearGradient>
+                        <linearGradient id="arcG2" x1="0" y1="0" x2="1" y2=".2">
+                            <stop offset="0%" stop-color="#1e293b" stop-opacity=".9" />
+                            <stop offset="100%" stop-color="#334155" stop-opacity=".6" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,0 C380,0 380,900 0,900 Z" fill="#020617" opacity=".55" />
+                    <path d="M0,0 C440,0 440,900 0,900 Z" fill="#0f172a" />
+                    <path d="M0,0 C500,0 500,900 0,900 Z" fill="url(#arcG1)" />
+                    <path d="M0,0 C550,0 550,900 0,900 Z" fill="url(#arcG2)" opacity=".85" />
+                    <path d="M0,0 C585,0 585,900 0,900 Z" fill="#d8c9b5" opacity=".15" />
+                    <path d="M0,0 C605,0 605,900 0,900 L620,900 L620,0 Z" fill="#ffffff" />
+                </svg>
+            </div>
+
+            <div class="form-card">
+
+                <!-- Logo -->
+                <div class="header-logo">
+                    <div class="header-logo-icon">
+                        <svg width="22" height="22" viewBox="0 0 40 40" fill="none">
+                            <path d="M12 30V14C12 12.9 12.9 12 14 12H26C27.1 12 28 12.9 28 14V30" stroke="#d8c9b5"
+                                stroke-width="2.5" stroke-linecap="round" />
+                            <path d="M16 18H18M22 18H24M16 22H18M22 22H24M16 26H18M22 26H24" stroke="#d8c9b5"
+                                stroke-width="2" stroke-linecap="round" />
+                            <path d="M20 30V26" stroke="#d8c9b5" stroke-width="2.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <span>Hotel<strong>Pro</strong></span>
+                </div>
+
+                <!-- ─────────────── LOGIN MODE ─────────────── -->
+                {% if mode == 'login' %}
+
+                <!-- Tab switcher -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="window.location.href=this.dataset.url"
+                        data-url="{% url 'customer:customer_login' %}">Sign In</button>
+                    <button class="auth-tab" onclick="window.location.href=this.dataset.url"
+                        data-url="{% url 'customer:customer_signup' %}">Create Account</button>
+                </div>
+
+                <h1 class="form-title"><b>Sign In</b></h1>
+                <p class="form-subtitle">Welcome back. Access your personal booking dashboard.</p>
+
+                {% if messages %}{% for message in messages %}
+                <div
+                    class="alert alert-{% if message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}error{% endif %}">
+                    <i
+                        class="fas {% if message.tags == 'success' %}fa-circle-check{% else %}fa-exclamation-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}{% endif %}
+
+                <form method="POST" action="{% url 'customer:customer_login' %}">
+                    {% csrf_token %}
+                    <div class="field">
+                        <input type="email" id="email" name="email" placeholder=" " required autocomplete="email">
+                        <label for="email">Email Address</label>
+                    </div>
+                    <div class="field">
+                        <input type="password" id="password" name="password" placeholder=" " required
+                            autocomplete="current-password">
+                        <label for="password">Password</label>
+                        <button type="button" class="eye-btn" id="toggle-pwd">
+                            <i class="far fa-eye" id="eye-icon"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        SIGN IN TO HOTELPRO <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="card-footer">
+                    <span>No account yet?</span>
+                    <a href="{% url 'customer:customer_signup' %}">Create one here</a>
+                </div>
+                <div class="back-link">
+                    <a href="{% url 'customer:customer_landing' %}"><i class="fas fa-arrow-left"></i> Back to
+                        HotelPro</a>
+                </div>
+
+                {% else %}
+                <!-- ─────────────── SIGNUP MODE — 3-STEP FLOW ─────────────── -->
+
+                <!-- Tab switcher -->
+                <div class="auth-tabs">
+                    <button class="auth-tab" onclick="window.location.href=this.dataset.url"
+                        data-url="{% url 'customer:customer_login' %}">Sign In</button>
+                    <button class="auth-tab active" onclick="window.location.href=this.dataset.url"
+                        data-url="{% url 'customer:customer_signup' %}">Create Account</button>
+                </div>
+
+                <h1 class="form-title"><b>Join</b> HotelPro</h1>
+                <p class="form-subtitle">Complete 3 simple steps to get started.</p>
+
+                <!-- Progress Track -->
+                <div class="progress-track" id="progress-track">
+                    <div class="prog-step active" id="prog-1"></div>
+                    <div class="prog-step" id="prog-2"></div>
+                    <div class="prog-step" id="prog-3"></div>
+                </div>
+
+                <!-- Django server-side alerts -->
+                {% if messages %}{% for message in messages %}
+                <div
+                    class="alert alert-{% if message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}error{% endif %} show">
+                    <i
+                        class="fas {% if message.tags == 'success' %}fa-circle-check{% else %}fa-exclamation-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}{% endif %}
+
+                <!-- JS Dynamic Alert -->
+                <div class="alert" id="js-alert" style="display:none;">
+                    <i class="fas fa-exclamation-circle" id="js-alert-icon"></i>
+                    <span id="js-alert-msg"></span>
+                </div>
+
+                <!-- ── STEP WRAPPER ── -->
+                <div class="step-wrapper" id="step-wrapper">
+
+                    <!-- STEP 1: Account Info -->
+                    <div class="step active" id="step-1">
+                        <div class="step-icon-wrap"><i class="fas fa-user-plus"></i></div>
+                        <div class="input-group">
+                            <input type="text" id="username" placeholder=" " autocomplete="name" maxlength="50">
+                            <label for="username">Full Name</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" id="email" placeholder=" " autocomplete="email">
+                            <label for="email">Email Address</label>
+                        </div>
+                        <button class="btn-primary" id="send-otp-btn" type="button">
+                            SEND VERIFICATION CODE <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+
+                    <!-- STEP 2: OTP Verification -->
+                    <div class="step" id="step-2">
+                        <div class="step-icon-wrap"><i class="fas fa-shield-halved"></i></div>
+                        <p class="otp-instruction">
+                            Enter the 6-digit code sent to<br>
+                            <strong id="display-email"></strong>
+                        </p>
+                        <div class="otp-container" id="otp-container">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-0">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-1">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-2">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-3">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-4">
+                            <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                                id="otp-5">
+                        </div>
+                        <div class="otp-timer">
+                            <span id="otp-timer-label" style="font-size:12px;color:#94a3b8;">Expires in</span>
+                            <span class="otp-timer-badge" id="otp-timer-badge">
+                                <span class="timer-dot"></span>
+                                <span id="otp-countdown">0:30</span>
+                            </span>
+                        </div>
+                        <div class="otp-action-wrap">
+                            <button class="btn-primary" id="verify-otp-btn" type="button">
+                                VERIFY &amp; CONTINUE <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn-resend btn-hidden" id="resend-otp-btn" type="button">
+                                RESEND CODE <i class="fas fa-rotate-right"></i>
+                            </button>
+                        </div>
+                        <div style="text-align:center;">
+                            <button class="link-btn" id="change-email-btn" type="button">
+                                <i class="fas fa-arrow-left"></i>&nbsp; Change Email
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Password -->
+                    <div class="step" id="step-3">
+                        <form method="POST" id="signup-form" action="{% url 'customer:customer_signup' %}"
+                            data-api-send-otp="{% url 'customer:api_send_otp' %}"
+                            data-api-verify-otp="{% url 'customer:api_verify_otp' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="username" id="final-username">
+                            <input type="hidden" name="email" id="final-email">
+                            <div class="step-icon-wrap"><i class="fas fa-lock"></i></div>
+                            <div class="input-group">
+                                <input type="password" id="password" name="password" placeholder=" "
+                                    autocomplete="new-password">
+                                <label for="password">Password</label>
+                                <button type="button" class="password-toggle"><i class="fas fa-eye"></i></button>
+                            </div>
+                            <div class="strength-meter">
+                                <div id="strength-bar" class="strength-bar"></div>
+                            </div>
+                            <div class="input-group">
+                                <input type="password" id="confirm_password" name="confirm_password" placeholder=" "
+                                    autocomplete="new-password">
+                                <label for="confirm_password">Confirm Password</label>
+                                <button type="button" class="password-toggle"><i class="fas fa-eye"></i></button>
+                            </div>
+                            <div class="security-checklist">
+                                <div class="check-item" id="req-len"><i class="fas fa-circle-dot"></i> 8+ characters
+                                </div>
+                                <div class="check-item" id="req-case"><i class="fas fa-circle-dot"></i> Upper &amp;
+                                    Lowercase</div>
+                                <div class="check-item" id="req-num"><i class="fas fa-circle-dot"></i> Number included
+                                </div>
+                                <div class="check-item" id="req-sym"><i class="fas fa-circle-dot"></i> Special character
+                                </div>
+                                <div class="check-item" id="req-match"><i class="fas fa-circle-dot"></i> Passwords match
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary" id="create-btn" disabled>
+                                CREATE MY ACCOUNT <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                </div><!-- /step-wrapper -->
+
+                <div class="card-footer">
+                    <span>Already have an account?</span>
+                    <a href="{% url 'customer:customer_login' %}">Sign in here</a>
+                </div>
+                <div class="back-link">
+                    <a href="{% url 'customer:customer_landing' %}"><i class="fas fa-arrow-left"></i> Back to
+                        HotelPro</a>
+                </div>
+
+                {% endif %}
+
+            </div><!-- /form-card -->
+        </div>
+    </div>
+
+    <script>
+        /* ══════════════════════════════════════
+           LOGIN: password eye toggle
+        ══════════════════════════════════════ */
+        const togglePwd = document.getElementById('toggle-pwd');
+        if (togglePwd) {
+            togglePwd.addEventListener('click', () => {
+                const pwd = document.getElementById('password');
+                const icon = document.getElementById('eye-icon');
+                if (pwd.type === 'password') { pwd.type = 'text'; icon.className = 'far fa-eye-slash'; }
+                else { pwd.type = 'password'; icon.className = 'far fa-eye'; }
+            });
+        }
+
+        /* ══════════════════════════════════════
+           SIGNUP: 3-STEP FLOW
+        ══════════════════════════════════════ */
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupForm = document.getElementById('signup-form');
+            if (!signupForm) return; // login mode, skip all
+
+            const apiSendOtp = signupForm.getAttribute('data-api-send-otp');
+            const apiVerifyOtp = signupForm.getAttribute('data-api-verify-otp');
+            const $ = id => document.getElementById(id);
+            let currentStep = 1;
+
+            /* ── Alert helper ── */
+            function showAlert(msg, type = 'error') {
+                const el = $('js-alert');
+                if (!el) return;
+                el.style.display = 'flex';
+                el.className = `alert alert-${type}`;
+                const icon = $('js-alert-icon');
+                if (icon) icon.className = `fas fa-${type === 'success' ? 'circle-check' : type === 'warning' ? 'triangle-exclamation' : 'exclamation-circle'}`;
+                const msgEl = $('js-alert-msg');
+                if (msgEl) msgEl.textContent = msg;
+                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                if (type !== 'error') setTimeout(() => { el.style.display = 'none'; }, 5000);
+            }
+
+            /* ── Step transition ── */
+            function goStep(n) {
+                const from = $('step-' + currentStep);
+                const to = $('step-' + n);
+                if (from && to) {
+                    from.classList.add('exit');
+                    setTimeout(() => from.classList.remove('active', 'exit'), 300);
+                    setTimeout(() => to.classList.add('active'), 80);
+                }
+                for (let i = 1; i <= 3; i++) {
+                    const dot = $('prog-' + i);
+                    if (dot) { dot.classList.remove('active', 'done'); }
+                    if (i < n) dot && dot.classList.add('done');
+                    if (i === n) dot && dot.classList.add('active');
+                }
+                const jsAlert = $('js-alert');
+                if (jsAlert) jsAlert.style.display = 'none';
+                currentStep = n;
+            }
+
+            /* ── Password toggles (step 3) ── */
+            document.querySelectorAll('.password-toggle').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const input = btn.parentElement.querySelector('input');
+                    const icon = btn.querySelector('i');
+                    if (input.type === 'password') { input.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash'); }
+                    else { input.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
+                });
+            });
+
+            /* ══════════════ STEP 1: Send OTP ══════════════ */
+            const sendOtpBtn = $('send-otp-btn');
+            if (sendOtpBtn) {
+                sendOtpBtn.addEventListener('click', async () => {
+                    const username = $('username').value.trim();
+                    const email = $('email').value.trim();
+
+                    if (!username || !email) { showAlert('Please fill in both fields.'); return; }
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert('Please enter a valid email address.'); return; }
+
+                    sendOtpBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> SENDING...';
+                    sendOtpBtn.disabled = true;
+
+                    try {
+                        const res = await fetch(apiSendOtp, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+                            body: JSON.stringify({ username, email })
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            $('display-email').textContent = email;
+                            $('final-username').value = username;
+                            $('final-email').value = email;
+                            showAlert('OTP sent! Check your inbox.', 'success');
+                            setTimeout(() => goStep(2), 700);
+                            startOtpTimer();
+                            // Focus first OTP box
+                            setTimeout(() => { const box = $('otp-0'); if (box) box.focus(); }, 900);
+                        } else {
+                            showAlert(data.message || 'Failed to send OTP.');
+                        }
+                    } catch { showAlert('Network error. Please try again.'); }
+                    finally {
+                        sendOtpBtn.innerHTML = 'SEND VERIFICATION CODE <i class="fas fa-paper-plane"></i>';
+                        sendOtpBtn.disabled = false;
+                    }
+                });
+            }
+
+            /* ══════════════ STEP 2: OTP boxes ══════════════ */
+            const otpBoxes = Array.from({ length: 6 }, (_, i) => $('otp-' + i));
+            otpBoxes.forEach((box, i) => {
+                if (!box) return;
+                box.addEventListener('input', e => {
+                    box.value = e.target.value.replace(/\D/g, '').slice(0, 1);
+                    if (box.value) { box.classList.add('filled'); if (i < 5) otpBoxes[i + 1].focus(); }
+                    else box.classList.remove('filled');
+                });
+                box.addEventListener('keydown', e => {
+                    if (e.key === 'Backspace' && !box.value && i > 0) otpBoxes[i - 1].focus();
+                });
+                box.addEventListener('paste', e => {
+                    const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+                    e.preventDefault();
+                    text.split('').forEach((ch, idx) => { if (otpBoxes[idx]) { otpBoxes[idx].value = ch; otpBoxes[idx].classList.add('filled'); } });
+                    const next = otpBoxes[Math.min(text.length, 5)]; if (next) next.focus();
+                });
+            });
+
+            /* ── OTP Verify ── */
+            const verifyOtpBtn = $('verify-otp-btn');
+            if (verifyOtpBtn) {
+                verifyOtpBtn.addEventListener('click', async () => {
+                    const otp = otpBoxes.map(b => b ? b.value : '').join('');
+                    if (otp.length < 6) { showAlert('Please enter all 6 digits.'); return; }
+
+                    verifyOtpBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> VERIFYING...';
+                    verifyOtpBtn.disabled = true;
+
+                    try {
+                        const res = await fetch(apiVerifyOtp, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+                            body: JSON.stringify({ email: $('final-email').value, otp })
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            showAlert('Email verified!', 'success');
+                            setTimeout(() => goStep(3), 800);
+                        } else {
+                            showAlert(data.message || 'Invalid OTP. Please try again.');
+                            otpBoxes.forEach(b => { if (!b) return; b.classList.add('otp-error'); setTimeout(() => b.classList.remove('otp-error'), 600); });
+                        }
+                    } catch { showAlert('Network error. Please try again.'); }
+                    finally {
+                        verifyOtpBtn.innerHTML = 'VERIFY &amp; CONTINUE <i class="fas fa-check"></i>';
+                        verifyOtpBtn.disabled = false;
+                    }
+                });
+            }
+
+            /* ── Timer ── */
+            let timerInterval = null;
+            function startOtpTimer() {
+                clearInterval(timerInterval);
+                let time = 30;
+                const badge = $('otp-timer-badge');
+                const label = $('otp-timer-label');
+                const countdown = $('otp-countdown');
+                if (badge) badge.classList.remove('expired');
+                if (label) label.textContent = 'Expires in';
+                // Show verify, hide resend
+                const vBtn = $('verify-otp-btn'), rBtn = $('resend-otp-btn');
+                if (vBtn) vBtn.classList.remove('btn-hidden');
+                if (rBtn) rBtn.classList.add('btn-hidden');
+
+                timerInterval = setInterval(() => {
+                    time--;
+                    const s = time % 60;
+                    if (countdown) countdown.textContent = `0:${s < 10 ? '0' : ''}${s}`;
+                    if (time <= 0) {
+                        clearInterval(timerInterval);
+                        if (badge) badge.classList.add('expired');
+                        if (label) label.textContent = 'Code Expired';
+                        if (vBtn) vBtn.classList.add('btn-hidden');
+                        if (rBtn) rBtn.classList.remove('btn-hidden');
+                    }
+                }, 1000);
+            }
+
+            /* ── Resend ── */
+            const resendBtn = $('resend-otp-btn');
+            if (resendBtn) {
+                resendBtn.addEventListener('click', async () => {
+                    const username = $('final-username').value;
+                    const email = $('final-email').value;
+                    resendBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> SENDING...';
+                    resendBtn.disabled = true;
+                    try {
+                        const res = await fetch(apiSendOtp, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+                            body: JSON.stringify({ username, email })
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            showAlert('New code sent!', 'success');
+                            otpBoxes.forEach(b => { if (b) { b.value = ''; b.classList.remove('filled'); } });
+                            if (otpBoxes[0]) otpBoxes[0].focus();
+                            startOtpTimer();
+                        } else { showAlert(data.message || 'Failed. Try again.'); resendBtn.disabled = false; }
+                    } catch { showAlert('Network error.'); resendBtn.disabled = false; }
+                    finally { resendBtn.innerHTML = 'RESEND CODE <i class="fas fa-rotate-right"></i>'; }
+                });
+            }
+
+            /* ── Change Email ── */
+            const changeEmailBtn = $('change-email-btn');
+            if (changeEmailBtn) {
+                changeEmailBtn.addEventListener('click', () => {
+                    clearInterval(timerInterval);
+                    otpBoxes.forEach(b => { if (b) { b.value = ''; b.classList.remove('filled'); } });
+                    const vBtn = $('verify-otp-btn'), rBtn = $('resend-otp-btn');
+                    if (vBtn) { vBtn.classList.remove('btn-hidden'); }
+                    if (rBtn) { rBtn.classList.add('btn-hidden'); }
+                    const badge = $('otp-timer-badge');
+                    if (badge) badge.classList.remove('expired');
+                    goStep(1);
+                });
+            }
+
+            /* ══════════════ STEP 3: Password Validation ══════════════ */
+            const passInput = $('password');
+            const confInput = $('confirm_password');
+            const createBtn = $('create-btn');
+            const sBar = $('strength-bar');
+
+            function reqCheck(id, ok) {
+                const el = $(id); if (!el) return;
+                el.classList.toggle('valid', ok);
+                const icon = el.querySelector('i');
+                if (icon) { icon.className = ok ? 'fas fa-check-circle' : 'fas fa-circle-dot'; }
+            }
+
+            function validatePassword() {
+                if (!passInput) return;
+                const v = passInput.value, c = confInput ? confInput.value : '';
+                const len = v.length >= 8;
+                const cas = /[a-z]/.test(v) && /[A-Z]/.test(v);
+                const num = /[0-9]/.test(v);
+                const sym = /[^A-Za-z0-9]/.test(v);
+                const match = v === c && c.length > 0;
+                reqCheck('req-len', len); reqCheck('req-case', cas);
+                reqCheck('req-num', num); reqCheck('req-sym', sym); reqCheck('req-match', match);
+                const score = [v.length > 0, len, cas, num, sym, v.length > 12].filter(Boolean).length;
+                if (sBar) {
+                    sBar.className = 'strength-bar';
+                    if (score > 4) sBar.classList.add('strength-strong');
+                    else if (score > 2) sBar.classList.add('strength-medium');
+                    else if (score > 0) sBar.classList.add('strength-weak');
+                }
+                if (createBtn) createBtn.disabled = !(len && cas && num && sym && match);
+            }
+            if (passInput) passInput.addEventListener('input', validatePassword);
+            if (confInput) confInput.addEventListener('input', validatePassword);
+
+            if (signupForm) {
+                signupForm.addEventListener('submit', () => {
+                    if (createBtn) { createBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> CREATING...'; createBtn.disabled = true; }
+                });
+            }
+        });
+
+        /* ══════════════════════════════════════
+           PARTICLE CANVAS (beige)
+        ══════════════════════════════════════ */
+        const canvas = document.getElementById('particle-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let W, H;
+            const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+            resize();
+            window.addEventListener('resize', resize);
+            const particles = Array.from({ length: 55 }, () => ({
+                x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight,
+                vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3,
+                r: Math.random() * 1.8 + .5, o: Math.random() * .4 + .1
+            }));
+            let mouse = { x: -999, y: -999 };
+            document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+            (function draw() {
+                ctx.clearRect(0, 0, W, H);
+                particles.forEach(p => {
+                    const dx = p.x - mouse.x, dy = p.y - mouse.y;
+                    const d = Math.sqrt(dx * dx + dy * dy);
+                    if (d < 80) { p.vx += dx / d * .015; p.vy += dy / d * .015; }
+                    const sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+                    if (sp > .5) { p.vx = p.vx / sp * .5; p.vy = p.vy / sp * .5; }
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+                    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(216,201,181,${p.o})`; ctx.fill();
+                });
+                // Draw connecting lines
+                particles.forEach((a, i) => {
+                    particles.slice(i + 1).forEach(b => {
+                        const dx = a.x - b.x, dy = a.y - b.y;
+                        const d = Math.sqrt(dx * dx + dy * dy);
+                        if (d < 120) {
+                            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+                            ctx.strokeStyle = `rgba(216,201,181,${.08 * (1 - d / 120)})`; ctx.lineWidth = .6; ctx.stroke();
+                        }
+                    });
+                });
+                requestAnimationFrame(draw);
+            })();
+        }
+    </script>
+</body>
+
+</html>

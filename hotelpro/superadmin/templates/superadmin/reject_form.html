@@ -1,0 +1,41 @@
+{% extends "superadmin/base.html" %}
+{% block title %}Reject Hotel{% endblock %}
+{% block page_title %}Reject Hotel{% endblock %}
+{% block page_subtitle %}Provide a reason — the hotel owner will be notified by email{% endblock %}
+{% block active_hotels %}active{% endblock %}
+{% block topbar_actions %}
+<a href="{% url 'super_hotels' %}" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+{% endblock %}
+
+{% block content %}
+<div style="max-width:560px;">
+  <div class="card">
+    <div class="card-header">
+      <h3><i class="fas fa-times-circle" style="color:var(--danger);margin-right:8px;"></i>Reject: {{ hotel.name }}</h3>
+    </div>
+    <div class="card-body">
+      <p style="color:var(--text-2); font-size:13px; margin-bottom:20px; line-height:1.6;">
+        Rejecting this hotel will notify the owner at <strong style="color:var(--text);">{{ hotel.owner.email}}</strong> with your reason.
+        They can update and resubmit for review.
+      </p>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Rejection Reason *</label>
+          <textarea name="reason" class="form-control" rows="5"
+            placeholder="e.g. GST certificate is missing. Please upload a valid GST certificate and resubmit."
+            required></textarea>
+          <p style="font-size:11px;color:var(--text-2);margin-top:6px;">This message will be sent directly to the hotel
+            owner.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button type="submit" class="btn btn-danger">
+            <i class="fas fa-times"></i> Confirm Rejection
+          </button>
+          <a href="{% url 'super_hotels' %}" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

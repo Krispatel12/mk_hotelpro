@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | HotelPRO Enterprise</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/user_nexus/login.css' %}">
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <div class="page-wrapper">
+
+        <!-- ── LEFT PANEL ── -->
+        <div class="side-panel">
+            <div class="mesh-layer"></div>
+            <div class="orbit-ring ring-1"></div>
+            <div class="orbit-ring ring-2"></div>
+            <div class="orbit-ring ring-3"></div>
+            <div class="brand-icon-wrap"><i class="fas fa-hotel"></i></div>
+
+            <div class="brand-content">
+                <h1 class="brand-name">Hotel<strong>PRO</strong></h1>
+                <p class="brand-tagline">Experience the peak of premium hotel management. Secure, efficient, and elite.
+                </p>
+                <div class="trust-row">
+                    <div class="trust-badge"><i class="fas fa-shield-halved"></i> OWASP Compliant</div>
+                    <div class="trust-badge"><i class="fas fa-lock"></i> 256-bit SSL</div>
+                    <div class="trust-badge"><i class="fas fa-server"></i> 99.9% Uptime</div>
+                </div>
+                <div class="indicators">
+                    <div class="indicator i-cyan"></div>
+                    <div class="indicator i-red"></div>
+                    <div class="indicator i-amber"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── RIGHT PANEL ── -->
+        <div class="form-panel">
+            <div class="aurora-glow"></div>
+            <div class="arc-container">
+                <svg viewBox="0 0 620 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="arcG1" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#0b1bad" />
+                            <stop offset="100%" stop-color="#05126a" />
+                        </linearGradient>
+                        <linearGradient id="arcG2" x1="0" y1="0" x2="1" y2=".2">
+                            <stop offset="0%" stop-color="#1e3af0" stop-opacity=".9" />
+                            <stop offset="100%" stop-color="#3b59f7" stop-opacity=".6" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,0 C380,0 380,900 0,900 Z" fill="#020617" opacity=".55" />
+                    <path d="M0,0 C440,0 440,900 0,900 Z" fill="#07102a" />
+                    <path d="M0,0 C500,0 500,900 0,900 Z" fill="url(#arcG1)" />
+                    <path d="M0,0 C550,0 550,900 0,900 Z" fill="url(#arcG2)" opacity=".85" />
+                    <path d="M0,0 C585,0 585,900 0,900 Z" fill="#3b59f7" opacity=".4" />
+                    <path d="M0,0 C605,0 605,900 0,900 L620,900 L620,0 Z" fill="#ffffff" />
+                </svg>
+            </div>
+
+            <div class="form-card">
+                <div class="header-logo">
+                    <div class="header-logo-icon">
+                        <svg width="22" height="22" viewBox="0 0 40 40" fill="none">
+                            <path d="M12 30V14C12 12.9 12.9 12 14 12H26C27.1 12 28 12.9 28 14V30"
+                                stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" />
+                            <path d="M16 18H18M22 18H24M16 22H18M22 22H24M16 26H18M22 26H24" stroke="var(--primary)"
+                                stroke-width="2" stroke-linecap="round" />
+                            <path d="M20 30V26" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <span>Hotel<strong>PRO</strong></span>
+                </div>
+
+                <h1 class="form-title"><b>Sign In</b></h1>
+                <p class="form-subtitle">Welcome back. Access your hospitality command centre.</p>
+
+                {% if messages %}
+                {% for message in messages %}
+                <div
+                    class="alert alert-{% if message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}error{% endif %}">
+                    <i
+                        class="fas {% if message.tags == 'success' %}fa-circle-check{% elif message.tags == 'warning' %}fa-triangle-exclamation{% else %}fa-exclamation-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <form method="POST" action="" id="login-form">
+                    {% csrf_token %}
+                    <div class="field">
+                        <input type="email" id="email" name="username" placeholder=" " required autocomplete="email">
+                        <label for="email">User Email</label>
+                    </div>
+                    <div class="field">
+                        <input type="password" id="password" name="password" placeholder=" " required
+                            autocomplete="current-password">
+                        <label for="password">Security Password</label>
+                        <button type="button" class="eye-btn" id="toggle-pwd" aria-label="Toggle password"><i
+                                class="far fa-eye" id="eye-icon"></i></button>
+                    </div>
+                    <div class="form-utils">
+                        <label class="remember"><input type="checkbox" name="remember" checked><span>Remember
+                                session</span></label>
+                        <a href="{% url 'forget_password' %}" class="forgot-link">Recover Access</a>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submit-btn">
+                        LOG IN SESSION <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="card-footer">
+                    <span>No account yet?</span>
+                    <a href="{% url 'signup' %}">Create one here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/user_nexus/login.js' %}" defer></script>
+</body>
+
+</html>

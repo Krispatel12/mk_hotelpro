@@ -1,0 +1,302 @@
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --primary-glow: rgba(59, 130, 246, 0.4);
+    --indigo-glow: rgba(79, 70, 229, 0.4);
+    --bg-main: #060918;
+    --mesh-1: hsla(220, 80%, 12%, 1);
+    --mesh-2: hsla(255, 75%, 15%, 1);
+    --mesh-3: hsla(285, 85%, 12%, 1);
+    --text-color: #f1f5f9;
+    --grad-1: #60A5FA;
+    --grad-2: #818CF8;
+    --grad-3: #C084FC;
+}
+
+:root:not(.dark) {
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(99, 102, 241, 0.15); /* More professional indigo accent border */
+    --card-bg-tint: rgba(245, 247, 255, 0.8); /* Very light indigo tint for depth */
+    --card-shadow-tint: rgba(99, 102, 241, 0.1); 
+    --bg-main: #F8FAFC; 
+    --mesh-1: #DEE8FF;
+    --mesh-2: #E8E3FF;
+    --mesh-3: #F0EAFF;
+    --text-color: #0F172A;
+    --text-muted: #475569;
+    --grad-1: #312E81;
+    --grad-2: #4338CA;
+    --grad-3: #6D28D9;
+}
+
+/* --- Global Typography --- */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-color);
+    transition: color 0.5s ease;
+}
+
+/* --- Theme Swipe Toggle Polish --- */
+#theme-swipe-toggle:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#theme-swipe-toggle:active #theme-thumb {
+    width: 28px;
+    /* Slight stretch on click */
+}
+
+/* --- Ultra Glass Panels --- */
+.glass-panel-heavy {
+    background: var(--glass-bg);
+    backdrop-filter: blur(50px) saturate(200%);
+    -webkit-backdrop-filter: blur(50px) saturate(200%);
+    border: 1px solid var(--glass-border);
+    box-shadow: 
+        0 15px 35px -5px var(--card-shadow-tint, rgba(15, 23, 42, 0.04)),
+        0 5px 15px -5px var(--card-shadow-tint, rgba(15, 23, 42, 0.04)),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 1);
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root:not(.dark) .glass-panel-heavy {
+    background: linear-gradient(135deg, #FFFFFF, var(--card-bg-tint));
+}
+
+:root.dark .glass-panel-heavy {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    inset: 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-heavy::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.2), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: border-flow 6s linear infinite;
+}
+
+@keyframes border-flow {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.ultra-glow-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ultra-glow-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
+            rgba(255, 255, 255, 0.06),
+            transparent 40%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.ultra-glow-card:hover::before {
+    opacity: 1;
+}
+
+/* --- Organic Mesh Background --- */
+.mesh-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--bg-main);
+    background-image:
+        radial-gradient(at 0% 0%, var(--mesh-1) 0, transparent 75%), /* Larger, softer gradients */
+        radial-gradient(at 50% 0%, var(--mesh-2) 0, transparent 70%),
+        radial-gradient(at 100% 0%, var(--mesh-3) 0, transparent 75%);
+    overflow: hidden;
+    transition: background-color 1s ease;
+    animation: mesh-flow 20s ease infinite alternate;
+}
+
+@keyframes mesh-flow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 10% 10%; }
+}
+
+.mesh-sphere {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    animation: float-mesh 20s infinite alternate ease-in-out;
+}
+
+@keyframes float-mesh {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(100px, 50px) scale(1.2);
+    }
+}
+
+/* --- Typography & Text --- */
+.text-description {
+    color: var(--text-muted, #94a3b8);
+    transition: color 0.5s ease;
+}
+
+.text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(135deg, var(--grad-1) 0%, var(--grad-2) 50%, var(--grad-3) 100%);
+}
+
+/* --- Reveal Animations --- */
+.reveal-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-up.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Floating Animation --- */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* --- Enhanced Gradient Text --- */
+.text-gradient {
+    background: linear-gradient(
+        90deg, 
+        var(--grad-1) 0%, 
+        var(--grad-2) 25%, 
+        var(--grad-3) 50%, 
+        var(--grad-2) 75%, 
+        var(--grad-1) 100%
+    );
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: gradient-flow 10s linear infinite;
+    position: relative;
+}
+
+.text-gradient::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: skewX(-25deg);
+    animation: shimmer-sweep 4s infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmer-sweep {
+    0% { left: -100%; }
+    40% { left: 200%; }
+    100% { left: 200%; }
+}
+
+@keyframes gradient-flow {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+/* Staggered load delays */
+.stagger-1 {
+    transition-delay: 0.1s;
+}
+
+.stagger-2 {
+    transition-delay: 0.2s;
+}
+
+.stagger-3 {
+    transition-delay: 0.3s;
+}
+
+.stagger-4 {
+    transition-delay: 0.4s;
+}
+
+/* --- Magnetic & Interactive Utilities --- */
+.magnetic-wrap {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* --- Shimmer Animation --- */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-shimmer {
+    animation: shimmer 2s infinite;
+}
+/* --- Carousel Dots & Utilities --- */
+.dot-active { width: 2rem !important; background: #3B82F6 !important; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+#dashboard-slider { will-change: transform; }
+
+/* --- Mesh Sphere Variations --- */
+.sphere-1 {
+    width: 600px;
+    height: 600px;
+    background-color: rgba(37, 99, 235, 0.2);
+    top: -10%;
+    left: -10%;
+    animation-delay: 0s;
+}
+
+.sphere-2 {
+    width: 800px;
+    height: 800px;
+    background-color: rgba(79, 70, 229, 0.1);
+    top: 20%;
+    right: -20%;
+    animation-delay: -5s;
+}
+
+.sphere-3 {
+    width: 700px;
+    height: 700px;
+    background-color: rgba(147, 51, 234, 0.1);
+    bottom: -10%;
+    left: 20%;
+    animation-delay: -10s;
+}

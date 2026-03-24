@@ -1,0 +1,88 @@
+<!-- Global AI Chat Widget -->
+<!-- Floating Button -->
+<button id="ai-chat-toggle"
+    class="fixed bottom-8 right-8 z-50 w-16 h-16 rounded-2xl text-slate-900 dark:text-white shadow-2xl hover:scale-110 active:scale-95 transition-all duration-500 flex items-center justify-center group bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-white/10 shadow-primary-500/10"
+    aria-label="Toggle AI Assistant">
+    <div class="relative">
+        <!-- Premium AI Spark SVG -->
+        <svg class="w-8 h-8 text-primary-500 dark:text-primary-400 group-hover:rotate-12 transition-transform duration-500"
+            viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3L14.4 9.6L21 12L14.4 14.4L12 21L9.6 14.4L3 12L9.6 9.6L12 3Z" fill="currentColor"
+                stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M5 5L6.5 8.5L10 10L6.5 11.5L5 15L3.5 11.5L0 10L3.5 8.5L5 5Z" fill="currentColor"
+                class="opacity-30 dark:opacity-50" transform="translate(14, 2) scale(0.6)" />
+        </svg>
+    </div>
+    <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full animate-ping bg-primary-500 opacity-50"></span>
+    <span
+        class="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+
+<!-- Chat Container -->
+<div id="ai-chat-widget"
+    class="fixed bottom-28 right-8 z-50 w-96 max-w-[calc(100vw-2rem)] h-[550px] rounded-[3rem] shadow-2xl flex flex-col transform transition-all duration-500 origin-bottom-right scale-0 opacity-0 invisible ai-pro-glass bg-white/95 dark:bg-slate-950 border-slate-200 dark:border-white/10">
+
+    <!-- Header -->
+    <div
+        class="px-8 py-6 flex items-center justify-between border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center space-x-4">
+            <div
+                class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-950 border border-slate-200 dark:border-white/10 text-primary-600 dark:text-primary-400 shadow-lg relative overflow-hidden group">
+                <div class="absolute inset-0 bg-primary-500/5 group-hover:bg-primary-500/10 transition-colors"></div>
+                <svg class="w-6 h-6 text-primary-500 dark:text-primary-400 relative z-10" viewBox="0 0 24 24"
+                    fill="currentColor">
+                    <path d="M12 3L14.4 9.6L21 12L14.4 14.4L12 21L9.6 14.4L3 12L9.6 9.6L12 3Z" />
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-slate-900 dark:text-white font-display font-bold text-base tracking-tight">HotelPro AI
+                    <span
+                        class="text-[10px] bg-primary-500/20 text-primary-500 px-2 py-0.5 rounded-full ml-1">PRO</span>
+                </h3>
+                <p class="text-[10px] flex items-center text-emerald-400 font-bold uppercase tracking-widest mt-0.5">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2 shadow-[0_0_12px_#10b981]"></span>
+                    Intelligence Active
+                </p>
+            </div>
+        </div>
+        <button id="close-chat-widget"
+            class="w-10 h-10 rounded-xl flex items-center justify-center text-white/40 dark:text-slate-400 hover:text-white dark:hover:text-slate-900 hover:bg-white/10 dark:hover:bg-slate-100 transition-all border border-transparent hover:border-white/5 dark:hover:border-slate-200">
+            <i class="fas fa-times text-xs"></i>
+        </button>
+    </div>
+
+    <!-- Messages Area -->
+    <div id="widget-messages" class="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-hide">
+        <!-- Initial Message -->
+        <div class="flex items-start space-x-4">
+            <div
+                class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary-500/10 text-primary-400 border border-primary-500/20 shadow-inner">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3L14.4 9.6L21 12L14.4 14.4L12 21L9.6 14.4L3 12L9.6 9.6L12 3Z" />
+                </svg>
+            </div>
+            <div
+                class="p-5 rounded-2xl rounded-tl-sm text-slate-700 dark:text-slate-100 text-sm leading-relaxed max-w-[80%] bg-slate-100/50 dark:bg-white/[0.05] border border-slate-200/50 dark:border-white/5 shadow-sm">
+                <p>Greetings! I'm your professional AI Concierge. I can assist with <b>bookings</b>, <b>property
+                        data</b>, or <b>system status</b>. How may I help you today?</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="p-6 border-t border-slate-100 dark:border-white/5 bg-slate-50/30 dark:bg-white/[0.02]">
+        <form id="widget-chat-form" class="flex items-center space-x-3">
+            <div
+                class="flex-1 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden focus-within:border-primary-500/50 transition-all shadow-inner">
+                <input type="text" id="widget-user-input"
+                    class="w-full bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white placeholder-slate-400 px-5 py-4 text-sm"
+                    placeholder="Type a message..." autocomplete="off">
+            </div>
+            <button type="submit"
+                class="w-12 h-12 rounded-2xl bg-primary-500 text-white flex items-center justify-center shadow-lg shadow-primary-500/20 hover:bg-primary-600 hover:shadow-primary-500/40 transition-all active:scale-95">
+                <i class="fas fa-paper-plane text-sm"></i>
+            </button>
+        </form>
+    </div>
+</div>
+<!-- Partial now clean of inline JS/CSS -->

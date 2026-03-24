@@ -1,0 +1,157 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Settings | {{ hotel.name }} | HotelPro{% endblock %}
+
+{% block page_title %}Hotel Settings{% endblock %}
+{% block page_subtitle %}Manage your hotel details, website, and security settings.{% endblock %}
+
+{% block dashboard_content %}
+<div class="max-w-[1400px] mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-10 duration-1200 pb-24">
+
+    <!-- Settings Overview -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+
+        <!-- Hotel Info Section -->
+        <div class="lg:col-span-8 group relative">
+            <div
+                class="absolute inset-0 bg-blue-600/5 rounded-[3.5rem] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+            </div>
+            <div
+                class="premium-glass p-16 rounded-[3.5rem] shadow-2xl shadow-slate-200/40 border border-white/60 relative z-10 overflow-hidden transition-all duration-700 hover:-translate-y-2">
+                <div class="flex items-center gap-10 mb-16">
+                    <div
+                        class="w-20 h-20 rounded-[2rem] bg-indigo-50 text-indigo-600 flex items-center justify-center text-3xl shadow-inner group-hover:bg-indigo-600 group-hover:text-white transition-all duration-700 group-hover:rotate-[10deg]">
+                        <i class="fas fa-fingerprint"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-3xl font-display font-bold text-slate-900 tracking-tighter">Hotel Info
+                        </h3>
+                        <p
+                            class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pt-1 italic leading-none">
+                            Update your hotel name and website.</p>
+                    </div>
+                </div>
+
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="space-y-4">
+                        <label for="hotel_name">Hotel Name</label>
+                        <input type="text" id="hotel_name" value="{{ hotel.name }}"
+                            class="w-full bg-white border border-slate-100 rounded-2xl px-8 py-5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-600/10 focus:border-primary-600 transition-all shadow-sm">
+                    </div>
+                    <div class="space-y-4">
+                        <label for="website">Hotel Website</label>
+                        <input type="url" id="website" value="{{ hotel.website }}"
+                            class="w-full bg-white border border-slate-100 rounded-2xl px-8 py-5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-600/10 focus:border-primary-600 transition-all shadow-sm">
+                    </div>
+                    <div class="md:col-span-2 pt-10">
+                        <button
+                            class="btn-premium w-full py-6 rounded-2xl text-[11px] font-bold tracking-[0.4em] shadow-2xl shadow-primary-600/30 hover:scale-[1.01] active:scale-95 transition-all">
+                            SAVE CHANGES
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Security Section -->
+        <div class="lg:col-span-4 group relative">
+            <div
+                class="absolute inset-0 bg-rose-600/5 rounded-[3.5rem] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+            </div>
+            <div
+                class="premium-glass p-12 rounded-[3.5rem] shadow-2xl shadow-slate-200/40 border border-white/60 relative z-10 overflow-hidden transition-all duration-700 hover:-translate-y-2 flex flex-col">
+                <div class="flex items-center gap-6 mb-16">
+                    <div
+                        class="w-16 h-16 rounded-[1.5rem] bg-rose-50 text-rose-600 flex items-center justify-center text-2xl shadow-inner group-hover:bg-rose-600 group-hover:text-white transition-all duration-700">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-2xl font-display font-bold text-slate-900 tracking-tight">Security</h3>
+                        <p
+                            class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pt-1 italic leading-none">
+                            Keep your account safe.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6 flex-1">
+                    <div
+                        class="p-8 bg-white border border-slate-100 rounded-3xl group/toggle hover:border-primary-100 transition-all shadow-sm">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest">Two-Factor Auth
+                            </h4>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" checked>
+                                <div
+                                    class="w-12 h-6 bg-slate-100 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[3px] after:left-[4px] after:bg-white after:rounded-full after:h-4.5 after:w-4.5 after:shadow-lg after:transition-all peer-checked:bg-emerald-500">
+                                </div>
+                            </label>
+                        </div>
+                        <p>Secure login is active</p>
+                    </div>
+
+                    <div
+                        class="p-8 bg-white border border-slate-100 rounded-3xl group/toggle hover:border-primary-100 transition-all shadow-sm">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest">Visible Reviews
+                            </h4>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div
+                                    class="w-12 h-6 bg-slate-100 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[3px] after:left-[4px] after:bg-white after:rounded-full after:h-4.5 after:w-4.5 after:shadow-lg after:transition-all peer-checked:bg-emerald-500">
+                                </div>
+                            </label>
+                        </div>
+                        <p
+                            class="text-[10px] text-slate-400 font-bold uppercase tracking-widest pt-2 italic leading-relaxed">
+                            Allow guests to see verified reviews.</p>
+                    </div>
+                </div>
+
+                <div class="pt-10">
+                    <button
+                        class="w-full py-5 text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em] border-2 border-dashed border-slate-100 rounded-[1.5rem] hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all italic">
+                        ADD STAFF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Status Section -->
+    <div
+        class="premium-glass p-16 rounded-[4rem] shadow-2xl shadow-slate-200/40 border border-white/60 border-l-[12px] border-emerald-500 relative overflow-hidden group">
+        <div
+            class="absolute -right-32 -top-32 w-80 h-80 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-emerald-500/10 transition-colors">
+        </div>
+
+        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-12 relative z-10">
+            <div class="space-y-6">
+                <div class="flex items-center gap-6">
+                    <div
+                        class="w-4 h-4 bg-emerald-500 rounded-full status-pulse shadow-[0_0_20px_rgba(16,185,129,0.8)]">
+                    </div>
+                    <h3 class="text-4xl font-display font-bold text-slate-900 tracking-tighter">Performance
+                        Status</h3>
+                </div>
+                <p class="text-lg text-slate-500 font-medium leading-relaxed italic max-w-3xl opacity-80">Your hotel
+                    is live and receiving bookings.
+                </p>
+            </div>
+            <div class="shrink-0 flex items-center gap-8">
+                <div class="flex flex-col items-end">
+                    <span class="text-4xl font-display font-bold text-emerald-600 tracking-tighter">ACTIVE</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 leading-none
+                    italic">Active
+                        Status</span>
+                </div>
+                <button
+                    class="px-14 py-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl text-[11px] uppercase tracking-[0.4em] shadow-2xl shadow-emerald-500/30 transition-all hover:scale-105 active:scale-95">
+                    UPDATE
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

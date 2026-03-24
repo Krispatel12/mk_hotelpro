@@ -1,0 +1,1394 @@
+/* ============================================================
+   HOTELS ELITE — Architecture v5.0 "Executive Standard"
+   Design: Obsidian Glass v4 (Deep Space x Platinum Core)
+   ============================================================ */
+
+:root {
+    --glass-bg: rgba(15, 23, 42, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-glow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    --glass-blur: blur(50px) saturate(250%);
+
+    --slate-pro-950: #020617;
+    --slate-pro-900: #0f172a;
+    --slate-pro-400: #94a3b8;
+    --primary-pro: #3b82f6;
+
+    --transition-pro: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    --shadow-pro: 0 10px 20px -10px rgba(0, 0, 0, 0.4);
+    --shadow-pro-elite: 0 40px 100px -20px rgba(0, 0, 0, 0.5);
+
+    /* Zenith Ultra Palette (v41.0) */
+    --zenith-indigo: #6366f1;
+    --zenith-emerald: #10b981;
+    --zenith-amber: #f59e0b;
+    --zenith-rose: #ef4444;
+    --zenith-slate: #0b0f1a;
+    --zenith-azure: #06b6d4;
+    --zenith-glass-white: rgba(2, 6, 23, 0.4);
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 🧠 Neural Search Visibility Override (Hard Filter) */
+.neural-hidden {
+    display: none !important;
+}
+
+/* Selected Nodes Styling */
+.executive-card.selected-node {
+    transform: translateY(-8px) scale(1.02) !important;
+    pointer-events: all !important;
+}
+
+/* 🏔️ Staggered Reveal Engine (v7.0 Elite Spring) */
+@keyframes bkPortfolioIn {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) rotateX(15deg) scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotateX(0) scale(1);
+    }
+}
+
+/* 🌀 Parallax Mesh variables */
+.executive-card,
+.bk-stat {
+    --parallax-mx: 0px;
+    --parallax-my: 0px;
+}
+
+/* 🏔️ Elite Stat Nodes (v41.0 Zenith Ultra) */
+.bk-stat.metric-mesh-card {
+    background: rgba(15, 23, 42, 0.8) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 2.5rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1) !important;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: bkPortfolioIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.bk-stat.metric-mesh-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(255, 255, 255, 0.08) 0%,
+            transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.bk-stat.metric-mesh-card:hover::before {
+    opacity: 1;
+}
+
+.bk-stat.metric-mesh-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.4) !important;
+}
+
+.bk-stat::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at -20% -20%, rgba(79, 70, 229, 0.04), transparent 60%);
+    pointer-events: none;
+}
+
+.bk-stat:hover {
+    transform: translateY(-12px) scale(1.02);
+    border-color: var(--primary-pro);
+}
+
+/* 🏔️ Executive Summary Signatures (v46.0 Zenith Silk Signatures) */
+
+/* Base Silk Node Foundation */
+.bk-stat.metric-mesh-card {
+    background: #0b0f1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* "All Hotels" (Green-Orange Portfolio Signature) */
+.bk-stat[data-status-filter="all"].metric-mesh-card {
+    background:
+        radial-gradient(circle at top right, rgba(16, 185, 129, 0.12), transparent 70%),
+        radial-gradient(circle at bottom left, rgba(245, 158, 11, 0.12), transparent 70%),
+        #0b0f1a !important;
+    box-shadow: 0 40px 100px -20px rgba(16, 185, 129, 0.2) !important;
+}
+
+.bk-stat[data-status-filter="all"] .w-12.h-12 {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(245, 158, 11, 0.2)) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+    color: #34d399 !important;
+}
+
+.bk-stat[data-status-filter="all"] .text-3xl {
+    background: linear-gradient(to bottom right, #34d399, #fbbf24);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* "Live" (Emerald Green Signature) */
+.bk-stat[data-status-filter="live"].metric-mesh-card {
+    background:
+        radial-gradient(circle at top right, rgba(16, 185, 129, 0.2), transparent 70%),
+        #0b0f1a !important;
+    box-shadow: 0 40px 100px -20px rgba(16, 185, 129, 0.3) !important;
+}
+
+.bk-stat[data-status-filter="live"] .w-12.h-12 {
+    background: rgba(16, 185, 129, 0.2) !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+    color: #10b981 !important;
+}
+
+.bk-stat[data-status-filter="live"] .text-3xl {
+    color: #10b981 !important;
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+/* "Verifying" (Saffron Orange Signature) */
+.bk-stat[data-status-filter="verifying"].metric-mesh-card {
+    background:
+        radial-gradient(circle at top right, rgba(245, 158, 11, 0.2), transparent 70%),
+        #0b0f1a !important;
+    box-shadow: 0 40px 100px -20px rgba(245, 158, 11, 0.3) !important;
+}
+
+.bk-stat[data-status-filter="verifying"] .w-12.h-12 {
+    background: rgba(245, 158, 11, 0.2) !important;
+    border-color: rgba(245, 158, 11, 0.4) !important;
+    color: #f59e0b !important;
+}
+
+.bk-stat[data-status-filter="verifying"] .text-3xl {
+    color: #f59e0b !important;
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+}
+
+/* "Expand" (Aero Blue Action Signature) */
+.mesh-vortex {
+    background:
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.2), transparent 70%),
+        #0b0f1a !important;
+    box-shadow: 0 40px 100px -20px rgba(37, 99, 235, 0.4) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+}
+
+.mesh-vortex .w-12.h-12 {
+    background: rgba(37, 99, 235, 0.2) !important;
+    border-color: rgba(37, 99, 235, 0.5) !important;
+    color: #60a5fa !important;
+}
+
+.mesh-vortex .text-3xl {
+    color: #3b82f6 !important;
+    text-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+}
+
+/* 🌀 Executive Dual-Pulse Border Animation (Universal WOW) */
+.bk-stat.is-active,
+.executive-card.selected-node {
+    --sig-color: #a855f7 !important;
+    /* Electric Executive Purple */
+    opacity: 1 !important;
+    /* Force visibility (Fixes animation conflict) */
+    z-index: 50 !important;
+    /* Ensure highlight priority over ghosted cards */
+    animation: cardBreathing 4s ease-in-out infinite !important;
+}
+
+@keyframes cardBreathing {
+
+    0%,
+    100% {
+        transform: translateY(-8px) scale(1.02);
+    }
+
+    50% {
+        transform: translateY(-12px) scale(1.03);
+    }
+}
+
+.bk-stat.is-active::before,
+.executive-card.selected-node::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: -3px !important;
+    padding: 3px;
+    background: conic-gradient(from var(--border-angle),
+            transparent 20%,
+            var(--sig-color) 45%,
+            transparent 50%,
+            transparent 70%,
+            var(--sig-color) 95%,
+            transparent 100%) !important;
+    border-radius: inherit;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: borderFlow 2.5s linear infinite;
+    z-index: 5 !important;
+}
+
+/* Volumetric Outer Glow */
+.bk-stat.is-active::after,
+.executive-card.selected-node::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: -10px !important;
+    background: conic-gradient(from var(--border-angle),
+            transparent 20%,
+            var(--sig-color) 45%,
+            transparent 50%,
+            transparent 70%,
+            var(--sig-color) 95%,
+            transparent 100%) !important;
+    border-radius: inherit;
+    filter: blur(15px) opacity(0.5);
+    pointer-events: none;
+    animation: borderFlow 2.5s linear infinite, glowPulse 4s ease-in-out infinite;
+    z-index: -1 !important;
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.05);
+    }
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes borderFlow {
+    from {
+        --border-angle: 0deg;
+    }
+
+    to {
+        --border-angle: 360deg;
+    }
+}
+
+.bk-stat.is-active,
+.executive-card.selected-node {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.bk-stat.is-active .bk-stat-value {
+    color: white !important;
+}
+
+.bk-stat-label {
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: auto;
+}
+
+.bk-stat-value {
+    font-size: 3.5rem;
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.bk-stat-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.status-pulse {
+    width: 8px;
+    height: 8px;
+    animation: bkPulse 2s infinite;
+}
+
+@keyframes bkPulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 12px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+/* ── Container — Zenith Stage ────────────────────────────── */
+.hotels-dual-container {
+    perspective: 2500px;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* == GRID VIEW =============================================== */
+.hotel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    padding-bottom: 15rem;
+    /* Prevents final dropdown clipping */
+}
+
+.hotel-card-wrapper {
+    opacity: 0;
+    animation: bkPortfolioIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--stagger-index, 0) * 0.1s);
+}
+
+.executive-card {
+    padding: 2.25rem !important;
+    transition: var(--transition-pro) !important;
+    border-radius: 2.5rem !important;
+    position: relative;
+    background: #0b0f1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    transform-style: preserve-3d;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 🏔️ Crystallized Property Nodes (v60.0 Zenith Silk) */
+.hotel-card-wrapper.node-live .executive-card {
+    background:
+        radial-gradient(circle at 100% 0%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 0% 100%, rgba(20, 184, 166, 0.1) 0%, transparent 50%),
+        #0b0f1a !important;
+    border: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+.hotel-card-wrapper.node-pending .executive-card {
+    background:
+        radial-gradient(circle at 100% 0%, rgba(245, 158, 11, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 0% 100%, rgba(244, 63, 94, 0.1) 0%, transparent 50%),
+        #0b0f1a !important;
+    border: 1px solid rgba(245, 158, 11, 0.2) !important;
+}
+
+.hotel-card-wrapper.node-draft .executive-card {
+    background: #0b0f1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* 🏔️ Jeweled Property Icons */
+.executive-card .w-16.h-16 {
+    background: rgba(255, 255, 255, 0.03) !important;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 1.25rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.2),
+        inset 0 1px 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+.hotel-card-wrapper.node-live .w-16.h-16 {
+    background: radial-gradient(circle at top right, #10b981, #059669) !important;
+    color: white !important;
+    box-shadow: 0 10px 30px -5px rgba(16, 185, 129, 0.3) !important;
+}
+
+.hotel-card-wrapper.node-pending .w-16.h-16 {
+    background: radial-gradient(circle at top right, #f59e0b, #d97706) !important;
+    color: white !important;
+    box-shadow: 0 10px 30px -5px rgba(245, 158, 11, 0.3) !important;
+}
+
+.hotel-card-wrapper.node-draft .w-16.h-16 {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* ❄️ Frosted Edge Zenith Highlight (v44.0) */
+.executive-card::after {
+    content: '';
+    position: absolute;
+    inset: 0.5rem;
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0);
+    transition: var(--transition-pro);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.executive-card:hover::after {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.hotel-card-wrapper.selected-node::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: linear-gradient(45deg, #3b82f6, #10b981, #f59e0b, #3b82f6);
+    background-size: 400% 400%;
+    z-index: -1;
+    border-radius: 2.6rem;
+    animation: prism-flow 8s linear infinite;
+    filter: blur(2px);
+    opacity: 0.8;
+}
+
+/* Adaptive Content Contrast — Zenith Hub */
+.executive-card .text-slate-900,
+.executive-card .text-slate-800,
+.executive-card h3 {
+    color: #f8fafc !important;
+    letter-spacing: -0.02em;
+}
+
+.executive-card .text-slate-500,
+.executive-card .text-slate-400 {
+    color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.executive-card:hover .text-slate-400:not(.hotel-dropdown *) {
+    color: var(--sig-color) !important;
+    opacity: 1;
+    filter: saturate(1.5);
+}
+
+/* 🔒 Dropdown text must ALWAYS remain neutral — never inherit sig-color */
+.executive-card .hotel-dropdown * {
+    color: initial;
+    filter: none !important;
+}
+
+.executive-card .hotel-dropdown .text-slate-400,
+.executive-card:hover .hotel-dropdown .text-slate-400 {
+    color: #94a3b8 !important;
+    filter: none !important;
+}
+
+.executive-card .hotel-dropdown .text-slate-700,
+.executive-card:hover .hotel-dropdown .text-slate-700 {
+    color: #334155 !important;
+    filter: none !important;
+}
+
+.executive-card .hotel-dropdown .text-rose-500,
+.executive-card:hover .hotel-dropdown .text-rose-500 {
+    color: #f43f5e !important;
+    filter: none !important;
+}
+
+.executive-card .hotel-dropdown .text-amber-600,
+.executive-card:hover .hotel-dropdown .text-amber-600 {
+    color: #d97706 !important;
+    filter: none !important;
+}
+
+/* Selected State — Prism Edge Protocol */
+.executive-card.selected-node {
+    border-color: transparent !important;
+    background-clip: padding-box !important;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 🌊 Refractive Light-Ribbon */
+.executive-card .shimmer-layer {
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform: skewX(-20deg);
+    transition: 0.8s;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.executive-card:hover .shimmer-layer {
+    left: 150%;
+}
+
+/* 🏔️ Chromatic Node Synchronization (v9.0) */
+.executive-card .w-16.h-16 {
+    background: rgba(255, 255, 255, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    color: var(--sig-color) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+}
+
+.executive-card:hover .w-16.h-16 {
+    background: var(--sig-color) !important;
+    color: white !important;
+    box-shadow: 0 10px 25px -5px var(--sig-color)66;
+    transform: scale(1.1) rotate(5deg);
+}
+
+.executive-card .action-hub a:hover {
+    background: var(--sig-color) !important;
+    box-shadow: 0 15px 35px -5px var(--sig-color)88 !important;
+}
+
+.executive-card:hover {
+    transform: translateY(-12px) scale(1.03) !important;
+    box-shadow: 0 50px 100px -30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.hotel-card-wrapper.node-live:hover .executive-card {
+    border-color: #10b981 !important;
+    box-shadow: 0 50px 100px -30px rgba(16, 185, 129, 0.25) !important;
+}
+
+.hotel-card-wrapper.node-pending:hover .executive-card {
+    border-color: #f59e0b !important;
+    box-shadow: 0 50px 100px -30px rgba(245, 158, 11, 0.25) !important;
+}
+
+.executive-card .text-3xl {
+    font-size: 1.5rem !important;
+    line-height: 1.25;
+}
+
+.executive-card .mb-10 {
+    margin-bottom: 1.5rem !important;
+}
+
+.executive-card .py-8 {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+}
+
+/* == SEARCH ENGINE (v5.8 Elite) ============================== */
+.bk-search-engine {
+    flex: 1;
+    max-width: 720px;
+    position: relative;
+    transition: var(--transition-pro);
+}
+
+.bk-search-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 2.25rem;
+    padding: 1.5rem 1.5rem 1.5rem 4rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white !important;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow:
+        0 10px 40px -10px rgba(0, 0, 0, 0.05),
+        inset 0 1px 1px rgba(255, 255, 255, 0.02) !important;
+}
+
+.bk-search-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: #3b82f6 !important;
+    box-shadow:
+        0 20px 50px -15px rgba(59, 130, 246, 0.2),
+        0 0 0 4px rgba(59, 130, 246, 0.05) !important;
+    padding-left: 4.5rem;
+}
+
+.bk-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+}
+
+.bk-search-btn {
+    height: 100%;
+    padding: 0 1.75rem;
+    border-radius: 1.75rem;
+    background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition-pro);
+    box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3);
+}
+
+.bk-search-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.5);
+    background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+}
+
+.bk-search-clear {
+    height: 100%;
+    padding: 0 1.25rem;
+    border-radius: 1.75rem;
+    background: #f8fafc;
+    color: var(--slate-pro-400);
+    font-size: 0.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-pro);
+}
+
+.bk-search-clear:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* == VIEW CONTROLLER (v5.8 Elite) =========================== */
+.bk-view-controller {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    padding: 0.75rem;
+    border-radius: 2rem;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+    transition: var(--transition-pro);
+}
+
+.bk-view-controller:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.2);
+}
+
+.bk-view-btn {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--slate-pro-400);
+    transition: var(--transition-pro);
+    position: relative;
+    overflow: hidden;
+}
+
+.bk-view-btn:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.bk-view-btn.active {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3);
+}
+
+.bk-view-btn i {
+    font-size: 1.1rem;
+}
+
+/* == Professional Swipe View Toggle ======================== */
+.view-toggle-btn {
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.view-toggle-btn.is-active {
+    background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+    color: white !important;
+    box-shadow: 0 8px 20px -5px rgba(79, 70, 229, 0.45);
+    transform: scale(1.03);
+}
+
+/* == REVEAL ENGINE — S2 ===================================== */
+.reveal-fade-in {
+    opacity: 0;
+    animation: fadeReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--reveal-delay, 0s);
+}
+
+@keyframes fadeReveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* == LIST VIEW =============================================== */
+.view-list-mode .hotel-grid {
+    display: flex !important;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.view-list-mode .hotel-card-wrapper {
+    animation: bkRowIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes bkRowIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* List Mode Perfection */
+.view-list-mode .executive-card {
+    padding: 1.5rem 2.5rem !important;
+    border-radius: 2.5rem !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 3rem !important;
+}
+
+.view-list-mode .executive-card .mb-10 {
+    margin-bottom: 0 !important;
+}
+
+.view-list-mode .identity-block {
+    flex: 2;
+    margin-bottom: 0 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LIGHT MODE (CLEAN SAAS) OVERRIDES - v10.0 Hotels & Property Elite
+   ───────────────────────────────────────────────────────────────────────── */
+
+html.light-mode body {
+    background-color: #f8fafc !important;
+}
+
+/* Stat Nodes in Light Mode */
+html.light-mode .bk-stat.metric-mesh-card {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light-mode .bk-stat[data-status-filter="all"].metric-mesh-card {
+    background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.05), transparent 70%), #ffffff !important;
+}
+
+html.light-mode .bk-stat[data-status-filter="live"].metric-mesh-card {
+    background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.05), transparent 70%), #ffffff !important;
+}
+
+html.light-mode .bk-stat[data-status-filter="verifying"].metric-mesh-card {
+    background: radial-gradient(circle at top right, rgba(245, 158, 11, 0.05), transparent 70%), #ffffff !important;
+}
+
+html.light-mode .bk-stat-value {
+    color: #0f172a !important;
+}
+
+html.light-mode .bk-stat-label {
+    color: #64748b !important;
+}
+
+/* Executive Cards in Light Mode */
+html.light-mode .executive-card {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode .executive-card:hover {
+    background: #ffffff !important;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(37, 99, 235, 0.1) !important;
+}
+
+html.light-mode .executive-card h3,
+html.light-mode .executive-card .text-slate-900,
+html.light-mode .executive-card .text-slate-800 {
+    color: #0f172a !important;
+}
+
+html.light-mode .executive-card .text-slate-400,
+html.light-mode .executive-card .text-slate-500 {
+    color: #475569 !important;
+}
+
+/* Search Engine in Light Mode */
+html.light-mode .bk-search-input {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    color: #0f172a !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+}
+
+html.light-mode .bk-search-input::placeholder {
+    color: #94a3b8;
+}
+
+html.light-mode .bk-search-btn {
+    background: #0f172a !important;
+}
+
+/* View Controller in Light Mode */
+html.light-mode .bk-view-controller {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode .bk-view-btn.active {
+    background: #0f172a !important;
+}
+
+/* List Mode Refinement */
+html.light-mode .view-list-mode .executive-card:hover {
+    border-left-color: #2563eb !important;
+    background: #f8fafc !important;
+}
+
+
+.view-list-mode .operational-metrics {
+    flex: 1;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    gap: 3rem !important;
+}
+
+.view-list-mode .action-hub {
+    width: 220px;
+    flex-shrink: 0;
+}
+
+.view-list-mode .executive-card:hover {
+    transform: translateX(8px) !important;
+}
+
+/* == QUICK ACTIONS POPUP ===================================== */
+.hotel-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px) scale(0.95);
+    transform-origin: top right;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hotel-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+/* List View Dropdown — Opens ABOVE the button to avoid overlapping next card */
+.view-list-mode .hotel-dropdown {
+    bottom: calc(100% + 10px) !important;
+    top: auto !important;
+    right: 0 !important;
+    transform-origin: bottom right !important;
+}
+
+/* == Redesigned Add Hotel Hero =============================== */
+#bk-add-hotel-hero {
+    box-shadow: 0 15px 35px -5px rgba(79, 70, 229, 0.4) !important;
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-shimmer {
+    animation: shimmer 2s infinite;
+}
+
+/* == Floating Tip Entrance & Idle (v43.0 Glass Pearl) ========================== */
+#bk-welcome-popup .bg-slate-900\/40 {
+    background: rgba(15, 23, 42, 0.4) !important;
+    backdrop-filter: blur(40px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow:
+        0 30px 60px -15px rgba(0, 0, 0, 0.8),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+#bk-welcome-popup.show {
+    display: flex !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: all !important;
+    z-index: 999999 !important;
+    animation: tipBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+        tipFloat 3s ease-in-out infinite 0.8s;
+}
+
+@keyframes tipBounce {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes tipFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+#bk-welcome-popup .bg-indigo-600 {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+}
+
+/* 🏔️ Card Action & Dropdown Theme (v60.0 Obsidian Hub) */
+.hotel-menu-btn {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.hotel-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+}
+
+.hotel-dropdown {
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(24px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8) !important;
+}
+
+.hotel-dropdown .text-slate-700,
+.hotel-dropdown .text-slate-400 {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.hotel-dropdown a:hover,
+.hotel-dropdown button:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #3b82f6 !important;
+}
+
+.operational-metrics {
+    border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.text-slate-100 {
+    color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.status-tag {
+    background: rgba(15, 23, 42, 0.4) !important;
+    color: rgba(255, 255, 255, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.node-live .status-tag {
+    background: rgba(16, 185, 129, 0.1) !important;
+    color: #10b981 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+.node-pending .status-tag {
+    background: rgba(245, 158, 11, 0.1) !important;
+    color: #f59e0b !important;
+    border-color: rgba(245, 158, 11, 0.2) !important;
+}
+
+/* 🏔️ Empty State - Obsidian Translation */
+#hotels-portfolio-container .hotel-grid>div.col-span-full {
+    background: rgba(15, 23, 42, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(20px);
+}
+
+#hotels-portfolio-container .hotel-grid>div.col-span-full h4 {
+    color: white !important;
+}
+
+#hotels-portfolio-container .hotel-grid>div.col-span-full .bg-white {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* =========================================================================
+   LIGHT MODE (CLEAN SAAS) OVERRIDES
+   ========================================================================= */
+
+/* Statistic Cards Container Overrides */
+html.light-mode .metric-mesh-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode .metric-mesh-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-4px) !important;
+    border-color: #cbd5e1 !important;
+}
+
+html.light-mode .metric-mesh-card::before,
+html.light-mode .metric-mesh-card::after {
+    display: none !important;
+}
+
+/* Icons inside Stat Cards */
+html.light-mode .metric-mesh-card .w-12.h-12 {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #3b82f6 !important;
+    box-shadow: none !important;
+}
+
+/* Card Titles and Text inside Stat Cards */
+html.light-mode .metric-mesh-card .text-5xl,
+html.light-mode .metric-mesh-card .text-3xl {
+    color: #0f172a !important;
+    text-shadow: none !important;
+    -webkit-text-fill-color: initial !important; 
+    background: none !important;
+}
+
+html.light-mode .metric-mesh-card .text-white\/70,
+html.light-mode .metric-mesh-card .text-white {
+    color: #64748b !important;
+}
+
+html.light-mode .metric-mesh-card .status-tag,
+html.light-mode .metric-mesh-card .px-3.py-1 {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #64748b !important;
+}
+
+/* Specific Card Color Logic (Light Mode) */
+html.light-mode .metric-mesh-card.mesh-active { border-top: 4px solid #3b82f6 !important; }
+html.light-mode .metric-mesh-card.mesh-active .w-12.h-12 { color: #3b82f6 !important; background: #eff6ff !important; border-color: #bfdbfe !important; }
+
+html.light-mode .metric-mesh-card.mesh-revenue { border-top: 4px solid #10b981 !important; }
+html.light-mode .metric-mesh-card.mesh-revenue .w-12.h-12 { color: #10b981 !important; background: #ecfdf5 !important; border-color: #a7f3d0 !important;}
+
+html.light-mode .metric-mesh-card.mesh-audit { border-top: 4px solid #f59e0b !important; }
+html.light-mode .metric-mesh-card.mesh-audit .w-12.h-12 { color: #f59e0b !important; background: #fffbeb !important; border-color: #fde68a !important;}
+
+html.light-mode .metric-mesh-card.mesh-vortex { 
+    background: #2563eb !important; 
+    border-color: #1d4ed8 !important; 
+    border-top: none !important;
+}
+
+html.light-mode .metric-mesh-card.mesh-vortex .text-white\/70,
+html.light-mode .metric-mesh-card.mesh-vortex .text-3xl,
+html.light-mode .metric-mesh-card.mesh-vortex .w-12.h-12 {
+    color: white !important;
+}
+html.light-mode .metric-mesh-card.mesh-vortex .px-3.py-1,
+html.light-mode .metric-mesh-card.mesh-vortex .w-12.h-12 {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+}
+
+/* Hotel Grid Cards - Ultra-Premium Elite Transformation (v61.0) */
+html.light-mode .executive-card {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 10px 15px -3px rgba(0, 0, 0, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    --sig-color: #6366f1 !important;
+    overflow: visible !important;
+}
+
+/* Status-Based Thematic Tints (Ultra-High Fidelity) */
+html.light-mode .hotel-card-wrapper.node-live .executive-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 253, 244, 0.6) 100%) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+    --sig-color: #10b981 !important;
+}
+
+html.light-mode .hotel-card-wrapper.node-pending .executive-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 251, 235, 0.6) 100%) !important;
+    border-color: rgba(245, 158, 11, 0.3) !important;
+    --sig-color: #f59e0b !important;
+}
+
+html.light-mode .executive-card:hover {
+    box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.08),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        0 0 0 1px rgba(255, 255, 255, 1) inset !important;
+    transform: translateY(-12px) scale(1.02) !important;
+    border-color: var(--sig-color) !important;
+}
+
+/* Precision-Engineered Animated Borders (Surgical 1.5px) */
+html.light-mode .executive-card::before {
+    display: block !important;
+    content: '' !important;
+    position: absolute !important;
+    inset: -1.5px !important;
+    padding: 1.5px;
+    background: conic-gradient(from var(--border-angle, 0deg),
+            transparent 10%,
+            var(--sig-color) 40%,
+            var(--sig-color) 60%,
+            transparent 90%) !important;
+    border-radius: inherit;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: borderFlow 4s linear infinite;
+    z-index: 5 !important;
+    opacity: 0.15;
+    transition: all 0.5s var(--transition-pro);
+}
+
+html.light-mode .executive-card:hover::before {
+    opacity: 1 !important;
+    animation-duration: 2s;
+    background: conic-gradient(from var(--border-angle, 0deg),
+            var(--sig-color) 0%,
+            #8b5cf6 25%,
+            var(--sig-color) 50%,
+            #06b6d4 75%,
+            var(--sig-color) 100%) !important; /* Multi-chromatic Elite Flow */
+}
+
+/* Volumetric Outer Glow (Light Mode Optimization) */
+html.light-mode .executive-card::after {
+    display: block !important;
+    content: '' !important;
+    position: absolute !important;
+    inset: -6px !important;
+    background: radial-gradient(circle, var(--sig-color) 0%, transparent 70%) !important;
+    opacity: 0 !important;
+    filter: blur(15px);
+    transition: opacity 0.5s ease;
+    z-index: -1;
+}
+
+html.light-mode .executive-card:hover::after {
+    opacity: 0.15 !important;
+}
+
+/* Surgical Typography & Identity (Elite Standard) */
+html.light-mode .executive-card h3 {
+    color: #0f172a !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 1.75rem !important;
+    letter-spacing: -0.03em !important;
+}
+
+html.light-mode .executive-card .text-slate-400 {
+    color: #64748b !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    font-size: 0.65rem !important;
+}
+
+html.light-mode .executive-card .text-slate-800 {
+    color: #334155 !important;
+    font-weight: 800 !important;
+}
+
+/* Icons inside Grid Cards */
+html.light-mode .executive-card .w-16.h-16 {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #94a3b8 !important;
+    box-shadow: none !important;
+}
+
+html.light-mode .hotel-card-wrapper.node-live .w-16.h-16 {
+    background: #ecfdf5 !important;
+    border-color: #d1fae5 !important;
+    color: #10b981 !important;
+}
+
+html.light-mode .hotel-card-wrapper.node-pending .w-16.h-16 {
+    background: #fffbeb !important;
+    border-color: #fde68a !important;
+    color: #f59e0b !important;
+}
+
+html.light-mode .hotel-card-wrapper.node-draft .w-16.h-16 {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+    color: #94a3b8 !important;
+}
+
+/* Live/Pending Status Badges */
+html.light-mode .executive-card.node-live .status-tag {
+    background: #ecfdf5 !important;
+    border: 1px solid #d1fae5 !important;
+    color: #059669 !important;
+}
+
+html.light-mode .executive-card.node-pending .status-tag {
+    background: #fffbeb !important;
+    border: 1px solid #fde68a !important;
+    color: #d97706 !important;
+}
+
+html.light-mode .executive-card.node-draft .status-tag {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #64748b !important;
+}
+
+/* Hotel Dropdown & Interaction (Premium Polish) */
+html.light-mode .hotel-menu-btn {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #64748b !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+    width: 52px !important;
+    height: 52px !important;
+}
+
+html.light-mode .hotel-menu-btn:hover {
+    background: #f8fafc !important;
+    color: var(--sig-color) !important;
+    border-color: var(--sig-color) !important;
+    transform: scale(1.1) rotate(90deg) !important;
+}
+
+html.light-mode .hospitality-btn {
+    height: 52px !important;
+    border-radius: 1rem !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.15em !important;
+    box-shadow: 0 10px 20px -10px var(--sig-color) !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    color: #0f172a !important;
+    transition: all 0.4s var(--transition-pro) !important;
+}
+
+html.light-mode .hospitality-btn:hover {
+    background: var(--sig-color) !important;
+    color: white !important;
+    border-color: var(--sig-color) !important;
+    transform: translateY(-4px) !important;
+}
+
+html.light-mode .operational-metrics {
+    border-color: #e2e8f0 !important;
+}
+
+html.light-mode .text-slate-100 {
+    color: #e2e8f0 !important;
+}
+
+/* Empty State */
+html.light-mode #hotels-portfolio-container .hotel-grid>div.col-span-full {
+    background: #f8fafc !important;
+    border: 2px dashed #e2e8f0 !important;
+}
+
+html.light-mode #hotels-portfolio-container .hotel-grid>div.col-span-full h4 {
+    color: #0f172a !important;
+}
+
+html.light-mode #hotels-portfolio-container .hotel-grid>div.col-span-full .bg-white {
+    background: rgba(255, 255, 255, 1) !important;
+    color: #64748b !important;
+}
+
+/* Welcome Popup (Tooltips/Tips) */
+html.light-mode #bk-welcome-popup > div {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #1e293b !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+html.light-mode #bk-welcome-popup > div > div:first-child {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+}
+html.light-mode #bk-welcome-popup .bg-white\/20,
+html.light-mode #bk-welcome-popup .w-10.h-10 {
+    background: #f1f5f9 !important;
+    color: #3b82f6 !important;
+    box-shadow: none !important;
+}
+html.light-mode #bk-welcome-popup p {
+    color: #475569 !important;
+}
+html.light-mode #bk-welcome-popup h4 {
+    color: #1e293b !important;
+}
+html.light-mode #bk-welcome-popup button {
+    color: #94a3b8 !important;
+}
+html.light-mode #bk-welcome-popup button:hover {
+    color: #ef4444 !important;
+}

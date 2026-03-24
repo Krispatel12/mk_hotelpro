@@ -1,0 +1,202 @@
+{% extends "superadmin/base.html" %}
+{% block title %}Hotel Detail{% endblock %}
+{% block page_title %}Hotel Review{% endblock %}
+{% block page_subtitle %}Full hotel detail for approval review{% endblock %}
+{% block active_hotels %}active{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'super_hotels' %}" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+{% endblock %}
+
+{% block content %}
+<div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
+
+    <!-- Left: Hotel Info -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <!-- Hero -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:20px;">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                            <h2 style="font-size:24px; font-weight:800; color:var(--text);">{{ hotel.name }}</h2>
+                            {% if hotel.status == 'PENDING' %}
+                            <span class="badge badge-pending"><i class="fas fa-clock"></i> Pending</span>
+                            {% elif hotel.status == 'LIVE' %}
+                            <span class="badge badge-live"><i class="fas fa-circle" style="font-size:8px;"></i>
+                                Live</span>
+                            {% elif hotel.status == 'REJECTED' %}
+                            <span class="badge badge-rejected">Rejected</span>
+                            {% endif %}
+                        </div>
+                        <p style="color:var(--text-2); font-size:13px; margin-bottom:4px;">{{ hotel.category }} • {{hotel.city }}, {{ hotel.state }}, {{ hotel.country }}</p>
+                        <p style="color:var(--text-2); font-size:13px;">Owner: <strong style="color:var(--accent);">{{hotel.owner.email }}</strong></p>
+                    </div>
+                    {% if hotel.status == 'PENDING' %}
+                    <div style="display:flex; gap:8px; flex-shrink:0;">
+                        <a href="{% url 'super_approve_hotel' hotel.id %}" class="btn btn-success"
+                            onclick="return confirm('Approve {{ hotel.name }}?')">
+                            <i class="fas fa-check"></i> Approve Hotel
+                        </a>
+                        <a href="{% url 'super_reject_hotel' hotel.id %}" class="btn btn-danger">
+                            <i class="fas fa-times"></i> Reject
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% if hotel.narrative %}
+                <p
+                    style="margin-top:16px; color:var(--text-2); font-size:14px; line-height:1.6; border-top:1px solid var(--border); padding-top:16px;">
+                    {{ hotel.narrative }}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Details -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Property Details</h3>
+            </div>
+            <div class="card-body">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div>
+                        <div
+                            style="font-size:11px;color:var(--text-2);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+                            Address</div>
+                        <div style="font-size:13px;color:var(--text);">{{ hotel.address }}</div>
+                    </div>
+                    <div>
+                        <div
+                            style="font-size:11px;color:var(--text-2);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+                            Contact</div>
+                        <div style="font-size:13px;color:var(--text);">{{ hotel.contact_number|default:"—" }}</div>
+                    </div>
+                    <div>
+                        <div
+                            style="font-size:11px;color:var(--text-2);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+                            Check-in / Check-out</div>
+                        <div style="font-size:13px;color:var(--text);">{{ hotel.check_in_time|default:"—" }} / {{hotel.check_out_time|default:"—" }}</div>
+                    </div>
+                    <div>
+                        <div
+                            style="font-size:11px;color:var(--text-2);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+                            Star Rating</div>
+                        <div style="font-size:13px;color:var(--warn);">{{ hotel.star_rating }} ★</div>
+                    </div>
+                    <div>
+                        <div
+                            style="font-size:11px;color:var(--text-2);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+                            GST Number</div>
+                        <div style="font-size:13px;color:var(--text);">{{ hotel.gst_number|default:"—" }}</div>
+                    </div>
+                    <div>
+                        <div
+                            style="font-size:11px;color:var(--text-2);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+                            Govt Reg No.</div>
+                        <div style="font-size:13px;color:var(--text);">{{ hotel.govt_reg_number|default:"—" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rooms -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Room Categories ({{ rooms|length }})</h3>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Room</th>
+                            <th>Class</th>
+                            <th>Max Guests</th>
+                            <th>Base Price</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for room in rooms %}
+                        <tr>
+                            <td style="font-weight:600;">{{ room.name }}</td>
+                            <td><span class="badge badge-accent">{{ room.room_class }}</span></td>
+                            <td>{{ room.max_guests }}</td>
+                            <td style="color:var(--success);">₹{{ room.base_price }}</td>
+                            <td>{{ room.inventory_count }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align:center;padding:24px;color:var(--text-2);">No rooms
+                                defined.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Uploaded Documents</h3>
+            </div>
+            <div class="card-body" style="display:flex; gap:12px; flex-wrap:wrap;">
+                {% if hotel.doc_id_proof %}
+                <a href="{{ hotel.doc_id_proof.url }}" target="_blank" class="btn btn-ghost">
+                    <i class="fas fa-id-card"></i> ID Proof
+                </a>
+                {% else %}<span style="color:var(--danger);font-size:13px;"><i class="fas fa-times"></i> ID Proof
+                    missing</span>{% endif %}
+
+                {% if hotel.doc_govt_registration %}
+                <a href="{{ hotel.doc_govt_registration.url }}" target="_blank" class="btn btn-ghost">
+                    <i class="fas fa-file-certificate"></i> Govt Registration
+                </a>
+                {% else %}<span style="color:var(--danger);font-size:13px;"><i class="fas fa-times"></i> Govt Reg
+                    missing</span>{% endif %}
+
+                {% if hotel.doc_gst_certificate %}
+                <a href="{{ hotel.doc_gst_certificate.url }}" target="_blank" class="btn btn-ghost">
+                    <i class="fas fa-receipt"></i> GST Certificate
+                </a>
+                {% else %}<span style="color:var(--text-2);font-size:13px;">GST not provided</span>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Reviews & Remarks -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+        {% if hotel.verification_remarks %}
+        <div class="card">
+            <div class="card-header">
+                <h3>Verification Notes</h3>
+            </div>
+            <div class="card-body">
+                <p style="color:var(--text-2); font-size:13px; line-height:1.6;">{{ hotel.verification_remarks }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Recent Reviews -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Recent Reviews</h3>
+            </div>
+            {% for review in reviews %}
+            <div style="padding:14px 20px; border-bottom:1px solid var(--border);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="font-weight:600;font-size:13px;">{{ review.guest_name }}</span>
+                    <span style="color:var(--warn); font-size:13px;">{{ review.rating }}★</span>
+                </div>
+                <p style="color:var(--text-2);font-size:12px;line-height:1.5;">{{ review.comment|truncatechars:120 }}
+                </p>
+            </div>
+            {% empty %}
+            <div style="padding:24px; text-align:center; color:var(--text-2);font-size:13px;">No reviews yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

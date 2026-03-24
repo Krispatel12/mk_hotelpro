@@ -1,0 +1,63 @@
+{% extends "superadmin/base.html" %}
+{% block title %}Reputation Ledger{% endblock %}
+{% block page_title %}Sentiment Governance{% endblock %}
+{% block page_subtitle %}Strategic oversight and disclosure control of global feedback discourse within the Nexus
+ecosystem{% endblock %}
+{% block active_reviews %}active{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3><i class="fas fa-comment-dots" style="color:var(--warn); margin-right:8px;"></i>Global Sentiment Discourse</h3>
+    <span class="badge badge-accent">{{ reviews|length }} Narrative Vectors</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Asset Identifier</th>
+          <th>Contributor Identity</th>
+          <th>Rating Magnitude</th>
+          <th>Feedback Discourse</th>
+          <th>Registry Date</th>
+          <th>Disclosure Status</th>
+          <th>Moderation Protocols</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reviews %}
+        <tr>
+          <td style="font-weight:600;">{{ r.hotel.name }}</td>
+          <td style="color:var(--text-2);">{{ r.guest_name }}</td>
+          <td style="color:var(--warn); font-size:15px; letter-spacing:2px;">
+            {% for i in "12345" %}{% if forloop.counter <= r.rating %}★{% else %}☆{% endif %}{% endfor %} </td>
+          <td style="max-width:280px; color:var(--text-2); font-size:12px; font-style:italic;">"{{r.comment|truncatechars:100 }}"</td>
+          <td style="color:var(--text-2); font-size:11px;">{{ r.created_at|date:"d M Y" }}</td>
+          <td>
+            {% if r.is_visible %}
+            <span class="badge badge-live"><i class="fas fa-eye"></i> PUBLIC DISCLOSURE</span>
+            {% else %}
+            <span class="badge badge-rejected"><i class="fas fa-eye-slash"></i> RESTRICTED ACCESS</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'super_toggle_review' r.id %}"
+              class="btn {% if r.is_visible %}btn-danger{% else %}btn-success{% endif %} btn-sm">
+              {% if r.is_visible %}
+              <i class="fas fa-user-shield"></i> Revoke Visibility
+              {% else %}
+              <i class="fas fa-shield-check"></i> Authorize Disclosure
+              {% endif %}
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" style="text-align:center;padding:48px;color:var(--text-2);">No reviews yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

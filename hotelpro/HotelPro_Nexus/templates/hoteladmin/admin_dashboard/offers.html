@@ -1,0 +1,491 @@
+{% extends 'hoteladmin/admin_dashboard/dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Offers | {{ hotel.name }} | HotelPro{% endblock %}
+
+
+{% block page_title %}Offer Management{% endblock %}
+{% block page_subtitle %}Strategic orchestration of promotions, yields, and guest experiences.{% endblock %}
+
+{% block extra_head %}
+<!-- Professional Tooling -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/hoteladmin/dashboard/offers_enterprise.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/hoteladmin/offers_view.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/hoteladmin/portfolio_strip.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/hoteladmin/dual_view_shared.css' %}?v=1.3">
+{% endblock %}
+
+{% block dashboard_content %}
+{{ offers_json|json_script:"offers-data" }}
+<div class="space-y-10 pb-24">
+
+    <!-- Elite Command Header -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-12 pt-12 px-8">
+        <div class="space-y-8 max-w-3xl">
+            <div class="inline-flex items-center gap-4 px-5 py-2.5 rounded-full border border-white/5 backdrop-blur-md bg-white/5">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em]">Portfolio Intelligence Active</span>
+            </div>
+            <h2 class="text-6xl font-display font-black text-white tracking-tighter leading-[0.85] filter drop-shadow-sm">
+                Portfolio <span class="text-blue-500">Orchestration</span>
+            </h2>
+            <p class="text-slate-400 font-medium text-lg max-w-xl leading-relaxed">
+                Strategic command of global property yields, flash activation windows, and real-time guest engagement metrics.
+            </p>
+        </div>
+
+        <div>
+            <a href="{% url 'add_offer' %}"
+                class="relative flex items-center gap-5 px-10 py-5 bg-white/5 rounded-[2.5rem] text-[11px] font-black uppercase tracking-widest text-white overflow-hidden group transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(59,130,246,0.2)] border border-white/10 shadow-2xl">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0"></div>
+                <!-- Shimmer Sweep -->
+                <div
+                    class="absolute inset-0 w-full h-full transform -translate-x-full bg-gradient-to-r from-transparent via-white/80 to-transparent z-0 group-hover:animate-shimmer mix-blend-overlay">
+                </div>
+
+                <div class="relative z-10 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-blue-600 transition-all duration-500 border border-white/10 group-hover:scale-110 shadow-sm">
+                    <i class="fas fa-plus text-emerald-500 group-hover:text-white group-hover:rotate-180 transition-all duration-700 text-sm"></i>
+                </div>
+                <span class="relative z-10 drop-shadow-sm transition-all duration-500 group-hover:tracking-[0.15em]">Create Custom Architecture</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Strategic Metrics Hub: Operational Pulse -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-8 mb-16 overflow-visible">
+        <!-- Live Node -->
+        <div class="glass-panel p-10 flex flex-col gap-6 metric-node group/metric bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-xl"
+            onclick="EnterpriseUI.switchView('live')" data-metric="live">
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] font-black text-slate-500 uppercase tracking-widest">Active Pulse</span>
+                <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-500 group-hover/metric:bg-emerald-500 group-hover/metric:text-white transition-all shadow-inner">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+            </div>
+            <div class="space-y-1">
+                <div class="flex items-baseline gap-3">
+                    <span class="text-6xl font-display font-black text-white tracking-tighter">{{stats.active_offers}}</span>
+                    <span class="text-xs font-black text-emerald-500 uppercase tracking-widest">Live Node</span>
+                </div>
+                <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div class="h-full bg-emerald-500 transition-all duration-1000" style="width: 75%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staged Node -->
+        <div class="glass-panel p-10 flex flex-col gap-6 metric-node group/metric bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-xl"
+            onclick="EnterpriseUI.switchView('draft')" data-metric="draft">
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] font-black text-slate-500 uppercase tracking-widest">Draft Strategy</span>
+                <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-amber-500 group-hover/metric:bg-amber-500 group-hover/metric:text-white transition-all shadow-inner">
+                    <i class="fas fa-box-archive"></i>
+                </div>
+            </div>
+            <div class="space-y-1">
+                <div class="flex items-baseline gap-3">
+                    <span class="text-6xl font-display font-black text-white tracking-tighter">{{stats.draft_offers}}</span>
+                    <span class="text-xs font-black text-amber-500 uppercase tracking-widest">Staged</span>
+                </div>
+                <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div class="h-full bg-amber-500 transition-all duration-1000 orchestration-progress" data-width="40"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Impact Node -->
+        <div class="glass-panel p-10 flex flex-col gap-6 metric-node group/metric bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-xl"
+            onclick="EnterpriseUI.switchView('impact')" data-metric="impact">
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] font-black text-slate-500 uppercase tracking-widest">Global Reach</span>
+                <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-blue-500 group-hover/metric:bg-blue-600 group-hover/metric:text-white transition-all shadow-inner">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+            </div>
+            <div class="space-y-1">
+                <div class="flex items-baseline gap-3">
+                    <span class="text-6xl font-display font-black text-white tracking-tighter">{{stats.avg_redemption|floatformat:1}}%</span>
+                    <span class="text-xs font-black text-blue-500 uppercase tracking-widest">Impact</span>
+                </div>
+                <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-500 transition-all duration-1000 orchestration-progress" data-width="{{ stats.avg_redemption }}"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Volume Node -->
+        <div class="glass-panel p-10 flex flex-col gap-6 metric-node group/metric bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-xl"
+            onclick="EnterpriseUI.switchView('yield')" data-metric="yield">
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] font-black text-slate-500 uppercase tracking-widest">Gross Yield</span>
+                <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 group-hover/metric:bg-blue-500 group-hover/metric:text-white transition-all shadow-inner">
+                    <i class="fas fa-gem"></i>
+                </div>
+            </div>
+            <div class="space-y-1">
+                <div class="flex items-baseline gap-3">
+                    <span class="text-6xl font-display font-black text-white tracking-tighter">₹{{stats.total_revenue|floatformat:0}}</span>
+                    <span class="text-xs font-black text-blue-400 uppercase tracking-widest">Volume</span>
+                </div>
+                <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-400 transition-all duration-1000 orchestration-progress" data-width="60"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Strategic Timeline: Portfolio Orchestration -->
+    <div class="px-8 mt-12">
+        <div class="glass-card p-10 space-y-8">
+            <div
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-50 pb-8">
+                <div class="space-y-2">
+                    <h4 class="section-label text-navy-pro">Strategic Portfolio Timeline</h4>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-emerald-500">Global
+                        Activation Matrix • Next 30 Days</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-6">
+                    <!-- Legend -->
+                    <div class="flex gap-4 px-6 py-3 bg-slate-50/50 rounded-2xl border border-slate-100/50">
+                        <div class="flex items-center gap-2 group cursor-help">
+                            <span
+                                class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.3)] animate-pulse"></span>
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Live
+                                Campaign</span>
+                        </div>
+                        <div class="w-px h-4 bg-slate-200"></div>
+                        <div class="flex items-center gap-2 group cursor-help">
+                            <span
+                                class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.3)]"></span>
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Staged
+                                Draft</span>
+                        </div>
+                    </div>
+
+                    <!-- Global Timeline Button -->
+                    <button onclick="EnterpriseUI.showTimelineOverlay()"
+                        class="relative flex items-center gap-3 px-6 py-4 bg-navy-pro rounded-[1.5rem] overflow-hidden group transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-navy-pro/20">
+                        <!-- Hover Shine -->
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0">
+                        </div>
+
+                        <div
+                            class="relative z-10 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center border border-white/20 group-hover:scale-110 group-hover:bg-white transition-all duration-500">
+                            <i
+                                class="fas fa-calendar-week text-emerald-400 group-hover:text-emerald-500 text-sm transition-colors duration-500"></i>
+                        </div>
+                        <span
+                            class="relative z-10 text-[10px] font-black text-white uppercase tracking-widest drop-shadow-sm group-hover:tracking-[0.15em] transition-all duration-500">Open
+                            Live Timeline</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="calendar-engine" id="yieldCalendar">
+                <!-- Dynamically populated by JS Engine -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Strategic Portfolio Registry: Global Archive -->
+    <div class="px-8 space-y-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-10 border-b border-white/5 pb-12">
+            <div class="space-y-4">
+                <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Strategy Registry</span>
+                <h4 class="text-4xl font-display font-black text-white tracking-tighter">Portfolio Archive</h4>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest text-emerald-500">Node Status: Operational & Synchronized</p>
+            </div>
+
+            <!-- 🏛️ Stage Orchestrator Bar v60.0 (Unified) -->
+            <div class="stage-orchestrator-bar !m-0 !w-auto !max-w-none flex-1">
+                <div class="portfolio-search-wrapper !max-w-[400px]">
+                    <i class="fas fa-terminal search-icon-node"></i>
+                    <input type="text" id="globalPortfolioSearch" placeholder="Search strategy by node name..."
+                        class="portfolio-search-node" autocomplete="off">
+                </div>
+
+                <div class="orchestrator-view-controller">
+                    <select id="hotelFilterSelector"
+                        class="bg-transparent border-none text-[10px] font-black text-slate-400 uppercase tracking-widest outline-none cursor-pointer hover:text-white transition-colors px-4">
+                        <option value="all">Global Node</option>
+                        {% for h in user_hotels %}
+                        <option value="{{ h.id }}">{{ h.name|upper }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="w-px h-8 bg-white/5 mx-2"></div>
+                    <button type="button" id="offers-grid-btn" class="orchestrator-view-btn is-active" title="Grid View">
+                        <i class="fas fa-shapes"></i>
+                    </button>
+                    <button type="button" id="offers-list-btn" class="orchestrator-view-btn" title="List View">
+                        <i class="fas fa-bars-staggered"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12" id="offerPortfolioList">
+            {% for offer in offers %}
+            <div class="glass-panel p-10 group relative transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.4)] border border-white/10 rounded-[3rem] bg-white/5 offer-card-master active:scale-[0.99] backdrop-blur-xl"
+                data-hotel-id="{{ offer.hotel.id }}" data-status="{% if offer.is_live %}live{% else %}draft{% endif %}"
+                data-name="{{ offer.name|lower }}" data-index="{{ forloop.counter0 }}">
+
+                <!-- ╔════════ GRID VIEW CONTENT ═══════════════╗ -->
+                <div class="offer-grid-only">
+
+                    <!-- Status Node -->
+                    <div class="flex justify-between items-start mb-12">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-2.5 h-2.5 rounded-full {% if offer.is_live %}bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)] animate-pulse{% else %}bg-amber-400{% endif %}"></div>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    {% if offer.is_live %}Operational Node Active{% else %}Strategy Staged{% endif %}
+                                </span>
+                            </div>
+                            <h5 class="text-[2.5rem] leading-[1.1] font-display font-black text-white tracking-tighter group-hover:text-blue-400 transition-colors">
+                                {{ offer.name }}</h5>
+                        </div>
+                        <div onclick="EnterpriseUI.showRooms('{{ offer.id }}')"
+                            class="w-16 h-16 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all duration-500 cursor-pointer group/icon transform hover:-translate-y-1 shadow-inner">
+                            <i class="fas {% if offer.category == 'PRICE' %}fa-tag{% elif offer.category == 'STAY' %}fa-clock{% else %}fa-gem{% endif %} text-xl group-hover/icon:scale-110 transition-transform"></i>
+                        </div>
+                    </div>
+
+                    <hr class="border-t border-white/5 mb-8" />
+
+                    <!-- Performance Matrix -->
+                    <div class="grid grid-cols-2 gap-8 mb-10">
+                        <div class="space-y-2">
+                            <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Gross Impact</span>
+                            <p class="text-[1.75rem] font-display font-black text-white leading-none">
+                                {{offer.discount_percent }}% <span class="text-[10px] font-bold text-slate-500 tracking-wide">OFFSET</span></p>
+                        </div>
+                        <div class="space-y-2 text-right">
+                            <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Consumption</span>
+                            <p class="text-[1.75rem] font-display font-black text-emerald-500 leading-none">
+                                {{offer.usage_count|default:0 }}
+                                <span class="text-[10px] font-bold text-slate-500 tracking-wide">UNITS</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr class="border-t border-white/5 mb-8" />
+
+                    <!-- Logistics Node -->
+                    <div class="flex items-center justify-between mb-12">
+                        <button onclick="EnterpriseUI.showTimelineOverlay('{{ offer.id }}')"
+                            class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-widest cursor-pointer group/cal hover:text-white transition-all">
+                            <i class="fas fa-calendar-alt text-slate-500 text-sm group-hover/cal:text-blue-500 transition-colors"></i>
+                            <span>{{ offer.activation_date|date:"M d" }} — {{ offer.expiration_date|date:"M d" }}</span>
+                        </button>
+                        <div class="flex items-center gap-2">
+                            <div class="switch-ui {% if offer.is_live %}on{% endif %}" onclick="EnterpriseUI.toggleStatus('{{ offer.id }}')">
+                                <div class="switch-handle"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Hub -->
+                    <div class="grid grid-cols-4 gap-4">
+                        <a href="{% url 'edit_offer' offer.id %}"
+                            class="col-span-1 py-4 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-[1.25rem] text-[9px] font-black uppercase tracking-widest text-center transition-all flex items-center justify-center gap-2 hover:shadow-inner border border-white/5">
+                            <i class="fas fa-pen-nib"></i> EDIT
+                        </a>
+                        <button onclick="EnterpriseUI.showDetails('{{ offer.id }}')"
+                            class="col-span-2 py-4 bg-white/5 border border-white/10 text-slate-400 hover:text-white rounded-[1.25rem] text-[9px] font-black uppercase tracking-widest transition-all hover:bg-white/10 hover:shadow-xl hover:shadow-black/20 flex items-center justify-center gap-2 relative overflow-hidden group/btn hover:-translate-y-1">
+                            <i class="fas fa-chart-line"></i> DRILLDOWN
+                        </button>
+                        <button onclick="EnterpriseUI.deleteStrategy('{{ offer.id }}')"
+                            class="col-span-1 py-4 bg-rose-50/50 text-rose-400 hover:bg-rose-50 hover:text-rose-500 rounded-[1.25rem] text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center hover:shadow-sm">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+
+                </div><!-- ╚════════ END GRID VIEW ═══════════════╝ -->
+
+                <!-- ╔════════ LIST VIEW CONTENT ══════════════╗ -->
+                <div class="offer-list-only">
+                    <!-- Status colour band -->
+                    <div class="list-status-band"></div>
+                    <!-- Row inner -->
+                    <div class="list-row-inner">
+                        <!-- Name + status tag -->
+                        <div class="list-col-name">
+                            <div class="list-title">{{ offer.name }}</div>
+                            <div class="list-status-tag">
+                                <span class="w-1.5 h-1.5 rounded-full {% if offer.is_live %}bg-emerald-500{% else %}bg-amber-400{% endif %}"></span>
+                                {% if offer.is_live %}Live{% else %}Draft{% endif %}
+                            </div>
+                        </div>
+
+                        <div class="list-divider"></div>
+
+                        <!-- Discount metric -->
+                        <div class="list-col-metric">
+                            <span class="metric-val">{{ offer.discount_percent }}%</span>
+                            <span class="metric-lbl">Discount</span>
+                        </div>
+
+                        <div class="list-divider"></div>
+
+                        <!-- Usage metric -->
+                        <div class="list-col-metric">
+                            <span class="metric-val text-emerald-500">{{ offer.usage_count|default:0 }}</span>
+                            <span class="metric-lbl">Uses</span>
+                        </div>
+
+                        <div class="list-divider"></div>
+
+                        <!-- Dates -->
+                        <div class="list-col-dates">
+                            <i class="fas fa-calendar-alt text-[0.6rem]"></i>
+                            <span>{{ offer.activation_date|date:"M d" }} – {{ offer.expiration_date|date:"M d" }}</span>
+                        </div>
+
+                        <div class="list-divider"></div>
+
+                        <!-- Toggle switch -->
+                        <div class="switch-ui {% if offer.is_live %}on{% endif %}" onclick="EnterpriseUI.toggleStatus('{{ offer.id }}')">
+                            <div class="switch-handle"></div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="list-actions">
+                            <a href="{% url 'edit_offer' offer.id %}" class="list-action-btn" title="Edit">
+                                <i class="fas fa-pen-nib"></i>
+                            </a>
+                            <button onclick="EnterpriseUI.showDetails('{{ offer.id }}')" class="list-action-btn" title="Drilldown">
+                                <i class="fas fa-chart-line"></i>
+                            </button>
+                            <button onclick="EnterpriseUI.deleteStrategy('{{ offer.id }}')" class="list-action-btn danger" title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div><!-- ╚════════ END LIST VIEW ════════════╝ -->
+
+            </div>
+            {% empty %}
+            <div class="col-span-full py-20 text-center">
+                <i class="fas fa-folder-open text-6xl text-slate-100 mb-6"></i>
+                <p class="text-slate-300 font-black uppercase tracking-[0.3em]">No yield strategies registered</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Enterprise Drilldown Overlay: Targeted Rooms -->
+    <div id="targetedRoomsOverlay" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-8">
+        <div class="absolute inset-0 bg-navy-pro/20 backdrop-blur-xl animate-fade-in"
+            onclick="EnterpriseUI.hideRooms()"></div>
+        <div
+            class="glass-panel w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden animate-premium-fade-up relative z-10">
+            <div class="p-10 border-b border-white/5 flex justify-between items-end">
+                <div class="space-y-4">
+                    <span class="text-[11px] font-black text-emerald-500 uppercase tracking-[0.3em]">Applicable
+                        Inventory</span>
+                    <h3 id="roomsOfferName" class="text-4xl font-display font-black text-white tracking-tighter">—
+                    </h3>
+                    <p class="text-slate-400 font-medium text-sm">Targeted room categories for this strategy</p>
+                </div>
+                <button onclick="EnterpriseUI.hideRooms()"
+                    class="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 transition-all">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-10 custom-scrollbar bg-transparent">
+                <div id="targetedRoomsList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enterprise Drilldown Overlay: Strategic Usage -->
+    <div id="usageDrilldownOverlay" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-8">
+        <div class="absolute inset-0 bg-navy-pro/20 backdrop-blur-xl animate-fade-in"
+            onclick="EnterpriseUI.hideDetails()"></div>
+        <div
+            class="glass-panel w-full max-w-6xl max-h-[85vh] flex flex-col overflow-hidden animate-premium-fade-up relative z-10">
+            <div class="p-12 border-b border-white/5 flex justify-between items-end">
+                <div class="space-y-4">
+                    <span class="text-[11px] font-black text-gold-pro uppercase tracking-[0.3em]">Performance
+                        Drilldown</span>
+                    <h3 id="drilldownOfferName" class="text-5xl font-display font-black text-white tracking-tighter">
+                        —</h3>
+                    <p class="text-slate-400 font-medium">Real-time Guest Engagement & Conversion Matrix</p>
+                </div>
+                <button onclick="EnterpriseUI.hideDetails()"
+                    class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 transition-all">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-12 custom-scrollbar">
+                <table class="w-full text-left border-separate border-spacing-y-4">
+                    <thead>
+                        <tr class="text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                            <th class="pb-6 pl-6">Guest Signature</th>
+                            <th class="pb-6">Property Node</th>
+                            <th class="pb-6">Activation Window</th>
+                            <th class="pb-6">Yield Ref</th>
+                            <th class="pb-6 text-right pr-6">Direct Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usageDataTable">
+                        <!-- Populated by Strategic Data Engine -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Timeline Overlay: Real-time Countdown Engine -->
+    <div id="globalTimelineOverlay" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 sm:p-8">
+        <div class="absolute inset-0 bg-navy-pro/30 backdrop-blur-xl animate-fade-in cursor-pointer"
+            onclick="EnterpriseUI.hideTimelineOverlay()"></div>
+        <div
+            class="glass-panel w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-premium-fade-up relative z-10 rounded-[3rem] border border-white/5 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)]">
+
+            <!-- Sticky Header -->
+            <div
+                class="p-8 sm:p-12 border-b border-white/5 flex justify-between items-start bg-transparent relative z-20">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)] animate-pulse"></span>
+                        <span class="text-[11px] font-black text-emerald-500 uppercase tracking-[0.3em]">Temporal Node
+                            Online</span>
+                    </div>
+                    <h3 class="text-4xl sm:text-5xl font-display font-black text-white tracking-tighter">Live
+                        Portfolio Timeline</h3>
+                    <p class="text-slate-400 font-medium text-sm">Real-time synchronized orchestration countdown matrix
+                    </p>
+                </div>
+                <button onclick="EnterpriseUI.hideTimelineOverlay()"
+                    class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/5 flex flex-shrink-0 items-center justify-center text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 transition-all duration-300 hover:scale-105 hover:shadow-sm">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable List Area -->
+            <div class="flex-1 overflow-y-auto p-8 sm:p-12 custom-scrollbar bg-transparent">
+                <div id="timelineOffersList" class="flex flex-col gap-8">
+                    <!-- Populated by Timeline Engine JS -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/hoteladmin/dashboard/offers_enterprise.js' %}?v=1.3"></script>
+{% endblock %}

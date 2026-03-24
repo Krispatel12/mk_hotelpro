@@ -1,0 +1,39 @@
+﻿<label class="section-subtitle"><i class="fas fa-concierge-bell"></i> 2B. Services & Amenities</label>
+
+<div class="services-registry-card">
+
+    <div class="selection-pill-group" id="servicesGrid">
+        {% for value, label in service_choices %}
+        <label class="pill-label">
+            <input type="checkbox" name="services" value="{{ value }}" {% if value in hotel.services or 'Wifi' in label or 'Parking' in label %}checked{% endif %}>
+            <i class="
+                {% if 'Wifi' in label %}fas fa-wifi
+                {% elif 'Parking' in label %}fas fa-square-parking
+                {% elif 'Pool' in label %}fas fa-person-swimming
+                {% elif 'Spa' in label %}fas fa-spa
+                {% elif 'Gym' in label %}fas fa-dumbbell
+                {% elif 'Restaurant' in label %}fas fa-utensils
+                {% elif 'Bar' in label %}fas fa-martini-glass
+                {% elif 'Laundry' in label %}fas fa-shirt
+                {% elif 'Airport' in label %}fas fa-plane
+                {% elif 'Conference' in label %}fas fa-chalkboard-user
+                {% elif 'Ev' in label or 'EV' in label %}fas fa-bolt
+                {% elif 'Pet' in label %}fas fa-paw
+                {% else %}fas fa-check-circle
+                {% endif %}"></i>
+            {{ label }}
+        </label>
+        {% endfor %}
+    </div>
+
+    <!-- Custom Service Input -->
+    <div class="pill-input-wrapper mt-8">
+        <i class="fas fa-plus-circle icon-add-service"></i>
+        <input type="text" id="customServiceInput" class="no-auto-next"
+            placeholder="Add custom service (e.g. Pool, Gym, Spa)...">
+        <button type="button" id="addServiceBtn" class="pill-add-btn">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
+</div>

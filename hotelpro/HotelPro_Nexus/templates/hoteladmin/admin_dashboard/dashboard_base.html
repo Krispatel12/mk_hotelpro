@@ -1,0 +1,349 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard | HotelPro Admin{% endblock %}</title>
+
+    <!-- Tailwind CSS Configuration (Development Engine) -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script src="{% static 'js/hoteladmin/dashboard_base.js' %}" defer></script>
+
+    <!-- Google Fonts Hierarchy -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome Pro-grade Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="{% static 'css/hoteladmin/dashboard_base.css' %}">
+
+    <!-- 🏔️ Zenith Theme Guard (Early Execution) -->
+    <script src="{% static 'js/hoteladmin/dashboard_theme_init.js' %}"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="h-full font-sans antialiased overflow-hidden" data-api-latest-booking="/api/bookings/latest/">
+    <div class="flex h-full">
+        <!-- Sidebar: Dark Mode -->
+        <nav class="hidden lg:flex flex-col w-80 border-r border-white/5 shrink-0 relative overflow-hidden">
+            <!-- Background Radial Glow -->
+            <div
+                class="absolute -top-48 -left-48 w-96 h-96 bg-primary-600/10 rounded-full blur-[120px] pointer-events-none animate-pulse">
+            </div>
+            <div
+                class="absolute -bottom-48 -right-48 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse delay-1000">
+            </div>
+
+            <!-- Brand Identity -->
+            <div class="p-10 relative z-10 border-b border-white/5">
+                <a href="{% url 'landing_page' %}" class="flex items-center gap-4 group">
+                    <div
+                        class="w-12 h-12 bg-gradient-to-br from-primary-600 to-indigo-700 rounded-2xl flex items-center justify-center text-white shadow-[0_0_25px_rgba(37,99,235,0.4)] group-hover:rotate-[360deg] transition-transform duration-1000">
+                        <i class="fas fa-hotel text-2xl"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-display font-bold text-white tracking-tighter">Hotel<span
+                                class="text-primary-500 italic">PRO</span></span>
+                        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-[0.4em]">ADMIN PANEL</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <div class="flex-1 px-6 pt-10 pb-6 space-y-2 overflow-y-auto relative z-10 scrollbar-hide">
+                <div class="pb-4 px-4">
+                    <span class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">MENU</span>
+                </div>
+
+                <a href="{% url 'dashboard' %}"
+                    class="group flex items-center gap-4 px-5 py-4.5 rounded-2xl transition-all duration-500 {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'admin_dashboard_pro' %}sidebar-item-active{% else %}text-slate-500 hover:text-white hover:bg-white/5{% endif %}">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary-600/20 group-hover:text-primary-400 transition-all duration-500 shadow-inner">
+                        <i class="fas fa-compass text-sm"></i>
+                    </div>
+                    <span class="text-[13px] font-bold tracking-[0.1em] uppercase">Dashboard</span>
+                </a>
+
+                <a href="{% url 'my_hotels' %}"
+                    class="group flex items-center gap-4 px-5 py-4.5 rounded-2xl transition-all duration-500 {% if request.resolver_match.url_name == 'my_hotels' %}sidebar-item-active{% else %}text-slate-500 hover:text-white hover:bg-white/5{% endif %}">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary-600/20 group-hover:text-primary-400 transition-all duration-500 shadow-inner">
+                        <i class="fas fa-building text-sm"></i>
+                    </div>
+                    <span class="text-[13px] font-bold tracking-[0.1em] uppercase">Hotels</span>
+                </a>
+
+                <a href="{% url 'manage_rooms' %}"
+                    class="group flex items-center gap-4 px-5 py-4.5 rounded-2xl transition-all duration-500 {% if request.resolver_match.url_name == 'manage_rooms' or request.resolver_match.url_name == 'add_room' or request.resolver_match.url_name == 'edit_room' %}sidebar-item-active{% else %}text-slate-500 hover:text-white hover:bg-white/5{% endif %}">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary-600/20 group-hover:text-primary-400 transition-all duration-500 shadow-inner">
+                        <i class="fas fa-bed text-sm"></i>
+                    </div>
+                    <span class="text-[13px] font-bold tracking-[0.1em] uppercase">Rooms</span>
+                </a>
+
+                <a href="{% url 'bookings' %}"
+                    class="group flex items-center gap-4 px-5 py-4.5 rounded-2xl transition-all duration-500 {% if request.resolver_match.url_name == 'bookings' %}sidebar-item-active{% else %}text-slate-500 hover:text-white hover:bg-white/5{% endif %}">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary-600/20 group-hover:text-primary-400 transition-all duration-500 shadow-inner">
+                        <i class="fas fa-calendar-check text-sm"></i>
+                    </div>
+                    <span class="text-[13px] font-bold tracking-[0.1em] uppercase">Bookings</span>
+                </a>
+
+                <div class="pt-12 pb-4 px-4">
+                    <span class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">OFFERS</span>
+                </div>
+
+                <a href="{% url 'offers' %}"
+                    class="group flex items-center gap-4 px-5 py-4.5 rounded-2xl transition-all duration-500 {% if request.resolver_match.url_name == 'offers' or request.resolver_match.url_name == 'add_offer' or request.resolver_match.url_name == 'edit_offer' %}sidebar-item-active{% else %}text-slate-500 hover:text-white hover:bg-white/5{% endif %}">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary-600/20 group-hover:text-primary-400 transition-all duration-500 shadow-inner">
+                        <i class="fas fa-bolt-lightning text-sm"></i>
+                    </div>
+                    <span class="text-[13px] font-bold tracking-[0.1em] uppercase">Offers</span>
+                </a>
+
+                <a href="{% url 'insights' %}"
+                    class="group flex items-center gap-4 px-5 py-4.5 rounded-2xl transition-all duration-500 {% if request.resolver_match.url_name == 'insights' %}sidebar-item-active{% else %}text-slate-500 hover:text-white hover:bg-white/5{% endif %}">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary-600/20 group-hover:text-primary-400 transition-all duration-500 shadow-inner">
+                        <i class="fas fa-chart-pie text-sm"></i>
+                    </div>
+                    <span class="text-[13px] font-bold tracking-[0.1em] uppercase">Insights</span>
+                </a>
+
+
+                <a href="{% url 'reviews' %}"
+                    class="group flex items-center gap-4 px-5 py-4.5 rounded-2xl transition-all duration-500 {% if request.resolver_match.url_name == 'reviews' %}sidebar-item-active{% else %}text-slate-500 hover:text-white hover:bg-white/5{% endif %}">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary-600/20 group-hover:text-primary-400 transition-all duration-500 shadow-inner">
+                        <i class="fas fa-star text-sm"></i>
+                    </div>
+                    <span class="text-[13px] font-bold tracking-[0.1em] uppercase">Reviews</span>
+                </a>
+
+                {% if user.is_staff or user.is_superuser %}
+                <div class="pt-12 pb-4 px-4">
+                    <span class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">ADMIN</span>
+                </div>
+
+                <a href="{% url 'admin_verify_list' %}"
+                    class="group flex items-center gap-4 px-5 py-4.5 rounded-2xl transition-all duration-500 {% if request.resolver_match.url_name == 'admin_verify_list' %}sidebar-item-active{% else %}text-slate-500 hover:text-white hover:bg-white/5{% endif %}">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-indigo-600/20 group-hover:text-indigo-400 transition-all duration-500 shadow-inner">
+                        <i class="fas fa-file-shield text-sm"></i>
+                    </div>
+                    <span class="text-[13px] font-bold tracking-[0.1em] uppercase">Pending Verification</span>
+                </a>
+
+                <a href="{% url 'admin_offer_list' %}"
+                    class="group flex items-center gap-4 px-5 py-4.5 rounded-2xl transition-all duration-500 {% if request.resolver_match.url_name == 'admin_offer_list' or request.resolver_match.url_name == 'admin_review_offer' %}sidebar-item-active{% else %}text-slate-500 hover:text-white hover:bg-white/5{% endif %}">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-cyan-600/20 group-hover:text-cyan-400 transition-all duration-500 shadow-inner">
+                        <i class="fas fa-file-invoice-dollar text-sm"></i>
+                    </div>
+                    <span class="text-[13px] font-bold tracking-[0.1em] uppercase">Review Offers</span>
+                </a>
+
+                <a href="{% url 'admin_ai_strategy' %}"
+                    class="group flex items-center gap-4 px-5 py-4.5 rounded-2xl transition-all duration-500 {% if request.resolver_match.url_name == 'admin_ai_strategy' %}sidebar-item-active{% else %}text-slate-500 hover:text-white hover:bg-white/5{% endif %}">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary-600/20 group-hover:text-primary-400 transition-all duration-500 shadow-inner">
+                        <i class="fas fa-brain text-sm"></i>
+                    </div>
+                    <span class="text-[13px] font-bold tracking-[0.1em] uppercase">Global Hub Strategy</span>
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Logout & Support (Positioned Bellow) -->
+            <div class="mt-auto p-6 relative z-10 border-t border-white/5 flex flex-col gap-4">
+                <!-- AI Command Node Card (Primary Support) -->
+                <a href="{% url 'ai_dashboard' %}" id="aiAgentNavLink"
+                    class="block px-6 py-5 rounded-[2rem] transition-all duration-700 relative overflow-hidden group ai-command-node-card glass-vibrant neural-glow-border {% if request.resolver_match.url_name == 'ai_dashboard' or request.resolver_match.url_name == 'ai_dashboard_specific' %}ai-card-active{% else %}border-white/5 hover:border-indigo-500/30{% endif %}">
+
+                    <!-- Left Accent Bar -->
+                    <div
+                        class="absolute left-0 top-1/4 bottom-1/4 w-0.5 bg-indigo-500 rounded-r-full group-hover:h-1/2 transition-all duration-700">
+                    </div>
+
+                    <!-- Refractive Glows -->
+                    <div
+                        class="absolute -top-10 -right-10 w-24 h-24 bg-indigo-600/15 blur-[40px] group-hover:bg-indigo-500/25 transition-all duration-700">
+                    </div>
+
+                    <div class="flex items-center justify-between mb-4 relative z-10">
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-1.5 h-1.5 rounded-full bg-indigo-400 ai-ping-glow shadow-[0_0_8px_rgba(139,92,246,0.5)]">
+                            </div>
+                            <span class="text-[10px] font-black text-white uppercase tracking-[0.15em] ai-glow-text">AI
+                                Agent</span>
+                        </div>
+                        <div class="relative w-14 h-14 shrink-0 group ai-button-haptic neural-pulse-ring">
+                            <!-- Prismatic Halo -->
+                            <div
+                                class="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-600 to-cyan-500 rounded-2xl blur-lg opacity-40 group-hover:opacity-80 transition-opacity duration-700 animate-pulse">
+                            </div>
+
+                            <div
+                                class="relative w-full h-full rounded-2xl bg-white flex items-center justify-center border border-white/20 shadow-2xl overflow-hidden ai-icon-shimmer animate-neural-float">
+                                <img src="{% static 'images/zenith_ai_icon.png' %}" alt="AI"
+                                    class="w-full h-full object-cover scale-110 group-hover:scale-150 transition-transform duration-1000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative z-10">
+                        <h4 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">24/7
+                            Intelligence</h4>
+
+                        <div class="flex items-center justify-between">
+                            <span class="text-[8px] font-black text-indigo-400/80 uppercase tracking-widest">Active
+                                System</span>
+                            <div class="flex gap-0.5 items-end h-2.5">
+                                <div class="w-1 rounded-full bg-indigo-500/30 animate-ai-bar-1"></div>
+                                <div class="w-1 rounded-full bg-indigo-500/60 animate-ai-bar-2"></div>
+                                <div class="w-1 rounded-full bg-indigo-500/30 animate-ai-bar-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Logout Footer -->
+                <div class="pt-2">
+
+                    <a href="{% url 'logout' %}"
+                        class="flex items-center gap-4 px-2 py-2 text-slate-500 hover:text-rose-500 transition-all group">
+                        <div
+                            class="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-rose-600/20 transition-all">
+                            <i class="fas fa-power-off text-sm"></i>
+                        </div>
+                        <span class="text-[11px] font-bold tracking-widest uppercase">Logout</span>
+                    </a>
+                </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="h-24 flex items-center justify-between px-10 shrink-0 relative z-20 glass-premium border-b border-white/5">
+                <div class="flex items-center gap-6">
+                    {% block back_link %}{% endblock %}
+                    <div class="flex flex-col">
+                        <h1 class="text-2xl font-display font-bold text-white tracking-tight">{% block page_title%}Dashboard{% endblock %}</h1>
+                        <p class="t ext-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">{% block page_subtitle %}Manage your hotels and bookings.{% endblock %}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-8">
+                    <!-- Real-time Status -->
+                    <div
+                        class="status-badge-elite hidden xl:flex items-center gap-3 px-5 py-2.5 rounded-full text-[10px] font-bold text-emerald-400 uppercase tracking-[0.2em] shadow-sm">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full status-pulse"></span>
+                        Online
+                    </div>
+
+                    <!-- Elite Theme Toggle Switch -->
+                    <button onclick="ZenithTheme.toggle()"
+                        class="theme-toggle-wrapper relative w-[76px] h-[38px] rounded-full border border-white/10 flex items-center p-1 cursor-pointer transition-all duration-500 overflow-hidden shrink-0 group shadow-sm hover:border-white/20">
+
+                        <!-- Inner Shadows & BG -->
+                        <div
+                            class="absolute inset-0 w-full h-full bg-[#0f172a] group-hover:bg-[#1e293b] transition-colors duration-500 toggle-bg shadow-inner">
+                        </div>
+
+                        <!-- Track Icons -->
+                        <div
+                            class="absolute inset-0 w-full h-full flex justify-between items-center px-2.5 pointer-events-none z-10 text-[14px]">
+                            <i class="fas fa-sun text-amber-400 drop-shadow-sm track-icon-sun"></i>
+                            <i class="fas fa-moon text-slate-400 drop-shadow-sm track-icon-moon"></i>
+                        </div>
+
+                        <!-- Sliding Thumb -->
+                        <div
+                            class="theme-toggle-thumb relative w-[30px] h-[30px] rounded-full bg-white shadow-[0_2px_10px_rgba(0,0,0,0.3)] flex items-center justify-center z-20 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] border border-white/50">
+                            <!-- Dual Icons inside thumb that fade & rotate -->
+                            <i class="fas fa-moon text-[#0f172a] text-[13px] thumb-icon-dark absolute"></i>
+                            <i class="fas fa-sun text-amber-500 text-[14px] thumb-icon-light absolute"></i>
+                        </div>
+                    </button>
+
+                    <!-- Alerts Console -->
+                    <button
+                        class="header-control-node w-12 h-12 rounded-2xl bg-white/5 border border-white/10 text-slate-400 flex items-center justify-center hover:text-white hover:border-white/20 hover:bg-white/10 transition-all shadow-sm relative group">
+                        <i class="far fa-bell text-lg group-hover:bounce transition-transform"></i>
+                        <span
+                            class="absolute top-3.5 right-3.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-[#020617] group-hover:animate-ping"></span>
+                    </button>
+
+                    <!-- Profile Module -->
+                    <div class="flex items-center gap-4 pl-8 border-l border-white/5">
+                        <div
+                            class="profile-contrast-node w-12 h-12 rounded-2xl bg-white/10 border-2 border-white/5 flex items-center justify-center text-white font-bold text-lg shadow-xl shadow-black/20">
+                            {{ user.username|first|upper }}
+                        </div>
+                        <div class="flex flex-col hidden sm:flex">
+                            <span class="text-sm font-bold text-white tracking-tight">{{ user.username }}</span>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                {% if user.role == 'super_admin' %}Super Admin{% else %}Hotel Owner{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Viewport -->
+            <div class="flex-1 overflow-y-auto p-12 scroll-viewport-node">
+                <div class="max-w-[1600px] mx-auto">
+                    <!-- High-Fidelity Messages Portal -->
+                    {% if messages %}
+                    <div class="fixed top-28 right-10 z-[100] flex flex-col gap-4 pointer-events-none">
+                        {% for message in messages %}
+                        <div class="message-card pointer-events-auto flex items-center gap-6 px-8 py-5 rounded-[2rem] shadow-2xl backdrop-blur-2xl border transition-all duration-700 animate-slide-in-right
+                            {% if message.tags == 'success' %}bg-emerald-500/90 border-emerald-400/50 text-white shadow-emerald-500/30
+                            {% elif message.tags == 'error' %}bg-rose-500/90 border-rose-400/50 text-white shadow-rose-500/30
+                            {% elif message.tags == 'warning' %}bg-amber-500/90 border-amber-400/50 text-white shadow-amber-500/30
+                            {% else %}bg-navy/90 border-white/20 text-white shadow-navy/30{% endif %}"
+                            style="min-width: 400px;">
+                            <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+                                {% if message.tags == 'success' %}<i class="fas fa-check-double text-lg"></i>
+                                {% elif message.tags == 'error' %}<i class="fas fa-triangle-exclamation text-lg"></i>
+                                {% elif message.tags == 'warning' %}<i class="fas fa-circle-exclamation text-lg"></i>
+                                {% else %}<i class="fas fa-info-circle text-lg"></i>{% endif %}
+                            </div>
+                            <div class="flex flex-col gap-0.5 pr-8">
+                                <span class="text-[10px] font-black uppercase tracking-[0.25em] opacity-70">
+                                    {% if message.tags == 'success' %}Strategic Success
+                                    {% elif message.tags == 'error' %}Protocol Failure
+                                    {% elif message.tags == 'warning' %}Action Required
+                                    {% else %}System Intel{% endif %}
+                                </span>
+                                <p class="text-[13px] font-bold tracking-tight">{{ message }}</p>
+                            </div>
+                            <button onclick="this.parentElement.remove()"
+                                class="ml-auto w-8 h-8 rounded-full hover:bg-white/20 transition-colors flex items-center justify-center">
+                                <i class="fas fa-times text-xs"></i>
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% block dashboard_content %}{% endblock %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>
