@@ -1,0 +1,16 @@
+{
+    "venvPath": ".",
+    "venv": ".venv",
+    "include": [
+        "hotelpro"
+    ],
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        ".venv"
+    ],
+    "pythonVersion": "3.12",
+    "analysis.extraPaths": [
+        "./hotelpro/HotelPro_Nexus"
+    ]
+}

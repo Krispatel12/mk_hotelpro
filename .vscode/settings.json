@@ -1,0 +1,7 @@
+{
+    "python.defaultInterpreterPath": "c:\\Users\\krish\\Desktop\\kris(20)\\kris(20)\\.venv\\Scripts\\python.exe",
+    "python.analysis.extraPaths": [
+        "./hotelpro/HotelPro_Nexus"
+    ],
+    "python.terminal.activateEnvInSelectedTerminal": true
+}
