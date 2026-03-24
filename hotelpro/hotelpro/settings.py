@@ -149,7 +149,7 @@ SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
 # Use DATABASE_URL from environment if available (standard on Render)
 # Note: Ensure DATABASE_URL is a postgres:// URL
 if HAS_DJ_DATABASE_URL and os.environ.get('DATABASE_URL'):
-    db_from_env = dj_database_url.config(conn_max_age=600)
+    db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
     if db_from_env:
         DATABASES['default'].update(db_from_env)
 else:
