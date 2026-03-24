@@ -25,6 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables
 dotenv_path = BASE_DIR / '.env'
+if not os.path.exists(dotenv_path):
+    dotenv_path = BASE_DIR.parent / '.env'
 load_dotenv(dotenv_path=dotenv_path)
 
 TEMPLATES_DIR = BASE_DIR / 'HotelPro_Nexus/templates'
@@ -251,7 +253,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 # Account Settings
 ACCOUNT_LOGIN_METHODS = {'email'}
-ACCOUNT_SIGNUP_FIELDS = ['email', 'password1', 'password2']
+ACCOUNT_SIGNUP_FIELDS = ['password1', 'password2']
 ACCOUNT_EMAIL_VERIFICATION = 'none' # Build up later
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
